@@ -25,7 +25,7 @@ export function load(callback) {
     window.gapi.client.sheets.spreadsheets.values.get(
       {
         spreadsheetId: config.spreadsheetId,
-        range: 'People!A1:V86',
+        range: 'People!A1:AV86',
       }
     ).then(
       (response) => {
