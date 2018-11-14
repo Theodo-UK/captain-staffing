@@ -22,20 +22,26 @@ export function checkAuth(immediate, callback) {
  */
 export function load(callback) {
   window.gapi.client.load('sheets', 'v4', () => {
-    window.gapi.client.sheets.spreadsheets.values.get(
+    window.gapi.client.sheets.spreadsheets.values.batchGet(
       {
         spreadsheetId: config.spreadsheetId,
-        range: 'People!A1:AV86',
+        ranges: [
+          'People - Architects!A1:AV86',
+          'People - Agile Coaches!A1:AV86',
+        ],
       }
     ).then(
       (response) => {
-        const rows = response.result.values || []
+        const rows = response.result.valueRanges[0].values || []
         let weeks = tail(tail(head(rows)))
-        const peopleStaffing = buildStaffing(response.result.values)
+        const architectStaffing = buildStaffing(response.result.valueRanges[0].values)
+        const agileCoachInput = response.result.valueRanges[1].values
+        agileCoachInput.shift()
+        const agileCoachStaffing = buildStaffing(agileCoachInput)
 
         weeks = removePastWeeks(weeks)
 
-        callback(weeks, peopleStaffing)
+        callback(weeks, architectStaffing, agileCoachStaffing)
       },
       (response) => {
         callback(null, null, response.result.error)

@@ -18,7 +18,8 @@ class App extends Component {
     this.state = {
       googleAuthenticated: null,
       weeks: loadLocalStorageItem('weeks'),
-      peopleStaffing: loadLocalStorageItem('peopleStaffing'),
+      architectStaffing: loadLocalStorageItem('architectStaffing'),
+      agileCoachStaffing: loadLocalStorageItem('agileCoachStaffing'),
       trelloAuthenticated: null,
     }
   }
@@ -43,14 +44,16 @@ class App extends Component {
     })
   }
 
-  onGoogleLoad(weeks, peopleStaffing, error) {
-    if (peopleStaffing) {
+  onGoogleLoad(weeks, architectStaffing, agileCoachStaffing, error) {
+    if (architectStaffing && agileCoachStaffing) {
       this.setState({
         weeks,
-        peopleStaffing,
+        architectStaffing,
+        agileCoachStaffing,
       })
       saveLocaleStorageItem('weeks', weeks)
-      saveLocaleStorageItem('peopleStaffing', peopleStaffing)
+      saveLocaleStorageItem('architectStaffing', architectStaffing)
+      saveLocaleStorageItem('agileCoachStaffing', agileCoachStaffing)
     } else {
       this.setState({
         error,
@@ -60,7 +63,7 @@ class App extends Component {
 
   onStaffingTableRowClick(peopleRow) {
     this.setState({
-      peopleStaffing: toggleByPeopleRow(peopleRow, this.state.peopleStaffing),
+      architectStaffing: toggleByPeopleRow(peopleRow, this.state.architectStaffing),
     })
   }
 
@@ -105,13 +108,23 @@ class App extends Component {
   }
 
   renderStaffing() {
-    if (this.state.peopleStaffing) {
+    if (this.state.architectStaffing) {
       return (
-        <StaffingTable
-          peopleStaffing={this.state.peopleStaffing}
-          onRowClick={this.onStaffingTableRowClick.bind(this)}
-          weeks={this.state.weeks}
-        />
+        <div>
+          <h1>Architects</h1>
+          <StaffingTable
+            peopleStaffing={this.state.architectStaffing}
+            onRowClick={this.onStaffingTableRowClick.bind(this)}
+            weeks={this.state.weeks}
+          />
+          <br />
+          <h1>Agile Coaches</h1>
+          <StaffingTable
+            peopleStaffing={this.state.agileCoachStaffing}
+            onRowClick={this.onStaffingTableRowClick.bind(this)}
+            weeks={this.state.weeks}
+          />
+        </div>
       )
     } else if (this.state.error) {
       return (
