@@ -61,10 +61,16 @@ class App extends Component {
     }
   }
 
-  onStaffingTableRowClick(peopleRow) {
-    this.setState({
-      architectStaffing: toggleByPeopleRow(peopleRow, this.state.architectStaffing),
-    })
+  onStaffingTableRowClick(peopleRow, type) {
+    if (type === 'architect') {
+      this.setState({
+        architectStaffing: toggleByPeopleRow(peopleRow, this.state.architectStaffing),
+      })
+    } else if (type === 'agileCoach') {
+      this.setState({
+        agileCoachStaffing: toggleByPeopleRow(peopleRow, this.state.agileCoachStaffing),
+      })
+    }
   }
 
   onTrelloSuccess() {
@@ -113,6 +119,7 @@ class App extends Component {
         <div>
           <h1>Architects</h1>
           <StaffingTable
+            type="architect"
             peopleStaffing={this.state.architectStaffing}
             onRowClick={this.onStaffingTableRowClick.bind(this)}
             weeks={this.state.weeks}
@@ -120,6 +127,7 @@ class App extends Component {
           <br />
           <h1>Agile Coaches</h1>
           <StaffingTable
+            type="agileCoach"
             peopleStaffing={this.state.agileCoachStaffing}
             onRowClick={this.onStaffingTableRowClick.bind(this)}
             weeks={this.state.weeks}
