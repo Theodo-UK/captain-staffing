@@ -1,5 +1,4 @@
 #!/bin/bash
-git stash save
 npm run env:save
 npm run env:prod
 npm run build
@@ -10,4 +9,3 @@ git filter-branch -f --prune-empty --subdirectory-filter build
 git push -f origin gh-pages
 git checkout -
 npm run env:restore
-git stash pop
