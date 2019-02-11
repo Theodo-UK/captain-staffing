@@ -26,8 +26,8 @@ export function load(callback) {
       {
         spreadsheetId: config.spreadsheetId,
         ranges: [
-          'People - Architects!A1:AV86',
-          'People - Agile Coaches!A1:AV86',
+          'People - Architects!A1:AV100',
+          'People - Agile Coaches!A1:AV100',
         ],
       }
     ).then(
