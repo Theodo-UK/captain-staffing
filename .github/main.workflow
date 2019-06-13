@@ -2,8 +2,16 @@ workflow "CI" {
   resolves = [
     "Lint",
     "Test",
+    "Build",
   ]
   on = "push"
+}
+
+workflow "CD" {
+  on = "push"
+  resolves = [
+    "Deploy",
+  ]
 }
 
 action "Install dependencies" {
@@ -11,34 +19,36 @@ action "Install dependencies" {
   args = "install"
 }
 
-action "Lint" {
-  uses = "Borales/actions-yarn@master"
-  needs = ["Install dependencies"]
-  args = "lint"
-}
-
-action "Test" {
-  uses = "Borales/actions-yarn@master"
-  needs = ["Install dependencies"]
-  args = "test"
-}
-
-workflow "CD" {
-  on = "push"
-  resolves = [
-    "Master",
-    "Deploy",
-  ]
-}
-
 action "Master" {
   uses = "actions/bin/filter@master"
   args = "branch master"
 }
 
+action "Dev environment" {
+  uses = "Borales/actions-yarn@master"
+  args = "env:dev"
+}
+
+action "Prod environment" {
+  uses = "Borales/actions-yarn@master"
+  args = "env:prod"
+}
+
+action "Lint" {
+  uses = "Borales/actions-yarn@master"
+  needs = ["Install dependencies", "Dev environment"]
+  args = "lint"
+}
+
+action "Test" {
+  uses = "Borales/actions-yarn@master"
+  needs = ["Install dependencies", "Dev environment"]
+  args = "test"
+}
+
 action "Build" {
   uses = "Borales/actions-yarn@master"
-  needs = ["Install dependencies"]
+  needs = ["Install dependencies", "Prod environment"]
   args = "build:ci"
 }
 
