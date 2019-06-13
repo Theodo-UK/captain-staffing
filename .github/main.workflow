@@ -49,7 +49,7 @@ action "Test" {
 action "Build" {
   uses = "Borales/actions-yarn@master"
   needs = ["Install dependencies", "Prod environment"]
-  args = "build:ci"
+  args = "build"
 }
 
 action "Deploy" {
