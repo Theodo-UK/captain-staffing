@@ -2,14 +2,10 @@ import React from 'react'
 import { Cell } from 'fixed-data-table'
 
 const getColor = (row, week) => {
-  if (row.project) {
+  if (row.project || !row.staffing[week] || !row.staffing[week]._total) {
     return null
   }
-  const staffedDaysString = row.staffing[week]._total
-  if (!staffedDaysString) {
-    return null
-  }
-  const staffedDays = parseFloat(staffedDaysString)
+  const staffedDays = parseFloat(row.staffing[week]._total)
   if (staffedDays === 5) {
     return '#81C784' // Green
   }
