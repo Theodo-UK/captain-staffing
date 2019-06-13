@@ -43,6 +43,7 @@
     "env:restore": "cp src/configs/config.save.js src/configs/config.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:ci": "yarn env:prod && yarn:build",
     "eject": "react-scripts eject",
     "deploy": "./deploy.sh",
     "test": "jest --config .jestrc --verbose --watch",
