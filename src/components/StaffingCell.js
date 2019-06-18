@@ -22,6 +22,8 @@ const getColor = (row, week) => {
 }
 
 const getValue = (row, week) => {
+  if (!row.staffing[week]) return null
+
   if (row.project) {
     return row.staffing[week][row.project]
   }
