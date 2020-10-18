@@ -9,7 +9,6 @@ import moment from 'moment'
 import 'fixed-data-table/dist/fixed-data-table.css'
 
 export default class StaffingTable extends React.Component {
-
   static propTypes = {
     weeks: React.PropTypes.array.isRequired,
     peopleStaffing: React.PropTypes.array.isRequired,
@@ -49,30 +48,24 @@ export default class StaffingTable extends React.Component {
           width={120}
           fixed
         />
-        {
-          this.props.weeks.map((week, i) => {
-            return (
-              <Column
-                key={i}
-                header={
-                  <Cell>
-                    { moment(week, 'DD/MM/YYYY').format('DD/MM') }
-                  </Cell>
-                }
-                headerClassName={`staffingHeaderCell staffingHeaderCell--${i}`}
-                cell={
-                  <StaffingCell
-                    data={this.props.peopleStaffing}
-                    onClick={this.props.onRowClick}
-                    week={moment(week, 'DD/MM/YYYY').format('DD/MM')}
-                  />
-                }
-                cellClassName={`staffingCell staffingCell--${i}`}
-                width={60}
-              />
-            )
-          })
-        }
+        {this.props.weeks.map((week, i) => {
+          return (
+            <Column
+              key={i}
+              header={<Cell>{moment(week, 'DD/MM/YYYY').format('DD/MM')}</Cell>}
+              headerClassName={`staffingHeaderCell staffingHeaderCell--${i}`}
+              cell={
+                <StaffingCell
+                  data={this.props.peopleStaffing}
+                  onClick={this.props.onRowClick}
+                  week={moment(week, 'DD/MM/YYYY').format('DD/MM')}
+                />
+              }
+              cellClassName={`staffingCell staffingCell--${i}`}
+              width={60}
+            />
+          )
+        })}
       </Table>
     )
   }
