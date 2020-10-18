@@ -26,22 +26,29 @@ export function load(callback) {
       {
         spreadsheetId: config.spreadsheetId,
         ranges: [
-          'People - Architects!A1:AV100',
-          'People - Agile Coaches!A1:AV100',
+          'People - Architects!A1:AV150',
+          'People - Agile Coaches!A1:AV150',
+          'People - Developers!A1:AV150',
         ],
       }
     ).then(
       (response) => {
         const rows = response.result.valueRanges[0].values || []
         let weeks = tail(tail(head(rows)))
+        // archi staffing
         const architectStaffing = buildStaffing(response.result.valueRanges[0].values)
+        // ac staffing
         const agileCoachInput = response.result.valueRanges[1].values
         agileCoachInput.shift()
         const agileCoachStaffing = buildStaffing(agileCoachInput)
+        // dev staffing
+        const developerInput = response.result.valueRanges[2].values
+        developerInput.shift()
+        const developerStaffing = buildStaffing(developerInput)
 
         weeks = removePastWeeks(weeks)
 
-        callback(weeks, architectStaffing, agileCoachStaffing)
+        callback(weeks, architectStaffing, agileCoachStaffing, developerStaffing)
       },
       (response) => {
         callback(null, null, response.result.error)

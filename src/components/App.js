@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 
 import { toggleByPeopleRow } from '../helpers/edit'
 import { checkTrelloAuth } from '../helpers/trello'
-import { loadLocalStorageItem, saveLocaleStorageItem } from '../helpers/localStorage'
+import {
+  loadLocalStorageItem,
+  saveLocaleStorageItem,
+} from '../helpers/localStorage'
 
 import Alert from './Alert'
 import StaffingTable from './StaffingTable'
@@ -11,7 +14,6 @@ import CaptainTrello from './CaptainTrello'
 import Projects from './Projects'
 
 class App extends Component {
-
   constructor(props) {
     super(props)
 
@@ -20,6 +22,7 @@ class App extends Component {
       weeks: loadLocalStorageItem('weeks'),
       architectStaffing: loadLocalStorageItem('architectStaffing'),
       agileCoachStaffing: loadLocalStorageItem('agileCoachStaffing'),
+      developerStaffing: loadLocalStorageItem('developerStaffing'),
       trelloAuthenticated: null,
     }
   }
@@ -44,16 +47,18 @@ class App extends Component {
     })
   }
 
-  onGoogleLoad(weeks, architectStaffing, agileCoachStaffing, error) {
-    if (architectStaffing && agileCoachStaffing) {
+  onGoogleLoad(weeks, architectStaffing, agileCoachStaffing, developerStaffing, error) {
+    if (architectStaffing && agileCoachStaffing && developerStaffing) {
       this.setState({
         weeks,
         architectStaffing,
         agileCoachStaffing,
+        developerStaffing,
       })
       saveLocaleStorageItem('weeks', weeks)
       saveLocaleStorageItem('architectStaffing', architectStaffing)
       saveLocaleStorageItem('agileCoachStaffing', agileCoachStaffing)
+      saveLocaleStorageItem('developerStaffing', developerStaffing)
     } else {
       this.setState({
         error,
@@ -64,11 +69,24 @@ class App extends Component {
   onStaffingTableRowClick(peopleRow, type) {
     if (type === 'architect') {
       this.setState({
-        architectStaffing: toggleByPeopleRow(peopleRow, this.state.architectStaffing),
+        architectStaffing: toggleByPeopleRow(
+          peopleRow,
+          this.state.architectStaffing
+        ),
       })
     } else if (type === 'agileCoach') {
       this.setState({
-        agileCoachStaffing: toggleByPeopleRow(peopleRow, this.state.agileCoachStaffing),
+        agileCoachStaffing: toggleByPeopleRow(
+          peopleRow,
+          this.state.agileCoachStaffing
+        ),
+      })
+    } else if (type === 'developer') {
+      this.setState({
+        developerStaffing: toggleByPeopleRow(
+          peopleRow,
+          this.state.developerStaffing
+        ),
       })
     }
   }
@@ -88,13 +106,12 @@ class App extends Component {
   render() {
     return (
       <div className="app">
-        <h1 className="brand">
-          Captain Staffing</h1>
+        <h1 className="brand">Captain Staffing</h1>
         <div className="content">
-          { this.renderStaffing() }
-          { this.renderGoogle() }
-          { this.renderTrello() }
-          { this.renderProjects() }
+          {this.renderStaffing()}
+          {this.renderGoogle()}
+          {this.renderTrello()}
+          {this.renderProjects()}
         </div>
       </div>
     )
@@ -132,16 +149,20 @@ class App extends Component {
             onRowClick={this.onStaffingTableRowClick.bind(this)}
             weeks={this.state.weeks}
           />
+          <br />
+          <h1>Developers</h1>
+          <StaffingTable
+            type="developer"
+            peopleStaffing={this.state.developerStaffing}
+            onRowClick={this.onStaffingTableRowClick.bind(this)}
+            weeks={this.state.weeks}
+          />
         </div>
       )
     } else if (this.state.error) {
-      return (
-        <Alert error={this.state.error} />
-      )
+      return <Alert error={this.state.error} />
     } else if (this.state.googleAuthenticated) {
-      return (
-        <div className="loader" />
-      )
+      return <div className="loader" />
     }
     return null
   }
@@ -160,9 +181,7 @@ class App extends Component {
 
   renderProjects() {
     if (this.state.trelloAuthenticated) {
-      return (
-        <Projects />
-      )
+      return <Projects />
     }
     return null
   }
