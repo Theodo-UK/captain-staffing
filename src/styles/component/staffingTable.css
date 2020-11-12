@@ -1,7 +1,7 @@
 /* Highlight the fifth and tenth columns */
-.staffingCell--3, .staffingCell--4,
-.staffingCell--8, .staffingCell--9,
-.staffingHeaderCell--3, .staffingHeaderCell--4,
-.staffingHeaderCell--8, .staffingHeaderCell--9 {
+.staffingCell--4,
+.staffingCell--9,
+.staffingHeaderCell--4,
+.staffingHeaderCell--9 {
   border-right: 5px double;
 }

@@ -20,7 +20,7 @@ export default class StaffingTable extends React.Component {
     return (
       <Table
         width={window.innerWidth - 20}
-        rowsCount={this.props.peopleStaffing.length}
+        rowsCount={this.props.peopleStaffing ? this.props.peopleStaffing.length : 0}
         rowHeight={35}
         maxHeight={1300}
         headerHeight={40}

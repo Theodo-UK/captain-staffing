@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
 import { toggleByPeopleRow } from '../helpers/edit'
-import { checkTrelloAuth } from '../helpers/trello'
 import {
+  clearLocaleStorage,
   loadLocalStorageItem,
   saveLocaleStorageItem,
 } from '../helpers/localStorage'
@@ -10,8 +10,11 @@ import {
 import Alert from './Alert'
 import StaffingTable from './StaffingTable'
 import CaptainGoogle from './CaptainGoogle'
-import CaptainTrello from './CaptainTrello'
-import Projects from './Projects'
+
+const reload = () => {
+  clearLocaleStorage()
+  location.reload()
+}
 
 class App extends Component {
   constructor(props) {
@@ -23,16 +26,7 @@ class App extends Component {
       architectStaffing: loadLocalStorageItem('architectStaffing'),
       agileCoachStaffing: loadLocalStorageItem('agileCoachStaffing'),
       developerStaffing: loadLocalStorageItem('developerStaffing'),
-      trelloAuthenticated: null,
     }
-  }
-
-  componentDidMount() {
-    checkTrelloAuth((authenticated) => {
-      this.setState({
-        trelloAuthenticated: authenticated,
-      })
-    })
   }
 
   onGoogleSuccess() {
@@ -91,27 +85,13 @@ class App extends Component {
     }
   }
 
-  onTrelloSuccess() {
-    this.setState({
-      trelloAuthenticated: true,
-    })
-  }
-
-  onTrelloFailure() {
-    this.setState({
-      trelloAuthenticated: false,
-    })
-  }
-
   render() {
     return (
       <div className="app">
         <h1 className="brand">Captain Staffing</h1>
         <div className="content">
-          {this.renderStaffing()}
           {this.renderGoogle()}
-          {this.renderTrello()}
-          {this.renderProjects()}
+          {this.renderStaffing()}
         </div>
       </div>
     )
@@ -127,7 +107,13 @@ class App extends Component {
         />
       )
     }
-    return null
+
+    return (<button
+      onClick={reload}
+      className="btn"
+    >
+      Reload
+    </button>)
   }
 
   renderStaffing() {
@@ -163,25 +149,6 @@ class App extends Component {
       return <Alert error={this.state.error} />
     } else if (this.state.googleAuthenticated) {
       return <div className="loader" />
-    }
-    return null
-  }
-
-  renderTrello() {
-    if (!this.state.trelloAuthenticated) {
-      return (
-        <CaptainTrello
-          onSuccess={this.onTrelloSuccess.bind(this)}
-          onFailure={this.onTrelloFailure.bind(this)}
-        />
-      )
-    }
-    return null
-  }
-
-  renderProjects() {
-    if (this.state.trelloAuthenticated) {
-      return <Projects />
     }
     return null
   }

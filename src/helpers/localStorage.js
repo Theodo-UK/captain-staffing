@@ -43,3 +43,7 @@ export function saveLocaleStorageItem(key, value) {
     // Ignore write errors.
   }
 }
+
+export function clearLocaleStorage() {
+  localStorage.clear()
+}
