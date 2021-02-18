@@ -29,6 +29,7 @@ export function load(callback) {
           'People - Architects!A1:AV150',
           'People - Agile Coaches!A1:AV150',
           'People - Developers!A1:AV150',
+          'People - Serverless!A1:AV150',
         ],
       }
     ).then(
@@ -45,10 +46,20 @@ export function load(callback) {
         const developerInput = response.result.valueRanges[2].values
         developerInput.shift()
         const developerStaffing = buildStaffing(developerInput)
+        // serverless staffing
+        const serverlessInput = response.result.valueRanges[3].values
+        serverlessInput.shift()
+        const serverlessStaffing = buildStaffing(serverlessInput)
 
         weeks = removePastWeeks(weeks)
 
-        callback(weeks, architectStaffing, agileCoachStaffing, developerStaffing)
+        callback(
+          weeks,
+          architectStaffing,
+          agileCoachStaffing,
+          developerStaffing,
+          serverlessStaffing
+        )
       },
       (response) => {
         callback(null, null, response.result.error)

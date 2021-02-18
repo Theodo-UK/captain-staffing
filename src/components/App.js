@@ -26,6 +26,7 @@ class App extends Component {
       architectStaffing: loadLocalStorageItem('architectStaffing'),
       agileCoachStaffing: loadLocalStorageItem('agileCoachStaffing'),
       developerStaffing: loadLocalStorageItem('developerStaffing'),
+      serverlessStaffing: loadLocalStorageItem('serverlessStaffing'),
     }
   }
 
@@ -41,18 +42,27 @@ class App extends Component {
     })
   }
 
-  onGoogleLoad(weeks, architectStaffing, agileCoachStaffing, developerStaffing, error) {
-    if (architectStaffing && agileCoachStaffing && developerStaffing) {
+  onGoogleLoad(
+    weeks,
+    architectStaffing,
+    agileCoachStaffing,
+    developerStaffing,
+    serverlessStaffing,
+    error
+    ) {
+    if (architectStaffing && agileCoachStaffing && developerStaffing && serverlessStaffing) {
       this.setState({
         weeks,
         architectStaffing,
         agileCoachStaffing,
         developerStaffing,
+        serverlessStaffing,
       })
       saveLocaleStorageItem('weeks', weeks)
       saveLocaleStorageItem('architectStaffing', architectStaffing)
       saveLocaleStorageItem('agileCoachStaffing', agileCoachStaffing)
       saveLocaleStorageItem('developerStaffing', developerStaffing)
+      saveLocaleStorageItem('serverlessStaffing', serverlessStaffing)
     } else {
       this.setState({
         error,
@@ -80,6 +90,13 @@ class App extends Component {
         developerStaffing: toggleByPeopleRow(
           peopleRow,
           this.state.developerStaffing
+        ),
+      })
+    } else if (type === 'serverless') {
+      this.setState({
+        developerStaffing: toggleByPeopleRow(
+          peopleRow,
+          this.state.serverlessStaffing
         ),
       })
     }
@@ -140,6 +157,14 @@ class App extends Component {
           <StaffingTable
             type="developer"
             peopleStaffing={this.state.developerStaffing}
+            onRowClick={this.onStaffingTableRowClick.bind(this)}
+            weeks={this.state.weeks}
+          />
+          <br />
+          <h1>🚀 Serverless</h1>
+          <StaffingTable
+            type="serverless"
+            peopleStaffing={this.state.serverlessStaffing}
             onRowClick={this.onStaffingTableRowClick.bind(this)}
             weeks={this.state.weeks}
           />
