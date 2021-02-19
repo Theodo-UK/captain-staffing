@@ -137,6 +137,14 @@ class App extends Component {
     if (this.state.architectStaffing) {
       return (
         <div>
+          <h1>Developers</h1>
+          <StaffingTable
+            type="developer"
+            peopleStaffing={this.state.developerStaffing}
+            onRowClick={this.onStaffingTableRowClick.bind(this)}
+            weeks={this.state.weeks}
+          />
+          <br />
           <h1>Architects</h1>
           <StaffingTable
             type="architect"
@@ -149,14 +157,6 @@ class App extends Component {
           <StaffingTable
             type="agileCoach"
             peopleStaffing={this.state.agileCoachStaffing}
-            onRowClick={this.onStaffingTableRowClick.bind(this)}
-            weeks={this.state.weeks}
-          />
-          <br />
-          <h1>Developers</h1>
-          <StaffingTable
-            type="developer"
-            peopleStaffing={this.state.developerStaffing}
             onRowClick={this.onStaffingTableRowClick.bind(this)}
             weeks={this.state.weeks}
           />
