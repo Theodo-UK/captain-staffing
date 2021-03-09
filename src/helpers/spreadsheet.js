@@ -30,6 +30,7 @@ export function load(callback) {
           'People - Agile Coaches!A1:AV150',
           'People - Developers!A1:AV150',
           'People - Serverless!A1:AV150',
+          'People - Mobile!A1:AV150',
         ],
       }
     ).then(
@@ -50,6 +51,10 @@ export function load(callback) {
         const serverlessInput = response.result.valueRanges[3].values
         serverlessInput.shift()
         const serverlessStaffing = buildStaffing(serverlessInput)
+        // mobile staffing
+        const mobileInput = response.result.valueRanges[4].values
+        mobileInput.shift()
+        const mobileStaffing = buildStaffing(mobileInput)
 
         weeks = removePastWeeks(weeks)
 
@@ -58,7 +63,8 @@ export function load(callback) {
           architectStaffing,
           agileCoachStaffing,
           developerStaffing,
-          serverlessStaffing
+          serverlessStaffing,
+          mobileStaffing
         )
       },
       (response) => {

@@ -2,11 +2,11 @@ import React from 'react'
 import { Cell } from 'fixed-data-table'
 
 const getColor = (row, week) => {
-  if (row.project || !row.staffing[week]) { // if it's a line project
+  if (row.project) { // if it's a line project
     return null
   }
 
-  const staffedDaysString = row.staffing[week]._total
+  const staffedDaysString = row.staffing[week] ? row.staffing[week]._total : 0
   if (!staffedDaysString) { // unstaffed
     return '#EF5350' // red
   }

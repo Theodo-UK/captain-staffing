@@ -27,6 +27,7 @@ class App extends Component {
       agileCoachStaffing: loadLocalStorageItem('agileCoachStaffing'),
       developerStaffing: loadLocalStorageItem('developerStaffing'),
       serverlessStaffing: loadLocalStorageItem('serverlessStaffing'),
+      mobileStaffing: loadLocalStorageItem('mobileStaffing'),
     }
   }
 
@@ -48,21 +49,30 @@ class App extends Component {
     agileCoachStaffing,
     developerStaffing,
     serverlessStaffing,
+    mobileStaffing,
     error
     ) {
-    if (architectStaffing && agileCoachStaffing && developerStaffing && serverlessStaffing) {
+    if (
+      architectStaffing &&
+      agileCoachStaffing &&
+      developerStaffing &&
+      serverlessStaffing &&
+      mobileStaffing
+    ) {
       this.setState({
         weeks,
         architectStaffing,
         agileCoachStaffing,
         developerStaffing,
         serverlessStaffing,
+        mobileStaffing,
       })
       saveLocaleStorageItem('weeks', weeks)
       saveLocaleStorageItem('architectStaffing', architectStaffing)
       saveLocaleStorageItem('agileCoachStaffing', agileCoachStaffing)
       saveLocaleStorageItem('developerStaffing', developerStaffing)
       saveLocaleStorageItem('serverlessStaffing', serverlessStaffing)
+      saveLocaleStorageItem('mobileStaffing', mobileStaffing)
     } else {
       this.setState({
         error,
@@ -97,6 +107,13 @@ class App extends Component {
         developerStaffing: toggleByPeopleRow(
           peopleRow,
           this.state.serverlessStaffing
+        ),
+      })
+    } else if (type === 'mobile') {
+      this.setState({
+        mobileStaffing: toggleByPeopleRow(
+          peopleRow,
+          this.state.mobileStaffing
         ),
       })
     }
@@ -149,6 +166,14 @@ class App extends Component {
           <StaffingTable
             type="architect"
             peopleStaffing={this.state.architectStaffing}
+            onRowClick={this.onStaffingTableRowClick.bind(this)}
+            weeks={this.state.weeks}
+          />
+          <br />
+          <h1>📱 Mobile</h1>
+          <StaffingTable
+            type="mobile"
+            peopleStaffing={this.state.mobileStaffing}
             onRowClick={this.onStaffingTableRowClick.bind(this)}
             weeks={this.state.weeks}
           />
