@@ -22,12 +22,14 @@ class App extends Component {
 
     this.state = {
       googleAuthenticated: null,
+      tabToggle: 'staffing',
       weeks: loadLocalStorageItem('weeks'),
       architectStaffing: loadLocalStorageItem('architectStaffing'),
       agileCoachStaffing: loadLocalStorageItem('agileCoachStaffing'),
       developerStaffing: loadLocalStorageItem('developerStaffing'),
       serverlessStaffing: loadLocalStorageItem('serverlessStaffing'),
       mobileStaffing: loadLocalStorageItem('mobileStaffing'),
+      currentProjects: loadLocalStorageItem('currentProjects'),
     }
   }
 
@@ -50,6 +52,7 @@ class App extends Component {
     developerStaffing,
     serverlessStaffing,
     mobileStaffing,
+    currentProjects,
     error
     ) {
     if (
@@ -57,7 +60,8 @@ class App extends Component {
       agileCoachStaffing &&
       developerStaffing &&
       serverlessStaffing &&
-      mobileStaffing
+      mobileStaffing &&
+      currentProjects
     ) {
       this.setState({
         weeks,
@@ -66,6 +70,7 @@ class App extends Component {
         developerStaffing,
         serverlessStaffing,
         mobileStaffing,
+        currentProjects,
       })
       saveLocaleStorageItem('weeks', weeks)
       saveLocaleStorageItem('architectStaffing', architectStaffing)
@@ -73,6 +78,7 @@ class App extends Component {
       saveLocaleStorageItem('developerStaffing', developerStaffing)
       saveLocaleStorageItem('serverlessStaffing', serverlessStaffing)
       saveLocaleStorageItem('mobileStaffing', mobileStaffing)
+      saveLocaleStorageItem('currentProjects', currentProjects)
     } else {
       this.setState({
         error,
@@ -116,6 +122,13 @@ class App extends Component {
           this.state.mobileStaffing
         ),
       })
+    } else if (type === 'projects') {
+      this.setState({
+        currentProjects: toggleByPeopleRow(
+          peopleRow,
+          this.state.currentProjects
+        ),
+      })
     }
   }
 
@@ -125,7 +138,8 @@ class App extends Component {
         <h1 className="brand">Captain Staffing</h1>
         <div className="content">
           {this.renderGoogle()}
-          {this.renderStaffing()}
+          {this.renderToggle()}
+          {this.state.tabToggle === 'staffing' ? this.renderStaffing() : this.renderProjects()}
         </div>
       </div>
     )
@@ -148,6 +162,33 @@ class App extends Component {
     >
       Reload
     </button>)
+  }
+
+  renderToggle = () => {
+    return (
+      <div>
+        <button
+          onClick={this.toggleStaffingTab}
+          className="btn"
+        >
+          Staffing view
+        </button>
+        <button
+          onClick={this.toggleProjectsTab}
+          className="btn"
+        >
+          Projects view
+        </button>
+      </div>
+    )
+  }
+
+  toggleStaffingTab = () => {
+    this.setState({ tabToggle: 'staffing' })
+  }
+
+  toggleProjectsTab = () => {
+    this.setState({ tabToggle: 'projects' })
   }
 
   renderStaffing() {
@@ -190,6 +231,27 @@ class App extends Component {
           <StaffingTable
             type="serverless"
             peopleStaffing={this.state.serverlessStaffing}
+            onRowClick={this.onStaffingTableRowClick.bind(this)}
+            weeks={this.state.weeks}
+          />
+        </div>
+      )
+    } else if (this.state.error) {
+      return <Alert error={this.state.error} />
+    } else if (this.state.googleAuthenticated) {
+      return <div className="loader" />
+    }
+    return null
+  }
+
+  renderProjects() {
+    if (this.state.architectStaffing) {
+      return (
+        <div>
+          <h1>Projects</h1>
+          <StaffingTable
+            type="projects"
+            peopleStaffing={this.state.currentProjects}
             onRowClick={this.onStaffingTableRowClick.bind(this)}
             weeks={this.state.weeks}
           />

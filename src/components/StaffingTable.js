@@ -59,6 +59,7 @@ export default class StaffingTable extends React.Component {
                   data={this.props.peopleStaffing}
                   onClick={this.props.onRowClick}
                   week={moment(week, 'DD/MM/YYYY').format('DD/MM')}
+                  projectView={this.props.type === 'projects'}
                 />
               }
               cellClassName={`staffingCell staffingCell--${i}`}
