@@ -31,9 +31,13 @@ export function load(callback) {
       }
     ).then(
       (response) => {
+        console.log('RAW RESPONSE', response);
         const rows = response.result.valueRanges[0].values || []
         let weeks = tail(tail(head(rows)))
+        console.log('WEEKS', weeks);
         const globalStaffing = buildStaffing(response.result.valueRanges[0].values)
+        console.log('GLOBAL staffing', globalStaffing);
+
         weeks = removePastWeeks(weeks)
 
         callback(
