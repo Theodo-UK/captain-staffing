@@ -40,7 +40,8 @@ export function buildWeekStaffing(rows, weekIndex) {
 }
 
 export function buildStaffing(peopleResponse) {
-  const weeks = tail(tail(head(peopleResponse)))
+  const weeks = peopleResponse[1].slice(2)
+  console.log('WEEKS in build staffing', weeks);
   const staffingArray = unMergeCells(tail(peopleResponse), 0)
   const staffingByName = groupBy(staffingArray, (someoneStaffing) => {
     return someoneStaffing[0]
