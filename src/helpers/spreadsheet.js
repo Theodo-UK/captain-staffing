@@ -33,7 +33,7 @@ export function load(callback) {
       (response) => {
         console.log('RAW RESPONSE', response);
         const rows = response.result.valueRanges[0].values || []
-        let weeks = tail(tail(head(rows)))
+        let weeks = rows[1].slice(2)
         console.log('WEEKS', weeks);
         const globalStaffing = buildStaffing(response.result.valueRanges[0].values)
         console.log('GLOBAL staffing', globalStaffing);
