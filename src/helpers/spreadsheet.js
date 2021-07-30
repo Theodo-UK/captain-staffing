@@ -26,51 +26,19 @@ export function load(callback) {
       {
         spreadsheetId: config.spreadsheetId,
         ranges: [
-          'People - Architects!A1:AV150',
-          'People - Agile Coaches!A1:AV150',
-          'People - Developers!A1:AV150',
-          'People - Serverless!A1:AV150',
-          'People - Mobile!A1:AV150',
-          'Current - Projects!A1:AV150',
+          'StaffingView!A1:AV2000'
         ],
       }
     ).then(
       (response) => {
         const rows = response.result.valueRanges[0].values || []
         let weeks = tail(tail(head(rows)))
-        // archi staffing
-        const architectStaffing = buildStaffing(response.result.valueRanges[0].values)
-        // ac staffing
-        const agileCoachInput = response.result.valueRanges[1].values
-        agileCoachInput.shift()
-        const agileCoachStaffing = buildStaffing(agileCoachInput)
-        // dev staffing
-        const developerInput = response.result.valueRanges[2].values
-        developerInput.shift()
-        const developerStaffing = buildStaffing(developerInput)
-        // serverless staffing
-        const serverlessInput = response.result.valueRanges[3].values
-        serverlessInput.shift()
-        const serverlessStaffing = buildStaffing(serverlessInput)
-        // mobile staffing
-        const mobileInput = response.result.valueRanges[4].values
-        mobileInput.shift()
-        const mobileStaffing = buildStaffing(mobileInput)
-        // mobile staffing
-        const projectsInput = response.result.valueRanges[5].values
-        projectsInput.shift()
-        const currentProjects = buildStaffing(projectsInput)
-
+        const globalStaffing = buildStaffing(response.result.valueRanges[0].values)
         weeks = removePastWeeks(weeks)
 
         callback(
           weeks,
-          architectStaffing,
-          agileCoachStaffing,
-          developerStaffing,
-          serverlessStaffing,
-          mobileStaffing,
-          currentProjects
+          globalStaffing,
         )
       },
       (response) => {
@@ -78,16 +46,4 @@ export function load(callback) {
       }
     )
   })
-}
-
-/**
- * Update a single cell value
- */
-export function updateCell(column, row, value, successCallback, errorCallback) {
-  window.gapi.client.sheets.spreadsheets.values.update({
-    spreadsheetId: config.spreadsheetId,
-    range: `Sheet1!${column}${row}`,
-    valueInputOption: 'USER_ENTERED',
-    values: [[value]],
-  }).then(successCallback, errorCallback)
 }

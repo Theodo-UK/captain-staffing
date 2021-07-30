@@ -24,12 +24,7 @@ class App extends Component {
       googleAuthenticated: null,
       tabToggle: 'staffing',
       weeks: loadLocalStorageItem('weeks'),
-      architectStaffing: loadLocalStorageItem('architectStaffing'),
-      agileCoachStaffing: loadLocalStorageItem('agileCoachStaffing'),
-      developerStaffing: loadLocalStorageItem('developerStaffing'),
-      serverlessStaffing: loadLocalStorageItem('serverlessStaffing'),
-      mobileStaffing: loadLocalStorageItem('mobileStaffing'),
-      currentProjects: loadLocalStorageItem('currentProjects'),
+      globalStaffing: loadLocalStorageItem('globalStaffing'),
     }
   }
 
@@ -47,38 +42,18 @@ class App extends Component {
 
   onGoogleLoad(
     weeks,
-    architectStaffing,
-    agileCoachStaffing,
-    developerStaffing,
-    serverlessStaffing,
-    mobileStaffing,
-    currentProjects,
+    globalStaffing,
     error
     ) {
     if (
-      architectStaffing &&
-      agileCoachStaffing &&
-      developerStaffing &&
-      serverlessStaffing &&
-      mobileStaffing &&
-      currentProjects
+      globalStaffing 
     ) {
       this.setState({
         weeks,
-        architectStaffing,
-        agileCoachStaffing,
-        developerStaffing,
-        serverlessStaffing,
-        mobileStaffing,
-        currentProjects,
+        globalStaffing,
       })
       saveLocaleStorageItem('weeks', weeks)
-      saveLocaleStorageItem('architectStaffing', architectStaffing)
-      saveLocaleStorageItem('agileCoachStaffing', agileCoachStaffing)
-      saveLocaleStorageItem('developerStaffing', developerStaffing)
-      saveLocaleStorageItem('serverlessStaffing', serverlessStaffing)
-      saveLocaleStorageItem('mobileStaffing', mobileStaffing)
-      saveLocaleStorageItem('currentProjects', currentProjects)
+      saveLocaleStorageItem('globalStaffing', globalStaffing)
     } else {
       this.setState({
         error,
@@ -87,49 +62,12 @@ class App extends Component {
   }
 
   onStaffingTableRowClick(peopleRow, type) {
-    if (type === 'architect') {
       this.setState({
-        architectStaffing: toggleByPeopleRow(
+        globalStaffing: toggleByPeopleRow(
           peopleRow,
-          this.state.architectStaffing
+          this.state.globalStaffing
         ),
       })
-    } else if (type === 'agileCoach') {
-      this.setState({
-        agileCoachStaffing: toggleByPeopleRow(
-          peopleRow,
-          this.state.agileCoachStaffing
-        ),
-      })
-    } else if (type === 'developer') {
-      this.setState({
-        developerStaffing: toggleByPeopleRow(
-          peopleRow,
-          this.state.developerStaffing
-        ),
-      })
-    } else if (type === 'serverless') {
-      this.setState({
-        developerStaffing: toggleByPeopleRow(
-          peopleRow,
-          this.state.serverlessStaffing
-        ),
-      })
-    } else if (type === 'mobile') {
-      this.setState({
-        mobileStaffing: toggleByPeopleRow(
-          peopleRow,
-          this.state.mobileStaffing
-        ),
-      })
-    } else if (type === 'projects') {
-      this.setState({
-        currentProjects: toggleByPeopleRow(
-          peopleRow,
-          this.state.currentProjects
-        ),
-      })
-    }
   }
 
   render() {
@@ -138,8 +76,7 @@ class App extends Component {
         <h1 className="brand">Captain Staffing</h1>
         <div className="content">
           {this.renderGoogle()}
-          {this.renderToggle()}
-          {this.state.tabToggle === 'staffing' ? this.renderStaffing() : this.renderProjects()}
+          {this.renderStaffing()}
         </div>
       </div>
     )
@@ -164,97 +101,18 @@ class App extends Component {
     </button>)
   }
 
-  renderToggle = () => {
-    return (
-      <div>
-        <button
-          onClick={this.toggleStaffingTab}
-          className="btn"
-        >
-          Staffing view
-        </button>
-        <button
-          onClick={this.toggleProjectsTab}
-          className="btn"
-        >
-          Projects view
-        </button>
-      </div>
-    )
-  }
-
-  toggleStaffingTab = () => {
-    this.setState({ tabToggle: 'staffing' })
-  }
-
-  toggleProjectsTab = () => {
-    this.setState({ tabToggle: 'projects' })
-  }
-
   renderStaffing() {
-    if (this.state.architectStaffing) {
+    if (this.state.globalStaffing) {
       return (
         <div>
-          <h1>Developers</h1>
+          <h1>Global Staffing</h1>
           <StaffingTable
-            type="developer"
-            peopleStaffing={this.state.developerStaffing}
+            type="globalStaffing"
+            peopleStaffing={this.state.globalStaffing}
             onRowClick={this.onStaffingTableRowClick.bind(this)}
             weeks={this.state.weeks}
           />
           <br />
-          <h1>Architects</h1>
-          <StaffingTable
-            type="architect"
-            peopleStaffing={this.state.architectStaffing}
-            onRowClick={this.onStaffingTableRowClick.bind(this)}
-            weeks={this.state.weeks}
-          />
-          <br />
-          <h1>📱 Mobile</h1>
-          <StaffingTable
-            type="mobile"
-            peopleStaffing={this.state.mobileStaffing}
-            onRowClick={this.onStaffingTableRowClick.bind(this)}
-            weeks={this.state.weeks}
-          />
-          <br />
-          <h1>Agile Coaches</h1>
-          <StaffingTable
-            type="agileCoach"
-            peopleStaffing={this.state.agileCoachStaffing}
-            onRowClick={this.onStaffingTableRowClick.bind(this)}
-            weeks={this.state.weeks}
-          />
-          <br />
-          <h1>🚀 Serverless</h1>
-          <StaffingTable
-            type="serverless"
-            peopleStaffing={this.state.serverlessStaffing}
-            onRowClick={this.onStaffingTableRowClick.bind(this)}
-            weeks={this.state.weeks}
-          />
-        </div>
-      )
-    } else if (this.state.error) {
-      return <Alert error={this.state.error} />
-    } else if (this.state.googleAuthenticated) {
-      return <div className="loader" />
-    }
-    return null
-  }
-
-  renderProjects() {
-    if (this.state.architectStaffing) {
-      return (
-        <div>
-          <h1>Projects</h1>
-          <StaffingTable
-            type="projects"
-            peopleStaffing={this.state.currentProjects}
-            onRowClick={this.onStaffingTableRowClick.bind(this)}
-            weeks={this.state.weeks}
-          />
         </div>
       )
     } else if (this.state.error) {
