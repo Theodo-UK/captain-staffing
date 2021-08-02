@@ -19,7 +19,7 @@ const reload = () => {
 const commonFilterStyles = {
   padding: '12px',
   marginRight: '10px',
-  pointer: 'cursor',
+  cursor: 'pointer',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -38,6 +38,12 @@ const unselectedFilterStyle = {
   backgroundColor: 'white',
   color: '#004262',
   opacity: '0.8'
+};
+
+const customFilterStyle = {
+  ...commonFilterStyles,
+  backgroundColor: '#33A5FF',
+  color: 'white',
 };
 
 class App extends Component {
@@ -67,6 +73,20 @@ class App extends Component {
 
   toggleFilter(targetCompany) {
     const newCompanies = {...this.state.companies, [targetCompany]: !this.state.companies[targetCompany]}
+    this.setState({
+      companies: newCompanies
+    });
+  }
+
+  toggleAllActive(){
+    const newCompanies = Object.keys(this.state.companies).reduce((acc, company) => { acc[company] = true; return acc; }, {});
+    this.setState({
+      companies: newCompanies
+    });
+  }
+
+  toggleNoneActive(){
+    const newCompanies = Object.keys(this.state.companies).reduce((acc, company) => { acc[company] = false; return acc; }, {});
     this.setState({
       companies: newCompanies
     });
@@ -152,10 +172,16 @@ class App extends Component {
                 </ div>
               )
             })}
+            <div style={customFilterStyle} onClick={this.toggleAllActive.bind(this)}>
+              Toggle All
+            </div>
+            <div style={customFilterStyle} onClick={this.toggleNoneActive.bind(this)}>
+              Toggle None
+            </div>
           </div>
           <StaffingTable
             type="globalStaffing"
-            peopleStaffing={this.state.globalStaffing}
+            peopleStaffing={this.state.globalStaffing.filter(staffing => this.state.companies[staffing.company])}
             onRowClick={this.onStaffingTableRowClick.bind(this)}
             weeks={this.state.weeks}
           />
