@@ -34,11 +34,22 @@
 
 .header__main {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
 }
 
 .header__main h1 {
   margin-right: 20px;
+}
+
+.filter-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  padding-left: 30px;
+  padding-right: 30px;
+  margin-top: 12px;
+  margin-bottom: 12px;
 }

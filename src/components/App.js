@@ -16,6 +16,30 @@ const reload = () => {
   location.reload()
 }
 
+const commonFilterStyles = {
+  padding: '12px',
+  marginRight: '10px',
+  pointer: 'cursor',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  borderRadius: '4px',
+  border: '3px solid #004262',
+};
+
+const selectedFilterStyle = {
+  ...commonFilterStyles,
+  backgroundColor: '#004262',
+  color: 'white',
+};
+
+const unselectedFilterStyle = {
+  ...commonFilterStyles,
+  backgroundColor: 'white',
+  color: '#004262',
+  opacity: '0.8'
+};
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -41,6 +65,13 @@ class App extends Component {
     })
   }
 
+  toggleFilter(targetCompany) {
+    const newCompanies = {...this.state.companies, [targetCompany]: !this.state.companies[targetCompany]}
+    this.setState({
+      companies: newCompanies
+    });
+  }
+
   onGoogleLoad(
     weeks,
     globalStaffing,
@@ -50,14 +81,15 @@ class App extends Component {
     if (
       globalStaffing 
     ) {
+      const companiesSelection = companies.reduce((acc, company) => { acc[company] = true; return acc; }, {});
       this.setState({
         weeks,
-        companies,
+        companies: companiesSelection,
         globalStaffing,
       })
       saveLocaleStorageItem('weeks', weeks)
       saveLocaleStorageItem('globalStaffing', globalStaffing)
-      saveLocaleStorageItem('companies', companies)
+      saveLocaleStorageItem('companies', companiesSelection)
     } else {
       this.setState({
         error,
@@ -112,6 +144,15 @@ class App extends Component {
     if (this.state.globalStaffing) {
       return (
         <div>
+          <div className="filter-container">
+            {Object.entries(this.state.companies).map(([companyName, isSelected]) => {
+              return (
+                <div key={companyName} style={isSelected ? selectedFilterStyle : unselectedFilterStyle} onClick={()=>{ this.toggleFilter(companyName);}}>
+                  {companyName}
+                </ div>
+              )
+            })}
+          </div>
           <StaffingTable
             type="globalStaffing"
             peopleStaffing={this.state.globalStaffing}
