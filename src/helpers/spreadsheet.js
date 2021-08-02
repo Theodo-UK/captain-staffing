@@ -31,18 +31,24 @@ export function load(callback) {
       }
     ).then(
       (response) => {
-        console.log('RAW RESPONSE', response);
+        console.log('[Response]', response);
+
         const rows = response.result.valueRanges[0].values || []
-        let weeks = rows[1].slice(2)
-        console.log('WEEKS', weeks);
+        let weeks = rows[1].slice(3)
+
         const globalStaffing = buildStaffing(response.result.valueRanges[0].values)
-        console.log('GLOBAL staffing', globalStaffing);
+        console.log('[Staffing]', globalStaffing);
+
+        const companies = Array.from(new Set(globalStaffing.map(staffing => staffing.company).filter(company => company !== undefined && company !== 'BU')));
+        console.log('[Companies]', companies);
 
         weeks = removePastWeeks(weeks)
+        console.log('[Weeks]', weeks);
 
         callback(
           weeks,
           globalStaffing,
+          companies
         )
       },
       (response) => {

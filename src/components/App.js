@@ -23,6 +23,7 @@ class App extends Component {
     this.state = {
       googleAuthenticated: null,
       tabToggle: 'staffing',
+      companies: loadLocalStorageItem('companies'),
       weeks: loadLocalStorageItem('weeks'),
       globalStaffing: loadLocalStorageItem('globalStaffing'),
     }
@@ -43,6 +44,7 @@ class App extends Component {
   onGoogleLoad(
     weeks,
     globalStaffing,
+    companies,
     error
     ) {
     if (
@@ -50,10 +52,12 @@ class App extends Component {
     ) {
       this.setState({
         weeks,
+        companies,
         globalStaffing,
       })
       saveLocaleStorageItem('weeks', weeks)
       saveLocaleStorageItem('globalStaffing', globalStaffing)
+      saveLocaleStorageItem('companies', companies)
     } else {
       this.setState({
         error,
@@ -75,7 +79,10 @@ class App extends Component {
       <div className="app">
         <h1 className="brand">Captain Staffing</h1>
         <div className="content">
-          {this.renderGoogle()}
+          <div className="header__main">
+            <h1>Global Staffing</h1>
+            {this.renderGoogle()}
+          </div>
           {this.renderStaffing()}
         </div>
       </div>
@@ -105,7 +112,6 @@ class App extends Component {
     if (this.state.globalStaffing) {
       return (
         <div>
-          <h1>Global Staffing</h1>
           <StaffingTable
             type="globalStaffing"
             peopleStaffing={this.state.globalStaffing}

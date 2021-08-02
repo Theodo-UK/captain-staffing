@@ -1,5 +1,18 @@
-import { tail, forEach, head, map, groupBy, filter } from 'lodash'
+import { tail, forEach, map, groupBy, filter } from 'lodash'
 import moment from 'moment'
+
+const getCompany = (rows) => {
+  if(Array.isArray(rows)){
+    const companies = Array.from(
+      new Set(
+        rows.map(row => row[1]).filter(item => item !== undefined)
+      )
+    );
+    if(companies.length === 0) return 'Other';
+    return companies[0];
+  }
+  return 'Other';
+}
 
 export function unMergeCells(data, columnIndex) {
   let buffer = null
@@ -28,7 +41,7 @@ export function buildWeekStaffing(rows, weekIndex) {
 
   forEach(rows, (row) => {
     const projectStaffing = getFloat(row[weekIndex + 2])
-    weekStaffing[row[1]] = projectStaffing
+    weekStaffing[row[2]] = projectStaffing
 
     if (projectStaffing !== null) {
       total += projectStaffing
@@ -40,8 +53,7 @@ export function buildWeekStaffing(rows, weekIndex) {
 }
 
 export function buildStaffing(peopleResponse) {
-  const weeks = peopleResponse[1].slice(2)
-  console.log('WEEKS in build staffing', weeks);
+  const weeks = peopleResponse[1].slice(3)
   const staffingArray = unMergeCells(tail(peopleResponse), 0)
   const staffingByName = groupBy(staffingArray, (someoneStaffing) => {
     return someoneStaffing[0]
@@ -55,13 +67,14 @@ export function buildStaffing(peopleResponse) {
     })
 
     const projects = map(rows, (row) => {
-      return row[1]
+      return row[2]
     })
 
     return {
       name,
       staffing,
       projects,
+      company: getCompany(rows)
     }
   })
 }
