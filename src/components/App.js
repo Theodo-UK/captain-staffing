@@ -181,7 +181,8 @@ class App extends Component {
           </div>
           <StaffingTable
             type="globalStaffing"
-            peopleStaffing={this.state.globalStaffing.filter(staffing => this.state.companies[staffing.company])}
+            // peopleStaffing={this.state.globalStaffing.filter(staffing => this.state.companies[staffing.company])}
+            peopleStaffing={this.state.globalStaffing}
             onRowClick={this.onStaffingTableRowClick.bind(this)}
             weeks={this.state.weeks}
           />
