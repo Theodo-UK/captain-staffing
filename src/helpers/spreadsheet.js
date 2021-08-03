@@ -1,4 +1,4 @@
-import { tail, head } from 'lodash'
+import { orderBy } from 'lodash'
 
 import config from '../configs/config'
 import { buildStaffing, removePastWeeks } from './formatter'
@@ -36,7 +36,8 @@ export function load(callback) {
         const rows = response.result.valueRanges[0].values || []
         let weeks = rows[1].slice(3)
 
-        const globalStaffing = buildStaffing(response.result.valueRanges[0].values)
+        let globalStaffing = buildStaffing(response.result.valueRanges[0].values)
+        globalStaffing = orderBy(globalStaffing, ['company', 'name']);
         console.log('[Staffing]', globalStaffing);
 
         const companies = Array.from(new Set(globalStaffing.map(staffing => staffing.company).filter(company => company !== undefined && company !== 'BU')));

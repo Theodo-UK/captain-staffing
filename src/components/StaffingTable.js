@@ -39,6 +39,17 @@ export default class StaffingTable extends React.Component {
         />
         <Column
           cell={
+            <HeaderCell
+              data={this.props.peopleStaffing}
+              onClick={this.props.onRowClick}
+              field="company"
+            />
+          }
+          width={120}
+          fixed
+        />
+        <Column
+          cell={
             <ProjectCell
               data={this.props.peopleStaffing}
               onClick={this.props.onRowClick}
