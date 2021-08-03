@@ -15,11 +15,11 @@ const getColor = (row, week) => {
   if (staffedDays === 5) { // fully staffed
     return '#81C784' // Green
   }
-  if (staffedDays > 1) { // partially staffed
-    return '#EF9A9A' // Light Red
-  }
   if (staffedDays > 5) { // overstaffed
     return '#FF9800' // Orange
+  }
+  if (staffedDays > 1) { // partially staffed
+    return '#EF9A9A' // Light Red
   }
   return '#EF5350' // red
 }
