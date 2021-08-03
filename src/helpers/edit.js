@@ -18,6 +18,7 @@ export function toggleByPeopleRow(peopleRow, data) {
         return {
           name: '',
           staffing: data[index].staffing,
+          company: data[index].company,
           project,
           _name: data[index].name,
         }
