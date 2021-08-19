@@ -40,7 +40,7 @@ export function buildWeekStaffing(rows, weekIndex) {
   let total = null
 
   forEach(rows, (row) => {
-    const projectStaffing = getFloat(row[weekIndex + 2])
+    const projectStaffing = getFloat(row[weekIndex + 3])
     weekStaffing[row[2]] = projectStaffing
 
     if (projectStaffing !== null) {
