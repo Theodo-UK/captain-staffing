@@ -53,9 +53,9 @@ class App extends Component {
     this.state = {
       googleAuthenticated: null,
       tabToggle: 'staffing',
-      companies: loadLocalStorageItem('companies'),
-      weeks: loadLocalStorageItem('weeks'),
-      globalStaffing: loadLocalStorageItem('globalStaffing'),
+      companies: undefined, //loadLocalStorageItem('companies'),
+      weeks: undefined, //loadLocalStorageItem('weeks'),
+      globalStaffing: undefined, //loadLocalStorageItem('globalStaffing'),
     }
   }
 
