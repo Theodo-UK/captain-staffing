@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 import { toggleByPeopleRow } from '../helpers/edit'
 import {
   clearLocaleStorage,
-  loadLocalStorageItem,
   saveLocaleStorageItem,
 } from '../helpers/localStorage'
 
@@ -11,41 +10,18 @@ import Alert from './Alert'
 import StaffingTable from './StaffingTable'
 import CaptainGoogle from './CaptainGoogle'
 
+import {
+  companySelectedFilterStyle,
+  companyUnselectedFilterStyle,
+  positionSelectedFilterStyle,
+  positionUnselectedFilterStyle,
+  customFilterStyle,
+} from './App.styles';
+
 const reload = () => {
   clearLocaleStorage()
   location.reload()
 }
-
-const commonFilterStyles = {
-  padding: '12px',
-  marginRight: '10px',
-  cursor: 'pointer',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  borderRadius: '4px',
-  border: '3px solid #004262',
-};
-
-const selectedFilterStyle = {
-  ...commonFilterStyles,
-  backgroundColor: '#004262',
-  color: 'white',
-};
-
-const unselectedFilterStyle = {
-  ...commonFilterStyles,
-  backgroundColor: 'white',
-  color: '#004262',
-  opacity: '0.8'
-};
-
-const customFilterStyle = {
-  ...commonFilterStyles,
-  backgroundColor: '#33A5FF',
-  color: 'white',
-};
-
 class App extends Component {
   constructor(props) {
     super(props)
@@ -53,9 +29,10 @@ class App extends Component {
     this.state = {
       googleAuthenticated: null,
       tabToggle: 'staffing',
-      companies: undefined, //loadLocalStorageItem('companies'),
-      weeks: undefined, //loadLocalStorageItem('weeks'),
-      globalStaffing: undefined, //loadLocalStorageItem('globalStaffing'),
+      companies: undefined,
+      positions: undefined,
+      weeks: undefined,
+      globalStaffing: undefined,
     }
   }
 
@@ -71,24 +48,36 @@ class App extends Component {
     })
   }
 
-  toggleFilter(targetCompany) {
+  toggleCompanyFilter(targetCompany) {
     const newCompanies = {...this.state.companies, [targetCompany]: !this.state.companies[targetCompany]}
     this.setState({
       companies: newCompanies
     });
   }
 
+  togglePositionFilter(targetPosition) {
+    const newPositions = {...this.state.positions, [targetPosition]: !this.state.positions[targetPosition]}
+    this.setState({
+      positions: newPositions
+    });
+  }
+
   toggleAllActive(){
     const newCompanies = Object.keys(this.state.companies).reduce((acc, company) => { acc[company] = true; return acc; }, {});
+    const newPositions = Object.keys(this.state.positions).reduce((acc, position) => { acc[position] = true; return acc; }, {});
+
     this.setState({
-      companies: newCompanies
+      companies: newCompanies,
+      positions: newPositions
     });
   }
 
   toggleNoneActive(){
     const newCompanies = Object.keys(this.state.companies).reduce((acc, company) => { acc[company] = false; return acc; }, {});
+    const newPositions = Object.keys(this.state.positions).reduce((acc, position) => { acc[position] = false; return acc; }, {});
     this.setState({
-      companies: newCompanies
+      companies: newCompanies,
+      positions: newPositions
     });
   }
 
@@ -96,20 +85,28 @@ class App extends Component {
     weeks,
     globalStaffing,
     companies,
+    positions,
     error
     ) {
     if (
       globalStaffing 
     ) {
       const companiesSelection = companies.reduce((acc, company) => { acc[company] = true; return acc; }, {});
+      const positionSelection = positions.reduce((acc, position) => { acc[position] = true; return acc; }, {});
+      console.log('LALA', positionSelection, positions)
+
       this.setState({
         weeks,
         companies: companiesSelection,
+        positions: positionSelection,
         globalStaffing,
+
       })
       saveLocaleStorageItem('weeks', weeks)
       saveLocaleStorageItem('globalStaffing', globalStaffing)
       saveLocaleStorageItem('companies', companiesSelection)
+      saveLocaleStorageItem('positions', positionSelection)
+
     } else {
       this.setState({
         error,
@@ -129,12 +126,13 @@ class App extends Component {
   render() {
     return (
       <div className="app">
-        <h1 className="brand">Captain Staffing</h1>
-        <div className="content">
-          <div className="header__main">
-            <h1>Global Staffing</h1>
+        <div className="app__bar">
+          <h1 className="brand">Captain Staffing</h1>
+          <div className="loader__container">
             {this.renderGoogle()}
           </div>
+        </div>
+        <div className="content">
           {this.renderStaffing()}
         </div>
       </div>
@@ -165,9 +163,16 @@ class App extends Component {
       return (
         <div>
           <div className="filter-container">
+          {Object.entries(this.state.positions).map(([positionName, isSelected]) => {
+              return (
+                <div key={positionName} style={isSelected ? positionSelectedFilterStyle : positionUnselectedFilterStyle} onClick={()=>{ this.togglePositionFilter(positionName);}}>
+                  {positionName}
+                </ div>
+              )
+            })}
             {Object.entries(this.state.companies).map(([companyName, isSelected]) => {
               return (
-                <div key={companyName} style={isSelected ? selectedFilterStyle : unselectedFilterStyle} onClick={()=>{ this.toggleFilter(companyName);}}>
+                <div key={companyName} style={isSelected ? companySelectedFilterStyle : companyUnselectedFilterStyle} onClick={()=>{ this.toggleCompanyFilter(companyName);}}>
                   {companyName}
                 </ div>
               )
@@ -181,7 +186,7 @@ class App extends Component {
           </div>
           <StaffingTable
             type="globalStaffing"
-            peopleStaffing={this.state.globalStaffing.filter(staffing => this.state.companies[staffing.company])}
+            peopleStaffing={this.state.globalStaffing.filter(staffing => this.state.companies[staffing.company]).filter(staffing => this.state.positions[staffing.position])}
             onRowClick={this.onStaffingTableRowClick.bind(this)}
             weeks={this.state.weeks}
           />

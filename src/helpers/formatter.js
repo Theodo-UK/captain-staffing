@@ -14,6 +14,19 @@ const getCompany = (rows) => {
   return 'Other';
 }
 
+const getPosition = (rows) => {
+  if(Array.isArray(rows)){
+    const positions = Array.from(
+      new Set(
+        rows.map(row => row[2]).filter(item => item !== undefined)
+      )
+    );
+    if(positions.length === 0) return 'Other';
+    return positions[0] === 'Dev' ? 'Dev' : 'Lead';
+  }
+  return 'Other';
+}
+
 export function unMergeCells(data, columnIndex) {
   let buffer = null
 
@@ -40,8 +53,8 @@ export function buildWeekStaffing(rows, weekIndex) {
   let total = null
 
   forEach(rows, (row) => {
-    const projectStaffing = getFloat(row[weekIndex + 3])
-    weekStaffing[row[2]] = projectStaffing
+    const projectStaffing = getFloat(row[weekIndex + 4])
+    weekStaffing[row[3]] = projectStaffing
 
     if (projectStaffing !== null) {
       total += projectStaffing
@@ -53,7 +66,7 @@ export function buildWeekStaffing(rows, weekIndex) {
 }
 
 export function buildStaffing(peopleResponse) {
-  const weeks = peopleResponse[1].slice(3)
+  const weeks = peopleResponse[1].slice(4)
   const staffingArray = unMergeCells(tail(peopleResponse), 0)
   const staffingByName = groupBy(staffingArray, (someoneStaffing) => {
     return someoneStaffing[0]
@@ -67,14 +80,15 @@ export function buildStaffing(peopleResponse) {
     })
 
     const projects = map(rows, (row) => {
-      return row[2]
+      return row[3]
     })
 
     return {
       name,
       staffing,
       projects,
-      company: getCompany(rows)
+      company: getCompany(rows),
+      position: getPosition(rows)
     }
   })
 }

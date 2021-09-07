@@ -26,6 +26,7 @@ export default class StaffingTable extends React.Component {
         headerHeight={40}
       >
         <Column
+          header="User"
           cell={
             <HeaderCell
               data={this.props.peopleStaffing}
@@ -38,6 +39,7 @@ export default class StaffingTable extends React.Component {
           fixed
         />
         <Column
+          header="Company"
           cell={
             <HeaderCell
               data={this.props.peopleStaffing}
@@ -49,6 +51,7 @@ export default class StaffingTable extends React.Component {
           fixed
         />
         <Column
+          header="Project"
           cell={
             <ProjectCell
               data={this.props.peopleStaffing}

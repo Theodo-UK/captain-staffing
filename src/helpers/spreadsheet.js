@@ -34,7 +34,7 @@ export function load(callback) {
         console.log('[Response]', response);
 
         const rows = response.result.valueRanges[0].values || []
-        let weeks = rows[1].slice(3)
+        let weeks = rows[1].slice(4)
 
         let globalStaffing = buildStaffing(response.result.valueRanges[0].values)
         globalStaffing = orderBy(globalStaffing, ['company', 'name']);
@@ -43,13 +43,17 @@ export function load(callback) {
         const companies = Array.from(new Set(globalStaffing.map(staffing => staffing.company).filter(company => company !== undefined && company !== 'BU')));
         console.log('[Companies]', companies);
 
+        const positions = Array.from(new Set(globalStaffing.map(staffing => staffing.position).filter(position => position !== undefined && position !== 'Position')));
+        console.log('[Positions]', positions);
+
         weeks = removePastWeeks(weeks)
         console.log('[Weeks]', weeks);
 
         callback(
           weeks,
           globalStaffing,
-          companies
+          companies,
+          positions
         )
       },
       (response) => {
