@@ -8,6 +8,10 @@ import moment from 'moment'
 
 import 'fixed-data-table/dist/fixed-data-table.css'
 
+const tableContainerStyle = {
+  display: 'flex',
+  flexGrow: 1,
+};
 export default class StaffingTable extends React.Component {
   static propTypes = {
     weeks: React.PropTypes.array.isRequired,
@@ -17,71 +21,74 @@ export default class StaffingTable extends React.Component {
   }
 
   render() {
+    const lala = (e) => { console.log(e.getBoundingClientRect().height); }
     return (
-      <Table
-        width={window.innerWidth - 20}
-        rowsCount={this.props.peopleStaffing ? this.props.peopleStaffing.length : 0}
-        rowHeight={30}
-        maxHeight={1000}
-        headerHeight={40}
-      >
-        <Column
-          header="User"
-          cell={
-            <HeaderCell
-              data={this.props.peopleStaffing}
-              onClick={this.props.onRowClick}
-              type={this.props.type}
-              field="name"
-            />
-          }
-          width={120}
-          fixed
-        />
-        <Column
-          header="Company"
-          cell={
-            <HeaderCell
-              data={this.props.peopleStaffing}
-              onClick={this.props.onRowClick}
-              field="company"
-            />
-          }
-          width={120}
-          fixed
-        />
-        <Column
-          header="Project"
-          cell={
-            <ProjectCell
-              data={this.props.peopleStaffing}
-              onClick={this.props.onRowClick}
-              field="project"
-            />
-          }
-          width={120}
-          fixed
-        />
-        {this.props.weeks.map((week, i) => {
-          return (
-            <Column
-              key={i}
-              header={<Cell>{moment(week, 'DD/MM/YYYY').format('DD/MM')}</Cell>}
-              headerClassName={`staffingHeaderCell staffingHeaderCell--${i}`}
-              cell={
-                <StaffingCell
-                  data={this.props.peopleStaffing}
-                  onClick={this.props.onRowClick}
-                  week={moment(week, 'DD/MM/YYYY').format('DD/MM')}
-                  projectView={this.props.type === 'projects'}
-                />
-              }
-              cellClassName={`staffingCell staffingCell--${i}`}
-              width={60}
-            />
-          )
-        })}
-      </Table>
+      <div style={tableContainerStyle} ref={lala}>
+        <Table
+          width={window.innerWidth - 20}
+          rowsCount={this.props.peopleStaffing ? this.props.peopleStaffing.length : 0}
+          rowHeight={30}
+          maxHeight={500}
+          headerHeight={40}
+        >
+          <Column
+            header="User"
+            cell={
+              <HeaderCell
+                data={this.props.peopleStaffing}
+                onClick={this.props.onRowClick}
+                type={this.props.type}
+                field="name"
+              />
+            }
+            width={120}
+            fixed
+          />
+          <Column
+            header="Company"
+            cell={
+              <HeaderCell
+                data={this.props.peopleStaffing}
+                onClick={this.props.onRowClick}
+                field="company"
+              />
+            }
+            width={120}
+            fixed
+          />
+          <Column
+            header="Project"
+            cell={
+              <ProjectCell
+                data={this.props.peopleStaffing}
+                onClick={this.props.onRowClick}
+                field="project"
+              />
+            }
+            width={120}
+            fixed
+          />
+          {this.props.weeks.map((week, i) => {
+            return (
+              <Column
+                key={i}
+                header={<Cell>{moment(week, 'DD/MM/YYYY').format('DD/MM')}</Cell>}
+                headerClassName={`staffingHeaderCell staffingHeaderCell--${i}`}
+                cell={
+                  <StaffingCell
+                    data={this.props.peopleStaffing}
+                    onClick={this.props.onRowClick}
+                    week={moment(week, 'DD/MM/YYYY').format('DD/MM')}
+                    projectView={this.props.type === 'projects'}
+                  />
+                }
+                cellClassName={`staffingCell staffingCell--${i}`}
+                width={60}
+              />
+            )
+          })}
+        </Table>
+      </div>
     )
   }
 }
