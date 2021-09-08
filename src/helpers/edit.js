@@ -19,6 +19,7 @@ export function toggleByPeopleRow(peopleRow, data) {
           name: '',
           staffing: data[index].staffing,
           company: data[index].company,
+          position:  data[index].position,
           project,
           _name: data[index].name,
         }
