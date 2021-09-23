@@ -11,7 +11,7 @@ const columnToIndex = {
 const getArrayFromColumnId = (rows, index) => {
   return Array.from(
     new Set(
-      rows.map(row => row[index]).filter(item => item !== undefined),
+      rows.map((row) => { return row[index] }).filter((item) => { return item !== undefined }),
     ),
   )
 }

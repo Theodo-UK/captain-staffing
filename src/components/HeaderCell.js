@@ -2,7 +2,6 @@ import React from 'react'
 import { Cell } from 'fixed-data-table'
 
 export default class HeaderCell extends React.Component {
-
   static propTypes = {
     data: React.PropTypes.array.isRequired,
     field: React.PropTypes.string,
