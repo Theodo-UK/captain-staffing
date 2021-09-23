@@ -57,3 +57,8 @@
   margin-bottom: 12px;
   justify-content: center;
 }
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}

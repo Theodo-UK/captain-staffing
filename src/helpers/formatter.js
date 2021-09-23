@@ -2,12 +2,13 @@ import { tail, forEach, map, groupBy, filter } from 'lodash'
 import moment from 'moment'
 
 const columnToIndex = {
-  company: 1,
-  position: 2,
-  project: 3,
+  id: 1,
+  company: 2,
+  position: 3,
+  project: 4,
 }
 
-const getArrayForColumn = (rows, index) => {
+const getArrayFromColumnId = (rows, index) => {
   return Array.from(
     new Set(
       rows.map(row => row[index]).filter(item => item !== undefined),
@@ -17,7 +18,7 @@ const getArrayForColumn = (rows, index) => {
 
 const getCompany = (rows) => {
   if (Array.isArray(rows)) {
-    const companies = getArrayForColumn(rows, columnToIndex.company)
+    const companies = getArrayFromColumnId(rows, columnToIndex.company)
     if (companies.length === 0) return 'Other'
     return companies[0]
   }
@@ -26,9 +27,18 @@ const getCompany = (rows) => {
 
 const getPosition = (rows) => {
   if (Array.isArray(rows)) {
-    const positions = getArrayForColumn(rows, columnToIndex.position)
+    const positions = getArrayFromColumnId(rows, columnToIndex.position)
     if (positions.length === 0) return 'Other'
     return positions[0] === 'Dev' ? 'Dev' : 'Lead'
+  }
+  return 'Other'
+}
+
+const getId = (rows) => {
+  if (Array.isArray(rows)) {
+    const ids = getArrayFromColumnId(rows, columnToIndex.id)
+    if (ids.length === 0) return 'Other'
+    return ids[0]
   }
   return 'Other'
 }
@@ -95,6 +105,7 @@ export function buildStaffing(peopleResponse) {
       projects,
       company: getCompany(rows),
       position: getPosition(rows),
+      id: getId(rows),
     }
   })
 }

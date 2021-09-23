@@ -13,13 +13,22 @@ export default class HeaderCell extends React.Component {
 
   render() {
     const { rowIndex, field, data, type, ...props } = this.props
+    if (field !== 'name') {
+      return (
+        <Cell
+          {...props}
+          onClick={this.props.onClick.bind(this, data[rowIndex], type)}
+          className="clickable"
+        >
+          { data[rowIndex][field] }
+        </Cell>
+      )
+    }
     return (
       <Cell
         {...props}
-        onClick={this.props.onClick.bind(this, data[rowIndex], type)}
-        className="clickable"
       >
-        { data[rowIndex][field] }
+        <a href={`https://app.pickyourskills.com/profile/${data[rowIndex].id}`}> { data[rowIndex][field] }</a>
       </Cell>
     )
   }
