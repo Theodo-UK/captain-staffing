@@ -58,7 +58,7 @@ export default class StaffingCell extends React.Component {
     week: React.PropTypes.string,
     rowIndex: React.PropTypes.number,
     onClick: React.PropTypes.func.isRequired,
-    projectView: React.PropTypes.boolean,
+    projectView: React.PropTypes.any,
   }
 
   render() {

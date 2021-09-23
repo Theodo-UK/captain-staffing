@@ -20,7 +20,7 @@ import {
 
 const reload = () => {
   clearLocaleStorage()
-  location.reload()
+  window.location.reload()
 }
 class App extends Component {
   constructor(props) {
