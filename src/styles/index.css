@@ -13,3 +13,8 @@ body {
 .clickable {
   cursor: pointer;
 }
+
+.pickYourSkillLink:hover {
+  font-weight: 600;
+  color: purple;
+}

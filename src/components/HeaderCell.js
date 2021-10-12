@@ -26,6 +26,8 @@ export default class HeaderCell extends React.Component {
           <Cell {...props}>
             <a
               href={`https://app.pickyourskills.com/profile/${data[rowIndex].id}`}
+              target="_blank"
+              className="pickYourSkillLink"
             >
               {data[rowIndex][field]}
             </a>
