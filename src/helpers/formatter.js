@@ -1,30 +1,46 @@
 import { tail, forEach, map, groupBy, filter } from 'lodash'
 import moment from 'moment'
 
+const columnToIndex = {
+  id: 1,
+  company: 2,
+  position: 3,
+  project: 4,
+}
+
+const getArrayFromColumnId = (rows, index) => {
+  return Array.from(
+    new Set(
+      rows.map((row) => { return row[index] }).filter((item) => { return item !== undefined }),
+    ),
+  )
+}
+
 const getCompany = (rows) => {
-  if(Array.isArray(rows)){
-    const companies = Array.from(
-      new Set(
-        rows.map(row => row[1]).filter(item => item !== undefined)
-      )
-    );
-    if(companies.length === 0) return 'Other';
-    return companies[0];
+  if (Array.isArray(rows)) {
+    const companies = getArrayFromColumnId(rows, columnToIndex.company)
+    if (companies.length === 0) return 'Other'
+    return companies[0]
   }
-  return 'Other';
+  return 'Other'
 }
 
 const getPosition = (rows) => {
-  if(Array.isArray(rows)){
-    const positions = Array.from(
-      new Set(
-        rows.map(row => row[2]).filter(item => item !== undefined)
-      )
-    );
-    if(positions.length === 0) return 'Other';
-    return positions[0] === 'Dev' ? 'Dev' : 'Lead';
+  if (Array.isArray(rows)) {
+    const positions = getArrayFromColumnId(rows, columnToIndex.position)
+    if (positions.length === 0) return 'Other'
+    return positions[0] === 'Dev' ? 'Dev' : 'Lead'
   }
-  return 'Other';
+  return 'Other'
+}
+
+const getId = (rows) => {
+  if (Array.isArray(rows)) {
+    const ids = getArrayFromColumnId(rows, columnToIndex.id)
+    if (ids.length === 0) return 'Other'
+    return ids[0]
+  }
+  return 'Other'
 }
 
 export function unMergeCells(data, columnIndex) {
@@ -54,7 +70,7 @@ export function buildWeekStaffing(rows, weekIndex) {
 
   forEach(rows, (row) => {
     const projectStaffing = getFloat(row[weekIndex + 4])
-    weekStaffing[row[3]] = projectStaffing
+    weekStaffing[row[columnToIndex.project]] = projectStaffing
 
     if (projectStaffing !== null) {
       total += projectStaffing
@@ -80,7 +96,7 @@ export function buildStaffing(peopleResponse) {
     })
 
     const projects = map(rows, (row) => {
-      return row[3]
+      return row[columnToIndex.project]
     })
 
     return {
@@ -88,7 +104,8 @@ export function buildStaffing(peopleResponse) {
       staffing,
       projects,
       company: getCompany(rows),
-      position: getPosition(rows)
+      position: getPosition(rows),
+      id: getId(rows),
     }
   })
 }
