@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import _ from 'lodash'
 import moment from 'moment'
 
 import { toggleByPeopleRow } from '../helpers/edit'
@@ -17,6 +18,7 @@ import {
   positionSelectedFilterStyle,
   positionUnselectedFilterStyle,
   customFilterStyle,
+  sortButtonFilterStyle,
 } from './App.styles';
 
 const reload = () => {
@@ -94,10 +96,8 @@ class App extends Component {
 
   toggleNoneActive(){
     const newCompanies = Object.keys(this.state.companies).reduce((acc, company) => { acc[company] = false; return acc; }, {});
-    const newPositions = Object.keys(this.state.positions).reduce((acc, position) => { acc[position] = false; return acc; }, {});
     this.setState({
       companies: newCompanies,
-      positions: newPositions
     });
   }
 
@@ -181,7 +181,7 @@ class App extends Component {
 
   changeStaffingList() {
     this.setState({
-      globalStaffing: this.state.isSortedByImportance ? _.orderBy(this.state.globalStaffing, ['company'],['asc']) : _.orderBy(this.state.globalStaffing, ['importance'],['asc']),
+      globalStaffing: this.state.isSortedByImportance ? _.orderBy(this.state.globalStaffing, ['company', 'name'],['asc', 'asc']) : _.orderBy(this.state.globalStaffing, ['importance'],['asc']),
       isSortedByImportance: !this.state.isSortedByImportance
     });
   }
@@ -211,7 +211,7 @@ class App extends Component {
             <div style={customFilterStyle} onClick={this.toggleNoneActive.bind(this)}>
               Toggle None
             </div>
-            <button onClick={this.changeStaffingList.bind(this)} style={customFilterStyle}>
+            <button onClick={this.changeStaffingList.bind(this)} style={sortButtonFilterStyle}>
               {this.state.isSortedByImportance ? "Sort by company" : "Sort by importance" }
             </button>
           </div>
