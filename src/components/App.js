@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import moment from 'moment'
 
 import { toggleByPeopleRow } from '../helpers/edit'
 import {
@@ -22,6 +23,24 @@ const reload = () => {
   clearLocaleStorage()
   window.location.reload()
 }
+
+const importanceLookup = (weeks) => {
+  const baseImportanceValues = [
+    70, 45, 40, 30, 25, 10, 6, 6, 6, 4, 4 ,4, 4, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1
+  ]
+  const importanceValuesWithDate = {}
+  weeks.map(week => importanceValuesWithDate[week] = baseImportanceValues.shift())
+  return importanceValuesWithDate
+}
+
+const getImportance = (staff, importanceLookup) => {
+  let importance = 0;
+  for (const [key, value] of Object.entries(staff.staffing)) {
+    importance += (!value._total || isNaN(value._total) || !importanceLookup[key]) ? 0 : (_.min([value._total, 5])/5) * importanceLookup[key];
+  }
+  return importance;
+}
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -33,6 +52,7 @@ class App extends Component {
       positions: undefined,
       weeks: undefined,
       globalStaffing: undefined,
+      isSortedByImportance: false,
     }
   }
 
@@ -89,21 +109,22 @@ class App extends Component {
     error
     ) {
     if (
-      globalStaffing 
+      globalStaffing
     ) {
       const companiesSelection = companies.reduce((acc, company) => { acc[company] = true; return acc; }, {});
       const positionSelection = positions.reduce((acc, position) => { acc[position] = true; return acc; }, {});
-      console.log('LALA', positionSelection, positions)
+      const formattedWeeks = weeks.map(week => moment(week, 'DD/MM/YYYY').format('YYYY/MM/DD'))
+      const globalStaffingWithImportance = globalStaffing.map(staff => ({...staff, importance: getImportance(staff, importanceLookup(formattedWeeks))}))
 
       this.setState({
-        weeks,
+        weeks: formattedWeeks,
         companies: companiesSelection,
         positions: positionSelection,
-        globalStaffing,
+        globalStaffing: globalStaffingWithImportance,
 
       })
-      saveLocaleStorageItem('weeks', weeks)
-      saveLocaleStorageItem('globalStaffing', globalStaffing)
+      saveLocaleStorageItem('weeks', formattedWeeks)
+      saveLocaleStorageItem('globalStaffing', globalStaffingWithImportance)
       saveLocaleStorageItem('companies', companiesSelection)
       saveLocaleStorageItem('positions', positionSelection)
 
@@ -158,6 +179,13 @@ class App extends Component {
     </button>)
   }
 
+  changeStaffingList() {
+    this.setState({
+      globalStaffing: this.state.isSortedByImportance ? _.orderBy(this.state.globalStaffing, ['company'],['asc']) : _.orderBy(this.state.globalStaffing, ['importance'],['asc']),
+      isSortedByImportance: !this.state.isSortedByImportance
+    });
+  }
+
   renderStaffing() {
     if (this.state.globalStaffing) {
       return (
@@ -183,6 +211,9 @@ class App extends Component {
             <div style={customFilterStyle} onClick={this.toggleNoneActive.bind(this)}>
               Toggle None
             </div>
+            <button onClick={this.changeStaffingList.bind(this)} style={customFilterStyle}>
+              {this.state.isSortedByImportance ? "Sort by company" : "Sort by importance" }
+            </button>
           </div>
           <StaffingTable
             type="globalStaffing"
