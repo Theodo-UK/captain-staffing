@@ -43,5 +43,13 @@ export const commonFilterStyles = {
     ...commonFilterStyles,
     backgroundColor: '#33A5FF',
     color: 'white',
+    border: 'none',
   };
   
+  export const sortButtonFilterStyle = {
+    ...commonFilterStyles,
+    backgroundColor: '#56ba81',
+    color: 'white',
+    border: 'none',
+    marginLeft: '40px'
+  };

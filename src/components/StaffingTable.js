@@ -66,13 +66,13 @@ export default class StaffingTable extends React.Component {
           return (
             <Column
               key={i}
-              header={<Cell>{moment(week, 'DD/MM/YYYY').format('DD/MM')}</Cell>}
+              header={<Cell>{moment(week, 'YYYY/MM/DD').format('DD/MM')}</Cell>}
               headerClassName={`staffingHeaderCell staffingHeaderCell--${i}`}
               cell={
                 <StaffingCell
                   data={this.props.peopleStaffing}
                   onClick={this.props.onRowClick}
-                  week={moment(week, 'DD/MM/YYYY').format('DD/MM')}
+                  week={week}
                   projectView={this.props.type === 'projects'}
                 />
               }

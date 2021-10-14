@@ -91,7 +91,7 @@ export function buildStaffing(peopleResponse) {
   return map(staffingByName, (rows, name) => {
     const staffing = {}
     forEach(weeks, (week, weekIndex) => {
-      const weekString = moment(week, 'DD/MM/YYYY').format('DD/MM')
+      const weekString = moment(week, 'DD/MM/YYYY').format('YYYY/MM/DD')
       staffing[weekString] = buildWeekStaffing(rows, weekIndex)
     })
 
