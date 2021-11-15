@@ -8,6 +8,10 @@ const columnToIndex = {
   project: 4,
 }
 
+const STAFFING_ALERT_THRESHOLD = 10
+const STAFFING_CRISIS_THRESHOLD = 5
+
+
 const getArrayFromColumnId = (rows, index) => {
   return Array.from(
     new Set(
@@ -41,6 +45,13 @@ const getId = (rows) => {
     return ids[0]
   }
   return 'Other'
+}
+
+const hasAvailabiltiesFromWeekNumber = (staffing, weekNumber) => {
+  return !Object.keys(staffing)
+    .sort()
+    .slice(0, weekNumber)
+    .reduce((acc, val) => { return staffing[val]._total >= 5 && acc }, true)
 }
 
 export function unMergeCells(data, columnIndex) {
@@ -99,10 +110,15 @@ export function buildStaffing(peopleResponse) {
       return row[columnToIndex.project]
     })
 
+    const isInStaffingAlert = hasAvailabiltiesFromWeekNumber(staffing, STAFFING_ALERT_THRESHOLD)
+    const isInStaffingCrisis = hasAvailabiltiesFromWeekNumber(staffing, STAFFING_CRISIS_THRESHOLD)
+
     return {
       name,
       staffing,
       projects,
+      isInStaffingAlert,
+      isInStaffingCrisis,
       company: getCompany(rows),
       position: getPosition(rows),
       id: getId(rows),

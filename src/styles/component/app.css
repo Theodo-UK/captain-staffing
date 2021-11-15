@@ -58,6 +58,27 @@
   justify-content: flex-start;
 }
 
+.stats-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  justify-content: flex-start;
+}
+
+.stats-indicator {
+  color: #004262;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.stats-indicator span{
+  color: red;
+  font-weight: 600;
+}
+
 a {
   color: inherit;
   text-decoration: inherit;

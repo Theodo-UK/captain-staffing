@@ -188,6 +188,9 @@ class App extends Component {
 
   renderStaffing() {
     if (this.state.globalStaffing) {
+      const staffingToDisplay = this.state.globalStaffing.filter(staffing => this.state.companies[staffing.company]).filter(staffing => this.state.positions[staffing.position]);
+      const inStaffingCrisis = staffingToDisplay.filter(staffing => staffing.isInStaffingCrisis).length;
+      const inStaffingAlert = staffingToDisplay.filter(staffing => staffing.isInStaffingAlert).length - inStaffingCrisis;
       return (
         <div>
           <div className="filter-container">
@@ -195,14 +198,14 @@ class App extends Component {
               return (
                 <div key={positionName} style={isSelected ? positionSelectedFilterStyle : positionUnselectedFilterStyle} onClick={()=>{ this.togglePositionFilter(positionName);}}>
                   {positionName}
-                </ div>
+                </div>
               )
             })}
             {Object.entries(this.state.companies).map(([companyName, isSelected]) => {
               return (
                 <div key={companyName} style={isSelected ? companySelectedFilterStyle : companyUnselectedFilterStyle} onClick={()=>{ this.toggleCompanyFilter(companyName);}}>
                   {companyName}
-                </ div>
+                </div>
               )
             })}
             <div style={customFilterStyle} onClick={this.toggleAllActive.bind(this)}>
@@ -215,9 +218,13 @@ class App extends Component {
               {this.state.isSortedByImportance ? "Sort by company" : "Sort by importance" }
             </button>
           </div>
+          <div className="stats-container">
+            <span className="stats-indicator">Staffing alert count: <span>{inStaffingAlert}</span></span>
+            <span className="stats-indicator">Staffing crisis count: <span>{inStaffingCrisis}</span></span>
+          </div>
           <StaffingTable
             type="globalStaffing"
-            peopleStaffing={this.state.globalStaffing.filter(staffing => this.state.companies[staffing.company]).filter(staffing => this.state.positions[staffing.position])}
+            peopleStaffing={staffingToDisplay}
             onRowClick={this.onStaffingTableRowClick.bind(this)}
             weeks={this.state.weeks}
           />
