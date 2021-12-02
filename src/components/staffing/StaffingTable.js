@@ -57,7 +57,7 @@ export default class StaffingTable extends React.Component {
               field="project"
             />
           }
-          width={120}
+          width={250}
           fixed
         />
         {this.props.weeks.map((week, i) => {

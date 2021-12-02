@@ -33,7 +33,7 @@ export default class ProjectTable extends React.Component {
               field="name"
             />
           }
-          width={120}
+          width={250}
           fixed
         />
         <Column
