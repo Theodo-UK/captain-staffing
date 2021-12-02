@@ -1,7 +1,7 @@
 import React from 'react'
 import { Cell } from 'fixed-data-table'
 
-export default class ProjectCell extends React.Component {
+export default class UserCell extends React.Component {
 
   static propTypes = {
     data: React.PropTypes.array.isRequired,
@@ -13,12 +13,14 @@ export default class ProjectCell extends React.Component {
   render() {
     const { rowIndex, field, data, ...props } = this.props
     return (
-      <Cell
-        {...props}
-        onClick={this.props.onClick.bind(this, data[rowIndex])}
-        className="clickable"
-      >
-        { data[rowIndex][field] }
+      <Cell {...props}>
+        <a
+          href={`https://app.pickyourskills.com/profile/${data[rowIndex].userId}`}
+          className="pickYourSkillLink"
+          target="_blank"
+        >
+          {data[rowIndex][field]}
+        </a>
       </Cell>
     )
   }

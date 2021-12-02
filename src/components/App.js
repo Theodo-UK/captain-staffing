@@ -7,7 +7,6 @@ import { hasActiveCompanies } from '../helpers/utils'
 
 import {
   clearLocaleStorage,
-  saveLocaleStorageItem,
 } from '../helpers/localStorage'
 
 import Alert from './Alert'
@@ -25,8 +24,8 @@ import {
   positionUnselectedFilterStyle,
   customFilterStyle,
   sortButtonStyle,
-  switchTabButtonStyle
-} from './App.styles';
+  switchTabButtonStyle,
+} from './App.styles'
 
 const reload = () => {
   clearLocaleStorage()
@@ -35,13 +34,13 @@ const reload = () => {
 
 const TABS = {
   STAFFING: 'Staffing',
-  PROJECT: ' Project'
+  PROJECT: ' Project',
 }
 
 
 const importanceLookup = (weeks) => {
   const baseImportanceValues = [
-    70, 45, 40, 30, 25, 10, 6, 6, 6, 4, 4 ,4, 4, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1
+    70, 45, 40, 30, 25, 10, 6, 6, 6, 4, 4 ,4, 4, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   ]
   const importanceValuesWithDate = {}
   weeks.map(week => importanceValuesWithDate[week] = baseImportanceValues.shift())
@@ -130,22 +129,17 @@ class App extends Component {
       const companiesSelection = companies.reduce((acc, company) => { acc[company] = true; return acc; }, {});
       const positionSelection = positions.reduce((acc, position) => { acc[position] = true; return acc; }, {});
       const formattedWeeks = weeks.map(week => moment(week, 'DD/MM/YYYY').format('YYYY/MM/DD'))
+  
       const globalStaffingWithImportance = globalStaffing.map(staff => ({...staff, importance: getImportance(staff, importanceLookup(formattedWeeks))}))
+      const globalProjectsWithImportance = globalProjects.map(staff => ({...staff, importance: getImportance(staff, importanceLookup(formattedWeeks))}))
 
       this.setState({
         weeks: formattedWeeks,
         companies: companiesSelection,
         positions: positionSelection,
         globalStaffing: globalStaffingWithImportance,
-        globalProjects,
+        globalProjects: globalProjectsWithImportance,
       })
-
-      saveLocaleStorageItem('weeks', formattedWeeks)
-      saveLocaleStorageItem('globalStaffing', globalStaffingWithImportance)
-      saveLocaleStorageItem('globalProjects', globalProjects)
-      saveLocaleStorageItem('companies', companiesSelection)
-      saveLocaleStorageItem('positions', positionSelection)
-
     } else {
       this.setState({
         error,
@@ -208,7 +202,8 @@ class App extends Component {
 
   changeStaffingList() {
     this.setState({
-      globalStaffing: this.state.isSortedByImportance ? _.orderBy(this.state.globalStaffing, ['company', 'name'],['asc', 'asc']) : _.orderBy(this.state.globalStaffing, ['importance'],['asc']),
+      globalStaffing: this.state.isSortedByImportance ? _.orderBy(this.state.globalStaffing, ['company', '_name'], ['asc', 'asc']) : _.orderBy(this.state.globalStaffing, ['importance'],['asc']),
+      globalProjects: this.state.isSortedByImportance ? _.orderBy(this.state.globalProjects, ['_name'], ['asc']) : _.orderBy(this.state.globalProjects, ['importance'], ['asc']),
       isSortedByImportance: !this.state.isSortedByImportance,
     });
   }

@@ -19,8 +19,6 @@ const projectColumnToIndex = {
 const STAFFING_ALERT_THRESHOLD = 10
 const STAFFING_CRISIS_THRESHOLD = 5
 
-const PROJECT_END_ALERT_THRESHOLD = 6
-
 const getArrayFromColumnId = (rows, index) => {
   return Array.from(
     new Set(
@@ -124,6 +122,7 @@ export function buildStaffing(peopleResponse) {
 
     return {
       name,
+      _name: name,
       staffing,
       projects,
       isInStaffingAlert,
@@ -163,6 +162,7 @@ export function buildProjects(projectResponse) {
 
     return {
       name,
+      _name: name,
       staffing,
       users,
       companies,

@@ -20,6 +20,7 @@ export function toggleByPeopleRow(peopleRow, data) {
           staffing: data[index].staffing,
           company: data[index].company,
           position: data[index].position,
+          importance: data[index].importance,
           project,
           _name: data[index].name,
         }
@@ -53,6 +54,7 @@ export function toggleByProjectRow(projectRow, data) {
           staffing: data[index].staffing,
           company: userDetails.company,
           position: userDetails.position,
+          importance: data[index].importance,
           user: userDetails.user,
           userId: userDetails.userId,
           companies: data[index].companies,

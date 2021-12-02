@@ -2,7 +2,7 @@ import React from 'react'
 import { Table, Column, Cell } from 'fixed-data-table'
 import HeaderCell from './HeaderCell'
 import StaffingCell from './StaffingCell'
-import ProjectCell from './ProjectCell'
+import UserCell from './UserCell'
 
 import moment from 'moment'
 
@@ -37,18 +37,6 @@ export default class ProjectTable extends React.Component {
           fixed
         />
         <Column
-          header="User"
-          cell={
-            <ProjectCell
-              data={this.props.projectStaffing}
-              onClick={this.props.onRowClick}
-              field="user"
-            />
-          }
-          width={120}
-          fixed
-        />
-        <Column
           header="Company"
           cell={
             <HeaderCell
@@ -67,6 +55,18 @@ export default class ProjectTable extends React.Component {
               data={this.props.projectStaffing}
               onClick={this.props.onRowClick}
               field="position"
+            />
+          }
+          width={120}
+          fixed
+        />
+        <Column
+          header="User"
+          cell={
+            <UserCell
+              data={this.props.projectStaffing}
+              onClick={this.props.onRowClick}
+              field="user"
             />
           }
           width={120}

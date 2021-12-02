@@ -32,31 +32,31 @@ export function load(callback) {
       }
     ).then(
       (response) => {
-        console.log('[Response]', response);
+        console.log('[Response]', response)
 
         const staffingRows = response.result.valueRanges[0].values || []
         const projectRows = response.result.valueRanges[1].values || []
 
         let weeks = staffingRows[1].slice(4)
 
-        let globalStaffing = buildStaffing(staffingRows);
-        let globalProjects = buildProjects(projectRows);
+        let globalStaffing = buildStaffing(staffingRows)
+        let globalProjects = buildProjects(projectRows)
 
     
-        globalStaffing = orderBy(globalStaffing, ['company', 'name']);
-        console.log('[Staffing]', globalStaffing);
+        globalStaffing = orderBy(globalStaffing, ['company', '_name'], ['asc', 'asc'])
+        console.log('[Staffing]', globalStaffing)
 
-        globalProjects = orderBy(globalProjects, ['company', 'name']);
-        console.log('[Projects]', globalProjects);
+        globalProjects = orderBy(globalProjects, ['_name'], ['asc'])
+        console.log('[Projects]', globalProjects)
 
-        const companies = Array.from(new Set(globalStaffing.map(staffing => staffing.company).filter(company => company !== undefined && company !== 'BU')));
-        console.log('[Companies]', companies);
+        const companies = Array.from(new Set(globalStaffing.map(staffing => staffing.company).filter(company => company !== undefined && company !== 'BU')))
+        console.log('[Companies]', companies)
 
-        const positions = Array.from(new Set(globalStaffing.map(staffing => staffing.position).filter(position => position !== undefined && position !== 'Position')));
-        console.log('[Positions]', positions);
+        const positions = Array.from(new Set(globalStaffing.map(staffing => staffing.position).filter(position => position !== undefined && position !== 'Position')))
+        console.log('[Positions]', positions)
 
         weeks = removePastWeeks(weeks)
-        console.log('[Weeks]', weeks);
+        console.log('[Weeks]', weeks)
 
         callback(
           weeks,
