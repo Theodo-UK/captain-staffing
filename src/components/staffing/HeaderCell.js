@@ -1,5 +1,5 @@
-import React from "react";
-import { Cell } from "fixed-data-table";
+import React from 'react'
+import { Cell } from 'fixed-data-table'
 
 export default class HeaderCell extends React.Component {
   static propTypes = {
@@ -7,17 +7,16 @@ export default class HeaderCell extends React.Component {
     field: React.PropTypes.string,
     rowIndex: React.PropTypes.number,
     onClick: React.PropTypes.func,
-    type: React.PropTypes.string,
   };
 
   render() {
-    const { rowIndex, field, data, type, ...props } = this.props;
+    const { rowIndex, field, data, ...props } = this.props;
     return (
       <div>
-        {field !== "name" ? (
+        {field !== 'name' ? (
           <Cell
             {...props}
-            onClick={this.props.onClick.bind(this, data[rowIndex], type)}
+            onClick={this.props.onClick.bind(this, data[rowIndex])}
             className="clickable"
           >
             {data[rowIndex][field]}
@@ -26,8 +25,8 @@ export default class HeaderCell extends React.Component {
           <Cell {...props}>
             <a
               href={`https://app.pickyourskills.com/profile/${data[rowIndex].id}`}
-              target="_blank"
               className="pickYourSkillLink"
+              target="_blank"
             >
               {data[rowIndex][field]}
             </a>

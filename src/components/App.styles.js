@@ -6,19 +6,20 @@ export const commonFilterStyles = {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: '4px',
-    border: '3px solid #004262',
+    border: '2px solid #004262',
+    fontSize: '14px'
   };
   
   export const companySelectedFilterStyle = {
     ...commonFilterStyles,
-    border: '3px solid #004262',
+    border: '2px solid #004262',
     backgroundColor: '#004262',
     color: 'white',
   };
   
   export const companyUnselectedFilterStyle = {
     ...commonFilterStyles,
-    border: '3px solid #004262',
+    border: '2px solid #004262',
     backgroundColor: 'white',
     color: '#004262',
     opacity: '0.8'
@@ -26,14 +27,14 @@ export const commonFilterStyles = {
 
   export const positionSelectedFilterStyle = {
     ...commonFilterStyles,
-    border: '3px solid #A020F0',
+    border: '2px solid #A020F0',
     backgroundColor: '#A020F0',
     color: 'white',
   };
   
   export const positionUnselectedFilterStyle = {
     ...commonFilterStyles,
-    border: '3px solid #A020F0',
+    border: '2px solid #A020F0',
     backgroundColor: 'white',
     color: '#A020F0',
     opacity: '0.8'
@@ -46,9 +47,17 @@ export const commonFilterStyles = {
     border: 'none',
   };
   
-  export const sortButtonFilterStyle = {
+  export const sortButtonStyle = {
     ...commonFilterStyles,
     backgroundColor: '#56ba81',
+    color: 'white',
+    border: 'none',
+    marginLeft: '40px'
+  };
+
+  export const switchTabButtonStyle = {
+    ...commonFilterStyles,
+    backgroundColor: '#900C3F',
     color: 'white',
     border: 'none',
     marginLeft: '40px'

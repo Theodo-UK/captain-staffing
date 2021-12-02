@@ -2,14 +2,20 @@ import React, { Component } from 'react'
 import _ from 'lodash'
 import moment from 'moment'
 
-import { toggleByPeopleRow } from '../helpers/edit'
+import { toggleByPeopleRow, toggleByProjectRow } from '../helpers/edit'
+import { hasActiveCompanies } from '../helpers/utils'
+
 import {
   clearLocaleStorage,
   saveLocaleStorageItem,
 } from '../helpers/localStorage'
 
 import Alert from './Alert'
-import StaffingTable from './StaffingTable'
+
+import StaffingTable from './staffing/StaffingTable'
+import ProjectTable from './project/ProjectTable'
+
+
 import CaptainGoogle from './CaptainGoogle'
 
 import {
@@ -18,13 +24,20 @@ import {
   positionSelectedFilterStyle,
   positionUnselectedFilterStyle,
   customFilterStyle,
-  sortButtonFilterStyle,
+  sortButtonStyle,
+  switchTabButtonStyle
 } from './App.styles';
 
 const reload = () => {
   clearLocaleStorage()
   window.location.reload()
 }
+
+const TABS = {
+  STAFFING: 'Staffing',
+  PROJECT: ' Project'
+}
+
 
 const importanceLookup = (weeks) => {
   const baseImportanceValues = [
@@ -54,7 +67,9 @@ class App extends Component {
       positions: undefined,
       weeks: undefined,
       globalStaffing: undefined,
+      globalProjects: undefined,
       isSortedByImportance: false,
+      activeTab: TABS.STAFFING,
     }
   }
 
@@ -106,10 +121,11 @@ class App extends Component {
     globalStaffing,
     companies,
     positions,
-    error
+    globalProjects,
+    error,
     ) {
     if (
-      globalStaffing
+      globalStaffing && globalProjects
     ) {
       const companiesSelection = companies.reduce((acc, company) => { acc[company] = true; return acc; }, {});
       const positionSelection = positions.reduce((acc, position) => { acc[position] = true; return acc; }, {});
@@ -121,10 +137,12 @@ class App extends Component {
         companies: companiesSelection,
         positions: positionSelection,
         globalStaffing: globalStaffingWithImportance,
-
+        globalProjects,
       })
+
       saveLocaleStorageItem('weeks', formattedWeeks)
       saveLocaleStorageItem('globalStaffing', globalStaffingWithImportance)
+      saveLocaleStorageItem('globalProjects', globalProjects)
       saveLocaleStorageItem('companies', companiesSelection)
       saveLocaleStorageItem('positions', positionSelection)
 
@@ -135,7 +153,7 @@ class App extends Component {
     }
   }
 
-  onStaffingTableRowClick(peopleRow, type) {
+  onStaffingTableRowClick(peopleRow) {
       this.setState({
         globalStaffing: toggleByPeopleRow(
           peopleRow,
@@ -143,6 +161,15 @@ class App extends Component {
         ),
       })
   }
+
+  onProjectTableRowClick(projectRow) {
+    this.setState({
+      globalProjects: toggleByProjectRow(
+        projectRow,
+        this.state.globalProjects
+      ),
+    })
+}
 
   render() {
     return (
@@ -182,19 +209,28 @@ class App extends Component {
   changeStaffingList() {
     this.setState({
       globalStaffing: this.state.isSortedByImportance ? _.orderBy(this.state.globalStaffing, ['company', 'name'],['asc', 'asc']) : _.orderBy(this.state.globalStaffing, ['importance'],['asc']),
-      isSortedByImportance: !this.state.isSortedByImportance
+      isSortedByImportance: !this.state.isSortedByImportance,
     });
   }
 
+  changeActiveTab() {
+    this.setState((state) => ({
+      activeTab: state.activeTab === TABS.STAFFING ? TABS.PROJECT : TABS.STAFFING,
+    }))
+  }
+
   renderStaffing() {
-    if (this.state.globalStaffing) {
+    if (this.state.globalStaffing && this.state.globalProjects) {
+    
       const staffingToDisplay = this.state.globalStaffing.filter(staffing => this.state.companies[staffing.company]).filter(staffing => this.state.positions[staffing.position]);
+      const projectToDisplay = this.state.globalProjects.filter(project => hasActiveCompanies(project.companies,  this.state.companies));
+
       const inStaffingCrisis = staffingToDisplay.filter(staffing => staffing.isInStaffingCrisis).length;
       const inStaffingAlert = staffingToDisplay.filter(staffing => staffing.isInStaffingAlert).length - inStaffingCrisis;
       return (
         <div>
           <div className="filter-container">
-          {Object.entries(this.state.positions).map(([positionName, isSelected]) => {
+          {this.state.activeTab === TABS.STAFFING && Object.entries(this.state.positions).map(([positionName, isSelected]) => {
               return (
                 <div key={positionName} style={isSelected ? positionSelectedFilterStyle : positionUnselectedFilterStyle} onClick={()=>{ this.togglePositionFilter(positionName);}}>
                   {positionName}
@@ -214,20 +250,31 @@ class App extends Component {
             <div style={customFilterStyle} onClick={this.toggleNoneActive.bind(this)}>
               Toggle None
             </div>
-            <button onClick={this.changeStaffingList.bind(this)} style={sortButtonFilterStyle}>
-              {this.state.isSortedByImportance ? "Sort by company" : "Sort by importance" }
+            <button onClick={this.changeStaffingList.bind(this)} style={sortButtonStyle}>
+              {this.state.isSortedByImportance ? 'Sort by company' : 'Sort by importance' }
+            </button>
+            <button onClick={this.changeActiveTab.bind(this)} style={switchTabButtonStyle}>
+              {this.state.activeTab === TABS.STAFFING ? 'View projects' : 'View staffing' }
             </button>
           </div>
-          <div className="stats-container">
-            <span className="stats-indicator">Staffing alert count: <span>{inStaffingAlert}</span></span>
-            <span className="stats-indicator">Staffing crisis count: <span>{inStaffingCrisis}</span></span>
-          </div>
-          <StaffingTable
-            type="globalStaffing"
-            peopleStaffing={staffingToDisplay}
-            onRowClick={this.onStaffingTableRowClick.bind(this)}
-            weeks={this.state.weeks}
-          />
+          {this.state.activeTab === TABS.STAFFING && <div>
+            <div className="stats-container">
+              <span className="stats-indicator">Staffing alert count: <span>{inStaffingAlert}</span></span>
+              <span className="stats-indicator">Staffing crisis count: <span>{inStaffingCrisis}</span></span>
+            </div>
+            <StaffingTable
+              peopleStaffing={staffingToDisplay}
+              onRowClick={this.onStaffingTableRowClick.bind(this)}
+              weeks={this.state.weeks}
+            />
+          </div>}
+          {this.state.activeTab === TABS.PROJECT && <div>
+            <ProjectTable
+              projectStaffing={projectToDisplay}
+              onRowClick={this.onProjectTableRowClick.bind(this)}
+              weeks={this.state.weeks}
+            />
+          </div>}
           <br />
         </div>
       )

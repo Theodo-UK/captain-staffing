@@ -1,16 +1,25 @@
 import { tail, forEach, map, groupBy, filter } from 'lodash'
 import moment from 'moment'
 
-const columnToIndex = {
+const staffingColumnToIndex = {
   id: 1,
   company: 2,
   position: 3,
   project: 4,
 }
 
+const projectColumnToIndex = {
+  user: 1,
+  userId: 2,
+  position: 3,
+  company: 4,
+}
+
+
 const STAFFING_ALERT_THRESHOLD = 10
 const STAFFING_CRISIS_THRESHOLD = 5
 
+const PROJECT_END_ALERT_THRESHOLD = 6
 
 const getArrayFromColumnId = (rows, index) => {
   return Array.from(
@@ -20,27 +29,27 @@ const getArrayFromColumnId = (rows, index) => {
   )
 }
 
-const getCompany = (rows) => {
+const getCompany = (rows, columnIndex) => {
   if (Array.isArray(rows)) {
-    const companies = getArrayFromColumnId(rows, columnToIndex.company)
+    const companies = getArrayFromColumnId(rows, columnIndex)
     if (companies.length === 0) return 'Other'
     return companies[0]
   }
   return 'Other'
 }
 
-const getPosition = (rows) => {
+const getPosition = (rows, columnIndex) => {
   if (Array.isArray(rows)) {
-    const positions = getArrayFromColumnId(rows, columnToIndex.position)
+    const positions = getArrayFromColumnId(rows, columnIndex)
     if (positions.length === 0) return 'Other'
     return positions[0] === 'Dev' ? 'Dev' : 'Lead'
   }
   return 'Other'
 }
 
-const getId = (rows) => {
+const getId = (rows, columnIndex) => {
   if (Array.isArray(rows)) {
-    const ids = getArrayFromColumnId(rows, columnToIndex.id)
+    const ids = getArrayFromColumnId(rows, columnIndex)
     if (ids.length === 0) return 'Other'
     return ids[0]
   }
@@ -75,13 +84,13 @@ export function getFloat(string) {
   return null
 }
 
-export function buildWeekStaffing(rows, weekIndex) {
+export function buildWeekStaffing(rows, weekIndex, columnIndex) {
   const weekStaffing = {}
   let total = null
 
   forEach(rows, (row) => {
     const projectStaffing = getFloat(row[weekIndex + 4])
-    weekStaffing[row[columnToIndex.project]] = projectStaffing
+    weekStaffing[row[columnIndex]] = projectStaffing
 
     if (projectStaffing !== null) {
       total += projectStaffing
@@ -103,11 +112,11 @@ export function buildStaffing(peopleResponse) {
     const staffing = {}
     forEach(weeks, (week, weekIndex) => {
       const weekString = moment(week, 'DD/MM/YYYY').format('YYYY/MM/DD')
-      staffing[weekString] = buildWeekStaffing(rows, weekIndex)
+      staffing[weekString] = buildWeekStaffing(rows, weekIndex, staffingColumnToIndex.project)
     })
 
     const projects = map(rows, (row) => {
-      return row[columnToIndex.project]
+      return row[staffingColumnToIndex.project]
     })
 
     const isInStaffingAlert = hasAvailabiltiesFromWeekNumber(staffing, STAFFING_ALERT_THRESHOLD)
@@ -119,9 +128,44 @@ export function buildStaffing(peopleResponse) {
       projects,
       isInStaffingAlert,
       isInStaffingCrisis,
-      company: getCompany(rows),
-      position: getPosition(rows),
-      id: getId(rows),
+      company: getCompany(rows, staffingColumnToIndex.company),
+      position: getPosition(rows, staffingColumnToIndex.position),
+      id: getId(rows, staffingColumnToIndex.id),
+    }
+  })
+}
+
+export function buildProjects(projectResponse) {
+  const weeks = projectResponse[1].slice(4)
+
+  const staffingArray = unMergeCells(tail(projectResponse), 0)
+  const staffingByProject = groupBy(staffingArray, (projectName) => {
+    return projectName[0]
+  })
+
+  return map(staffingByProject, (rows, name) => {
+    const staffing = {}
+    forEach(weeks, (week, weekIndex) => {
+      const weekString = moment(week, 'DD/MM/YYYY').format('YYYY/MM/DD')
+      staffing[weekString] = buildWeekStaffing(rows, weekIndex, projectColumnToIndex.user)
+    })
+
+    const users = map(rows, (row) => {
+      return {
+        user: row[projectColumnToIndex.user],
+        userId: row[projectColumnToIndex.userId],
+        company: row[projectColumnToIndex.company],
+        position: row[projectColumnToIndex.position],
+      }
+    })
+
+    const companies = Array.from(new Set(map(rows, (row) => { return row[projectColumnToIndex.company] })))
+
+    return {
+      name,
+      staffing,
+      users,
+      companies,
     }
   })
 }
