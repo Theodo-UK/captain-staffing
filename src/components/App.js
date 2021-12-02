@@ -47,7 +47,16 @@ const importanceLookup = (weeks) => {
   return importanceValuesWithDate
 }
 
-const getImportance = (staff, importanceLookup) => {
+const getProjectImportance = (staff, importanceLookup) => {
+  let importance = 0;
+  for (const [key, value] of Object.entries(staff.staffing)) {
+    importance += (!value._total || isNaN(value._total) || !importanceLookup[key]) ? 0 : importanceLookup[key];
+  }
+  return importance;
+}
+
+
+const getStaffingImportance = (staff, importanceLookup) => {
   let importance = 0;
   for (const [key, value] of Object.entries(staff.staffing)) {
     importance += (!value._total || isNaN(value._total) || !importanceLookup[key]) ? 0 : (_.min([value._total, 5])/5) * importanceLookup[key];
@@ -130,8 +139,8 @@ class App extends Component {
       const positionSelection = positions.reduce((acc, position) => { acc[position] = true; return acc; }, {});
       const formattedWeeks = weeks.map(week => moment(week, 'DD/MM/YYYY').format('YYYY/MM/DD'))
   
-      const globalStaffingWithImportance = globalStaffing.map(staff => ({...staff, importance: getImportance(staff, importanceLookup(formattedWeeks))}))
-      const globalProjectsWithImportance = globalProjects.map(staff => ({...staff, importance: getImportance(staff, importanceLookup(formattedWeeks))}))
+      const globalStaffingWithImportance = globalStaffing.map(staff => ({...staff, importance: getStaffingImportance(staff, importanceLookup(formattedWeeks))}))
+      const globalProjectsWithImportance = globalProjects.map(staff => ({...staff, importance: getProjectImportance(staff, importanceLookup(formattedWeeks))}))
 
       this.setState({
         weeks: formattedWeeks,
