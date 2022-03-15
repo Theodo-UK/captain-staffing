@@ -34,7 +34,8 @@
     "lodash": "^4.15.0",
     "moment": "^2.17.1",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-dom": "^15.4.2",
+    "react-dropdown-tree-select": "^2.7.1"
   },
   "scripts": {
     "env:dev": "cp src/configs/config.dev.js src/configs/config.js",

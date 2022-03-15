@@ -83,3 +83,11 @@ a {
   color: inherit;
   text-decoration: inherit;
 }
+
+.react-dropdown-tree-select .dropdown .dropdown-content {
+  z-index: 2;
+}
+
+.infinite-scroll-component  {
+  text-align: left;
+}

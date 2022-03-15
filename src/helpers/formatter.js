@@ -16,6 +16,13 @@ const projectColumnToIndex = {
 }
 
 
+export const subTypes = {
+  Devs: ['DevOps', 'Ingénieur IA', 'Dev', 'DevOps', 'DevOps [FREE]', 'SecOps'],
+  Lead: ['Architecte', 'Engineering Manager', 'Senior architect', 'VP Tech', 'LeadDevOps', 'LeadSecOps', 'Lead Data Scientist', 'Lead Data Engineer'],
+  BizDev: ['CA / PO', 'Operations (Finance) ', 'DP / PM / AM', 'Marketing', 'Growth Team', 'Sales', 'Data Product Manager'],
+  Other: ['Externe', 'Head of Tribe', 'Lead Designer', 'Designer Confirmé', 'Designer Junior', 'R&D', 'Evangelist', 'Dirigeant'],
+}
+
 const STAFFING_ALERT_THRESHOLD = 10
 const STAFFING_CRISIS_THRESHOLD = 5
 
@@ -40,9 +47,57 @@ const getPosition = (rows, columnIndex) => {
   if (Array.isArray(rows)) {
     const positions = getArrayFromColumnId(rows, columnIndex)
     if (positions.length === 0) return 'Other'
-    return positions[0] === 'Dev' ? 'Dev' : 'Lead'
+    return positions[0]
   }
   return 'Other'
+}
+
+const formatPositions = (options, positionSelectedPairs) => {
+  return Object.entries(positionSelectedPairs).filter(
+    ([position]) => {
+      return options.includes(position)
+    })
+    .map(([position, isSelected]) => {
+      return { label: position, value: position, children: [], checked: isSelected, id: position }
+    })
+}
+
+export const getPositionForFilter = (positionSelectedPairs) => {
+  const devPositions = formatPositions(subTypes['Devs'], positionSelectedPairs)
+  const leadPositions = formatPositions(subTypes['Lead'], positionSelectedPairs)
+  const bizDevPositions = formatPositions(subTypes['BizDev'], positionSelectedPairs)
+  const otherPositions = formatPositions(subTypes['Other'], positionSelectedPairs)
+
+  return {
+    label: 'All',
+    expanded: true,
+    children: [
+      {
+        label: 'Devs',
+        id: 'Devs',
+        children: devPositions,
+        checked: devPositions.every((position) => { return position.checked }),
+      },
+      {
+        label: 'Lead',
+        id: 'Lead',
+        children: leadPositions,
+        checked: leadPositions.every((position) => { return position.checked }),
+      },
+      {
+        label: 'Biz Dev',
+        id: 'Biz Dev',
+        children: bizDevPositions,
+        checked: bizDevPositions.every((position) => { return position.checked }),
+      },
+      {
+        label: 'Other',
+        id: 'Other',
+        children: otherPositions,
+        checked: otherPositions.every((position) => { return position.checked }),
+      },
+    ],
+  }
 }
 
 const getId = (rows, columnIndex) => {
