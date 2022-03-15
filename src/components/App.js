@@ -41,6 +41,11 @@ const TABS = {
   PROJECT: ' Project',
 }
 
+const LOCAL_FILTERS = {
+  POSITIONS: 'positionsFilterLocalStorage',
+  COMPANIES: 'companiesFilterLocalStorage',
+}
+
 
 const importanceLookup = (weeks) => {
   const baseImportanceValues = [
@@ -66,6 +71,10 @@ const getStaffingImportance = (staff, importanceLookup) => {
     importance += (!value._total || isNaN(value._total) || !importanceLookup[key]) ? 0 : (_.min([value._total, 5])/5) * importanceLookup[key];
   }
   return importance;
+}
+
+const updateLocalStorage = (index, object) => {
+  window.localStorage.setItem(index, JSON.stringify(object))
 }
 
 class App extends Component {
@@ -98,24 +107,33 @@ class App extends Component {
   }
 
   toggleCompanyFilter(targetCompany) {
-    const newCompanies = {...this.state.companies, [targetCompany]: !this.state.companies[targetCompany]}
+    const newCompanies = {
+      ...this.state.companies,
+      [targetCompany]: !this.state.companies[targetCompany],
+    }
+
+    updateLocalStorage(LOCAL_FILTERS.COMPANIES, newCompanies)
+
     this.setState({
-      companies: newCompanies
-    });
+      companies: newCompanies,
+    })
   }
 
   toggleAllActive(){
     const newCompanies = Object.keys(this.state.companies).reduce((acc, company) => { acc[company] = true; return acc; }, {});
+    updateLocalStorage(LOCAL_FILTERS.COMPANIES, newCompanies)
     const newPositions = Object.keys(this.state.positions).reduce((acc, position) => { acc[position] = true; return acc; }, {});
+    updateLocalStorage(LOCAL_FILTERS.POSITIONS, newPositions)
 
     this.setState({
       companies: newCompanies,
-      positions: newPositions
+      positions: newPositions,
     });
   }
 
-  toggleNoneActive(){
+  toggleNoneActive() {
     const newCompanies = Object.keys(this.state.companies).reduce((acc, company) => { acc[company] = false; return acc; }, {});
+    updateLocalStorage(LOCAL_FILTERS.COMPANIES, newCompanies)
     this.setState({
       companies: newCompanies,
     });
@@ -132,11 +150,19 @@ class App extends Component {
     if (
       globalStaffing && globalProjects
     ) {
-      const companiesSelection = companies.reduce((acc, company) => { acc[company] = true; return acc; }, {});
-      const positionSelection = positions.reduce((acc, position) => {
-        acc[position] = subTypes.Devs.includes(position) || subTypes.Lead.includes(position)
-        return acc
-      }, {});
+      const storagePositionsFilter = JSON.parse(window.localStorage.getItem(LOCAL_FILTERS.POSITIONS))
+      const storageCompaniesFilter = JSON.parse(window.localStorage.getItem(LOCAL_FILTERS.COMPANIES))
+
+      const companiesSelection = { ...companies.reduce((acc, company) => { acc[company] = true; return acc }, {}), ...storageCompaniesFilter }
+
+      const positionSelection = {
+        ...positions.reduce((acc, position) => {
+          acc[position] = subTypes.Devs.includes(position) || subTypes.Lead.includes(position)
+          return acc
+        }, {}),
+        ...storagePositionsFilter,
+      }
+
       const formattedWeeks = weeks.map(week => moment(week, 'DD/MM/YYYY').format('YYYY/MM/DD'))
   
       const globalStaffingWithImportance = globalStaffing.map(staff => ({...staff, importance: getStaffingImportance(staff, importanceLookup(formattedWeeks))}))
@@ -239,6 +265,8 @@ class App extends Component {
         newPositions[node.label] = true
       }
     })
+
+    updateLocalStorage(LOCAL_FILTERS.POSITIONS, newPositions)
 
     this.setState({
       positions: newPositions,
