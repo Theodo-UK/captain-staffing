@@ -13,9 +13,13 @@ import Alert from './Alert'
 
 import StaffingTable from './staffing/StaffingTable'
 import ProjectTable from './project/ProjectTable'
+import { getPositionForFilter, subTypes } from '../helpers/formatter'
 
 
 import CaptainGoogle from './CaptainGoogle'
+
+import DropdownTreeSelect from 'react-dropdown-tree-select'
+import 'react-dropdown-tree-select/dist/styles.css'
 
 import {
   companySelectedFilterStyle,
@@ -100,13 +104,6 @@ class App extends Component {
     });
   }
 
-  togglePositionFilter(targetPosition) {
-    const newPositions = {...this.state.positions, [targetPosition]: !this.state.positions[targetPosition]}
-    this.setState({
-      positions: newPositions
-    });
-  }
-
   toggleAllActive(){
     const newCompanies = Object.keys(this.state.companies).reduce((acc, company) => { acc[company] = true; return acc; }, {});
     const newPositions = Object.keys(this.state.positions).reduce((acc, position) => { acc[position] = true; return acc; }, {});
@@ -136,7 +133,10 @@ class App extends Component {
       globalStaffing && globalProjects
     ) {
       const companiesSelection = companies.reduce((acc, company) => { acc[company] = true; return acc; }, {});
-      const positionSelection = positions.reduce((acc, position) => { acc[position] = true; return acc; }, {});
+      const positionSelection = positions.reduce((acc, position) => {
+        acc[position] = subTypes.Devs.includes(position) || subTypes.Lead.includes(position)
+        return acc
+      }, {});
       const formattedWeeks = weeks.map(week => moment(week, 'DD/MM/YYYY').format('YYYY/MM/DD'))
   
       const globalStaffingWithImportance = globalStaffing.map(staff => ({...staff, importance: getStaffingImportance(staff, importanceLookup(formattedWeeks))}))
@@ -172,7 +172,7 @@ class App extends Component {
         this.state.globalProjects
       ),
     })
-}
+  }
 
   render() {
     return (
@@ -223,6 +223,28 @@ class App extends Component {
     }))
   }
 
+  positionsSelectorOnChange(currentNode, selectedNodes) {
+    const newPositions = Object.keys(this.state.positions).reduce((acc, position) => {
+      acc[position] = selectedNodes.some((node) => { return node.label === 'All' })
+      return acc
+    }, {})
+
+
+    selectedNodes.forEach((node) => {
+      if (node._children.length > 0) {
+        node._children.forEach((child) => {
+          newPositions[child] = true
+        })
+      } else {
+        newPositions[node.label] = true
+      }
+    })
+
+    this.setState({
+      positions: newPositions,
+    })
+  }
+
   renderStaffing() {
     if (this.state.globalStaffing && this.state.globalProjects) {
     
@@ -233,14 +255,8 @@ class App extends Component {
       const inStaffingAlert = staffingToDisplay.filter(staffing => staffing.isInStaffingAlert).length - inStaffingCrisis;
       return (
         <div>
+          <DropdownTreeSelect className="positionDropdown" data={getPositionForFilter(this.state.positions)} onChange={this.positionsSelectorOnChange.bind(this)} />
           <div className="filter-container">
-          {this.state.activeTab === TABS.STAFFING && Object.entries(this.state.positions).map(([positionName, isSelected]) => {
-              return (
-                <div key={positionName} style={isSelected ? positionSelectedFilterStyle : positionUnselectedFilterStyle} onClick={()=>{ this.togglePositionFilter(positionName);}}>
-                  {positionName}
-                </div>
-              )
-            })}
             {Object.entries(this.state.companies).map(([companyName, isSelected]) => {
               return (
                 <div key={companyName} style={isSelected ? companySelectedFilterStyle : companyUnselectedFilterStyle} onClick={()=>{ this.toggleCompanyFilter(companyName);}}>
