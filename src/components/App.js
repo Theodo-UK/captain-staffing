@@ -110,6 +110,8 @@ class App extends Component {
       isSortedByImportance: false,
       activeTab: TABS.STAFFING,
     }
+
+    this.lastClicked = undefined
   }
 
   onGoogleSuccess() {
@@ -310,6 +312,8 @@ class App extends Component {
 
     updateLocalStorage(LOCAL_FILTERS.POSITIONS, newPositions)
 
+    this.lastClicked = currentNode.label
+
     this.setState({
       positions: newPositions,
     })
@@ -325,7 +329,7 @@ class App extends Component {
       const inStaffingAlert = staffingToDisplay.filter(staffing => staffing.isInStaffingAlert).length - inStaffingCrisis;
       return (
         <div>
-          <DropdownTreeSelect className="positionDropdown" data={getPositionForFilter(this.state.positions)} onChange={this.positionsSelectorOnChange.bind(this)} />
+          <DropdownTreeSelect className="positionDropdown" data={getPositionForFilter(this.state.positions, this.lastClicked)} onChange={this.positionsSelectorOnChange.bind(this)} />
           <div className="filter-container">
             {Object.entries(this.state.companies).map(([companyName, isSelected]) => {
               return (
