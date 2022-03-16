@@ -3,7 +3,8 @@ import _ from 'lodash'
 import moment from 'moment'
 
 import { toggleByPeopleRow, toggleByProjectRow } from '../helpers/edit'
-import { hasActiveCompanies } from '../helpers/utils'
+import { hasActiveCompanies, mergeUnion } from '../helpers/utils'
+import { deserializeTruthyFilters, serializeTruthyFilters } from '../helpers/urlSerialiser'
 
 import {
   clearLocaleStorage,
@@ -24,8 +25,6 @@ import 'react-dropdown-tree-select/dist/styles.css'
 import {
   companySelectedFilterStyle,
   companyUnselectedFilterStyle,
-  positionSelectedFilterStyle,
-  positionUnselectedFilterStyle,
   customFilterStyle,
   sortButtonStyle,
   switchTabButtonStyle,
@@ -73,8 +72,46 @@ const getStaffingImportance = (staff, importanceLookup) => {
   return importance;
 }
 
+const uriQuery = {
+  companies: '',
+  positions: '',
+}
+
 const updateLocalStorage = (index, object) => {
+  const newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`
+
+  // eslint-disable-next-line default-case
+  switch (index) {
+    case LOCAL_FILTERS.COMPANIES: {
+      uriQuery.companies = serializeTruthyFilters(object)
+      break
+    }
+
+    case LOCAL_FILTERS.POSITIONS: {
+      uriQuery.positions = serializeTruthyFilters(object)
+      break
+    }
+  }
+
+  window.history.pushState({ path: newurl }, '', `${newurl}?companies=${uriQuery.companies}&positions=${uriQuery.positions}`)
   window.localStorage.setItem(index, JSON.stringify(object))
+}
+
+const setupFilters = (filterList, urlQuery, localStorage) => {
+  if (urlQuery) {
+    return filterList.reduce((acc, option) => {
+      acc[option] = Object.keys(urlQuery).includes(option)
+      return acc
+    }, {})
+  }
+
+  return mergeUnion(
+    filterList.reduce((acc, company) => {
+      acc[company] = true
+      return acc
+    }, {}),
+    localStorage,
+  )
 }
 
 class App extends Component {
@@ -92,6 +129,8 @@ class App extends Component {
       isSortedByImportance: false,
       activeTab: TABS.STAFFING,
     }
+
+    this.lastClicked = undefined
   }
 
   onGoogleSuccess() {
@@ -150,18 +189,24 @@ class App extends Component {
     if (
       globalStaffing && globalProjects
     ) {
+      const query = window.location.search.substring(1)
+
+      let queryFilters = {}
+      if (query) {
+        const vars = query.split('&')
+        queryFilters = vars.reduce((acc, company) => {
+          const pair = company.split('=')
+          acc[pair[0]] = deserializeTruthyFilters(pair[1].split(','))
+          return acc
+        }, {})
+      }
+
       const storagePositionsFilter = JSON.parse(window.localStorage.getItem(LOCAL_FILTERS.POSITIONS))
       const storageCompaniesFilter = JSON.parse(window.localStorage.getItem(LOCAL_FILTERS.COMPANIES))
 
-      const companiesSelection = { ...companies.reduce((acc, company) => { acc[company] = true; return acc }, {}), ...storageCompaniesFilter }
+      const companiesSelection = setupFilters(companies, queryFilters.companies, storageCompaniesFilter)
 
-      const positionSelection = {
-        ...positions.reduce((acc, position) => {
-          acc[position] = subTypes.Devs.includes(position) || subTypes.Lead.includes(position)
-          return acc
-        }, {}),
-        ...storagePositionsFilter,
-      }
+      const positionSelection = setupFilters(positions, queryFilters.positions, storagePositionsFilter)
 
       const formattedWeeks = weeks.map(week => moment(week, 'DD/MM/YYYY').format('YYYY/MM/DD'))
   
@@ -268,6 +313,8 @@ class App extends Component {
 
     updateLocalStorage(LOCAL_FILTERS.POSITIONS, newPositions)
 
+    this.lastClicked = currentNode.label
+
     this.setState({
       positions: newPositions,
     })
@@ -283,7 +330,7 @@ class App extends Component {
       const inStaffingAlert = staffingToDisplay.filter(staffing => staffing.isInStaffingAlert).length - inStaffingCrisis;
       return (
         <div>
-          <DropdownTreeSelect className="positionDropdown" data={getPositionForFilter(this.state.positions)} onChange={this.positionsSelectorOnChange.bind(this)} />
+          <DropdownTreeSelect className="positionDropdown" data={getPositionForFilter(this.state.positions, this.lastClicked)} onChange={this.positionsSelectorOnChange.bind(this)} />
           <div className="filter-container">
             {Object.entries(this.state.companies).map(([companyName, isSelected]) => {
               return (

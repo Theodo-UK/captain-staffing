@@ -62,11 +62,11 @@ const formatPositions = (options, positionSelectedPairs) => {
     })
 }
 
-export const getPositionForFilter = (positionSelectedPairs) => {
-  const devPositions = formatPositions(subTypes['Devs'], positionSelectedPairs)
-  const leadPositions = formatPositions(subTypes['Lead'], positionSelectedPairs)
-  const bizDevPositions = formatPositions(subTypes['BizDev'], positionSelectedPairs)
-  const otherPositions = formatPositions(subTypes['Other'], positionSelectedPairs)
+export const getPositionForFilter = (positionSelectedPairs, lastClicked = undefined) => {
+  const devPositions = formatPositions(subTypes.Devs, positionSelectedPairs)
+  const leadPositions = formatPositions(subTypes.Lead, positionSelectedPairs)
+  const bizDevPositions = formatPositions(subTypes.BizDev, positionSelectedPairs)
+  const otherPositions = formatPositions(subTypes.Other, positionSelectedPairs)
 
   return {
     label: 'All',
@@ -77,24 +77,28 @@ export const getPositionForFilter = (positionSelectedPairs) => {
         id: 'Devs',
         children: devPositions,
         checked: devPositions.every((position) => { return position.checked }),
+        expanded: subTypes.Devs.includes(lastClicked),
       },
       {
         label: 'Lead',
         id: 'Lead',
         children: leadPositions,
         checked: leadPositions.every((position) => { return position.checked }),
+        expanded: subTypes.Lead.includes(lastClicked),
       },
       {
         label: 'Biz Dev',
         id: 'Biz Dev',
         children: bizDevPositions,
         checked: bizDevPositions.every((position) => { return position.checked }),
+        expanded: subTypes.BizDev.includes(lastClicked),
       },
       {
         label: 'Other',
         id: 'Other',
         children: otherPositions,
         checked: otherPositions.every((position) => { return position.checked }),
+        expanded: subTypes.Other.includes(lastClicked),
       },
     ],
   }
