@@ -3,7 +3,8 @@ import _ from 'lodash'
 import moment from 'moment'
 
 import { toggleByPeopleRow, toggleByProjectRow } from '../helpers/edit'
-import { hasActiveCompanies } from '../helpers/utils'
+import { hasActiveCompanies, mergeUnion } from '../helpers/utils'
+import { deserializeFalsyFilters, serializeFalsyFilters } from '../helpers/urlSerialiser'
 
 import {
   clearLocaleStorage,
@@ -24,8 +25,6 @@ import 'react-dropdown-tree-select/dist/styles.css'
 import {
   companySelectedFilterStyle,
   companyUnselectedFilterStyle,
-  positionSelectedFilterStyle,
-  positionUnselectedFilterStyle,
   customFilterStyle,
   sortButtonStyle,
   switchTabButtonStyle,
@@ -73,7 +72,26 @@ const getStaffingImportance = (staff, importanceLookup) => {
   return importance;
 }
 
+const uriQuery = {
+  companies: '',
+  positions: '',
+}
+
 const updateLocalStorage = (index, object) => {
+  const newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`
+  switch (index) {
+    case LOCAL_FILTERS.COMPANIES: {
+      uriQuery.companies = serializeFalsyFilters(object)
+      break
+    }
+
+    case LOCAL_FILTERS.POSITIONS: {
+      uriQuery.positions = serializeFalsyFilters(object)
+      break
+    }
+  }
+
+  window.history.pushState({ path: newurl }, '', `${newurl}?companies=${uriQuery.companies}&positions=${uriQuery.positions}`)
   window.localStorage.setItem(index, JSON.stringify(object))
 }
 
@@ -150,18 +168,42 @@ class App extends Component {
     if (
       globalStaffing && globalProjects
     ) {
+      const query = window.location.search.substring(1)
+
+      let queryFilters = {}
+      if (query) {
+        const vars = query.split('&')
+        queryFilters = vars.reduce((acc, company) => {
+          const pair = company.split('=')
+          acc[pair[0]] = deserializeFalsyFilters(pair[1].split(','))
+          return acc
+        }, {})
+      }
+
       const storagePositionsFilter = JSON.parse(window.localStorage.getItem(LOCAL_FILTERS.POSITIONS))
       const storageCompaniesFilter = JSON.parse(window.localStorage.getItem(LOCAL_FILTERS.COMPANIES))
 
-      const companiesSelection = { ...companies.reduce((acc, company) => { acc[company] = true; return acc }, {}), ...storageCompaniesFilter }
+      const companiesSelection = mergeUnion(
+        mergeUnion(
+          companies.reduce((acc, company) => {
+            acc[company] = true
+            return acc
+          }, {}),
+          queryFilters.companies ? undefined : storageCompaniesFilter, // Only use local storage if no URL params are defined
+        ),
+        queryFilters.companies,
+      )
 
-      const positionSelection = {
-        ...positions.reduce((acc, position) => {
-          acc[position] = subTypes.Devs.includes(position) || subTypes.Lead.includes(position)
-          return acc
-        }, {}),
-        ...storagePositionsFilter,
-      }
+      const positionSelection = mergeUnion(
+        mergeUnion(
+          positions.reduce((acc, position) => {
+            acc[position] = subTypes.Devs.includes(position) || subTypes.Lead.includes(position)
+            return acc
+          }, {}),
+          queryFilters.positions ? undefined : storagePositionsFilter, // Only use local storage if no URL params are defined
+        ),
+        queryFilters.positions,
+      )
 
       const formattedWeeks = weeks.map(week => moment(week, 'DD/MM/YYYY').format('YYYY/MM/DD'))
   
