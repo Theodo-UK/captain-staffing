@@ -4,7 +4,7 @@ import moment from 'moment'
 
 import { toggleByPeopleRow, toggleByProjectRow } from '../helpers/edit'
 import { hasActiveCompanies, mergeUnion } from '../helpers/utils'
-import { deserializeFalsyFilters, serializeFalsyFilters } from '../helpers/urlSerialiser'
+import { deserializeTruthyFilters, serializeTruthyFilters } from '../helpers/urlSerialiser'
 
 import {
   clearLocaleStorage,
@@ -79,20 +79,39 @@ const uriQuery = {
 
 const updateLocalStorage = (index, object) => {
   const newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`
+
+  // eslint-disable-next-line default-case
   switch (index) {
     case LOCAL_FILTERS.COMPANIES: {
-      uriQuery.companies = serializeFalsyFilters(object)
+      uriQuery.companies = serializeTruthyFilters(object)
       break
     }
 
     case LOCAL_FILTERS.POSITIONS: {
-      uriQuery.positions = serializeFalsyFilters(object)
+      uriQuery.positions = serializeTruthyFilters(object)
       break
     }
   }
 
   window.history.pushState({ path: newurl }, '', `${newurl}?companies=${uriQuery.companies}&positions=${uriQuery.positions}`)
   window.localStorage.setItem(index, JSON.stringify(object))
+}
+
+const setupFilters = (filterList, urlQuery, localStorage) => {
+  if (urlQuery) {
+    return filterList.reduce((acc, option) => {
+      acc[option] = Object.keys(urlQuery).includes(option)
+      return acc
+    }, {})
+  }
+
+  return mergeUnion(
+    filterList.reduce((acc, company) => {
+      acc[company] = true
+      return acc
+    }, {}),
+    localStorage,
+  )
 }
 
 class App extends Component {
@@ -177,7 +196,7 @@ class App extends Component {
         const vars = query.split('&')
         queryFilters = vars.reduce((acc, company) => {
           const pair = company.split('=')
-          acc[pair[0]] = deserializeFalsyFilters(pair[1].split(','))
+          acc[pair[0]] = deserializeTruthyFilters(pair[1].split(','))
           return acc
         }, {})
       }
@@ -185,27 +204,9 @@ class App extends Component {
       const storagePositionsFilter = JSON.parse(window.localStorage.getItem(LOCAL_FILTERS.POSITIONS))
       const storageCompaniesFilter = JSON.parse(window.localStorage.getItem(LOCAL_FILTERS.COMPANIES))
 
-      const companiesSelection = mergeUnion(
-        mergeUnion(
-          companies.reduce((acc, company) => {
-            acc[company] = true
-            return acc
-          }, {}),
-          queryFilters.companies ? undefined : storageCompaniesFilter, // Only use local storage if no URL params are defined
-        ),
-        queryFilters.companies,
-      )
+      const companiesSelection = setupFilters(companies, queryFilters.companies, storageCompaniesFilter)
 
-      const positionSelection = mergeUnion(
-        mergeUnion(
-          positions.reduce((acc, position) => {
-            acc[position] = subTypes.Devs.includes(position) || subTypes.Lead.includes(position)
-            return acc
-          }, {}),
-          queryFilters.positions ? undefined : storagePositionsFilter, // Only use local storage if no URL params are defined
-        ),
-        queryFilters.positions,
-      )
+      const positionSelection = setupFilters(positions, queryFilters.positions, storagePositionsFilter)
 
       const formattedWeeks = weeks.map(week => moment(week, 'DD/MM/YYYY').format('YYYY/MM/DD'))
   
