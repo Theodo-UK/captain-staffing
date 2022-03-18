@@ -17,10 +17,13 @@ const projectColumnToIndex = {
 
 
 export const subTypes = {
-  Devs: ['DevOps', 'Ingénieur IA', 'Dev', 'DevOps', 'DevOps [FREE]', 'SecOps'],
-  Lead: ['Architecte', 'Engineering Manager', 'Senior architect', 'VP Tech', 'LeadDevOps', 'LeadSecOps', 'Lead Data Scientist', 'Lead Data Engineer'],
+  Devs: ['Dev'],
+  Lead: ['Architecte', 'Engineering Manager', 'Senior architect', 'VP Tech'],
   BizDev: ['CA / PO', 'Operations (Finance) ', 'DP / PM / AM', 'Marketing', 'Growth Team', 'Sales', 'Data Product Manager'],
-  Other: ['Externe', 'Head of Tribe', 'Lead Designer', 'Designer Confirmé', 'Designer Junior', 'R&D', 'Evangelist', 'Dirigeant'],
+  Designers: ['Lead Designer', 'Designer Confirmé', 'Designer Junior'],
+  DevOps: ['LeadDevOps', 'DevOps', 'DevOps [FREE]', 'SecOps', 'LeadSecOps'],
+  Data: ['Lead Data Scientist', 'Lead Data Engineer', 'Ingénieur IA'],
+  Other: ['Externe', 'Head of Tribe', 'R&D', 'Evangelist', 'Dirigeant'],
 }
 
 const STAFFING_ALERT_THRESHOLD = 10
@@ -67,6 +70,9 @@ export const getPositionForFilter = (positionSelectedPairs, lastClicked = undefi
   const leadPositions = formatPositions(subTypes.Lead, positionSelectedPairs)
   const bizDevPositions = formatPositions(subTypes.BizDev, positionSelectedPairs)
   const otherPositions = formatPositions(subTypes.Other, positionSelectedPairs)
+  const designerPositions = formatPositions(subTypes.Designers, positionSelectedPairs)
+  const devOpsPositions = formatPositions(subTypes.DevOps, positionSelectedPairs)
+  const dataPositions = formatPositions(subTypes.Data, positionSelectedPairs)
 
   return {
     label: 'All',
@@ -92,6 +98,27 @@ export const getPositionForFilter = (positionSelectedPairs, lastClicked = undefi
         children: bizDevPositions,
         checked: bizDevPositions.every((position) => { return position.checked }),
         expanded: subTypes.BizDev.includes(lastClicked),
+      },
+      {
+        label: 'Designers',
+        id: 'Designers',
+        children: designerPositions,
+        checked: designerPositions.every((position) => { return position.checked }),
+        expanded: subTypes.Designers.includes(lastClicked),
+      },
+      {
+        label: 'DevOps',
+        id: 'DevOps',
+        children: devOpsPositions,
+        checked: devOpsPositions.every((position) => { return position.checked }),
+        expanded: subTypes.DevOps.includes(lastClicked),
+      },
+      {
+        label: 'Data',
+        id: 'Data',
+        children: dataPositions,
+        checked: dataPositions.every((position) => { return position.checked }),
+        expanded: subTypes.Data.includes(lastClicked),
       },
       {
         label: 'Other',
