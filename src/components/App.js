@@ -77,11 +77,11 @@ const uriQuery = {
   positions: '',
 }
 
-const updateLocalStorage = (index, object) => {
-  const newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`
+const updateFilterStorage = (key, object) => {
+  const newurl = `${window.location.origin}${window.location.pathname}`
 
   // eslint-disable-next-line default-case
-  switch (index) {
+  switch (key) {
     case LOCAL_FILTERS.COMPANIES: {
       uriQuery.companies = serializeTruthyFilters(object)
       break
@@ -94,7 +94,7 @@ const updateLocalStorage = (index, object) => {
   }
 
   window.history.pushState({ path: newurl }, '', `${newurl}?companies=${uriQuery.companies}&positions=${uriQuery.positions}`)
-  window.localStorage.setItem(index, JSON.stringify(object))
+  window.localStorage.setItem(key, JSON.stringify(object))
 }
 
 const setupFilters = (filterList, urlQuery, localStorage) => {
@@ -151,7 +151,7 @@ class App extends Component {
       [targetCompany]: !this.state.companies[targetCompany],
     }
 
-    updateLocalStorage(LOCAL_FILTERS.COMPANIES, newCompanies)
+    updateFilterStorage(LOCAL_FILTERS.COMPANIES, newCompanies)
 
     this.setState({
       companies: newCompanies,
@@ -160,9 +160,9 @@ class App extends Component {
 
   toggleAllActive(){
     const newCompanies = Object.keys(this.state.companies).reduce((acc, company) => { acc[company] = true; return acc; }, {});
-    updateLocalStorage(LOCAL_FILTERS.COMPANIES, newCompanies)
+    updateFilterStorage(LOCAL_FILTERS.COMPANIES, newCompanies)
     const newPositions = Object.keys(this.state.positions).reduce((acc, position) => { acc[position] = true; return acc; }, {});
-    updateLocalStorage(LOCAL_FILTERS.POSITIONS, newPositions)
+    updateFilterStorage(LOCAL_FILTERS.POSITIONS, newPositions)
 
     this.setState({
       companies: newCompanies,
@@ -172,7 +172,7 @@ class App extends Component {
 
   toggleNoneActive() {
     const newCompanies = Object.keys(this.state.companies).reduce((acc, company) => { acc[company] = false; return acc; }, {});
-    updateLocalStorage(LOCAL_FILTERS.COMPANIES, newCompanies)
+    updateFilterStorage(LOCAL_FILTERS.COMPANIES, newCompanies)
     this.setState({
       companies: newCompanies,
     });
@@ -212,6 +212,9 @@ class App extends Component {
   
       const globalStaffingWithImportance = globalStaffing.map(staff => ({...staff, importance: getStaffingImportance(staff, importanceLookup(formattedWeeks))}))
       const globalProjectsWithImportance = globalProjects.map(staff => ({...staff, importance: getProjectImportance(staff, importanceLookup(formattedWeeks))}))
+
+      updateFilterStorage(LOCAL_FILTERS.COMPANIES, companiesSelection)
+      updateFilterStorage(LOCAL_FILTERS.POSITIONS, positionSelection)
 
       this.setState({
         weeks: formattedWeeks,
@@ -311,7 +314,7 @@ class App extends Component {
       }
     })
 
-    updateLocalStorage(LOCAL_FILTERS.POSITIONS, newPositions)
+    updateFilterStorage(LOCAL_FILTERS.POSITIONS, newPositions)
 
     this.lastClicked = currentNode.label
 
