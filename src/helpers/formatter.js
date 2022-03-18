@@ -107,8 +107,8 @@ export const getPositionForFilter = (positionSelectedPairs, lastClicked = undefi
         expanded: subTypes.Designers.includes(lastClicked),
       },
       {
-        label: 'DevOps',
-        id: 'DevOps',
+        label: 'Dev Ops',
+        id: 'Dev Ops',
         children: devOpsPositions,
         checked: devOpsPositions.every((position) => { return position.checked }),
         expanded: subTypes.DevOps.includes(lastClicked),
