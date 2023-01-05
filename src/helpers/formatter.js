@@ -244,7 +244,9 @@ export function buildProjects(projectResponse) {
       }
     })
 
-    const companies = Array.from(new Set(map(rows, (row) => { return row[projectColumnToIndex.company] })))
+    const companies = Array.from(
+      new Set(map(rows, (row) => { return row[projectColumnToIndex.company] }))
+    )
 
     return {
       name,

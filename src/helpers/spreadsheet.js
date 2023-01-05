@@ -42,17 +42,17 @@ export function load(callback) {
         let globalStaffing = buildStaffing(staffingRows)
         let globalProjects = buildProjects(projectRows)
 
-    
+
         globalStaffing = orderBy(globalStaffing, ['company', '_name'], ['asc', 'asc'])
         console.log('[Staffing]', globalStaffing)
 
         globalProjects = orderBy(globalProjects, ['_name'], ['asc'])
         console.log('[Projects]', globalProjects)
 
-        const companies = Array.from(new Set(globalStaffing.map(staffing => staffing.company).filter(company => company !== undefined && company !== 'BU')))
+        const companies = Array.from(new Set(globalStaffing.map((staffing) => { return staffing.company }).filter((company) => { return company !== undefined && company !== 'BU' })))
         console.log('[Companies]', companies)
 
-        const positions = Array.from(new Set(globalStaffing.map(staffing => staffing.position).filter(position => position !== undefined && position !== 'Position')))
+        const positions = Array.from(new Set(globalStaffing.map((staffing) => { return staffing.position }).filter((position) => { return position !== undefined && position !== 'Position' })))
         console.log('[Positions]', positions)
 
         weeks = removePastWeeks(weeks)
