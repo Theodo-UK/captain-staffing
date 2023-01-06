@@ -1,5 +1,6 @@
 import React from 'react'
 import { Cell } from 'fixed-data-table'
+import { IGNORED_PROJECT_NAMES } from '../../constants/ignoredProjectNames'
 
 export default class ProjectCell extends React.Component {
   static propTypes = {
@@ -8,7 +9,6 @@ export default class ProjectCell extends React.Component {
     rowIndex: React.PropTypes.number,
     onClick: React.PropTypes.func,
   };
-  ignoredProjectNames = ['HOLIDAY', 'NO PROJECT NAME', 'Leave UK', 'NOTHERE'];
 
   render() {
     const { rowIndex, field, data, ...props } = this.props
@@ -16,7 +16,7 @@ export default class ProjectCell extends React.Component {
     const currentWeek = [...weeks].sort()[0]
     const projects = data[rowIndex].projects
       ? data[rowIndex].projects.filter(
-          (project) => { return !this.ignoredProjectNames.includes(project) }
+          (project) => { return !IGNORED_PROJECT_NAMES.includes(project) }
         )
       : []
     const currentProjectStaffing = data[rowIndex].staffing[currentWeek]
