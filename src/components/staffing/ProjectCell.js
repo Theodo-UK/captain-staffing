@@ -15,17 +15,17 @@ export default class ProjectCell extends React.Component {
     const currentWeek = Object.keys(data[rowIndex].staffing).sort()[0]
     const projects = data[rowIndex].projects
       ? data[rowIndex].projects.filter(
-          (item) => { return !this.ignoredProjectNames.includes(item) }
+          (project) => { return !this.ignoredProjectNames.includes(project) }
         )
       : []
     const currentProjectStaffing = data[rowIndex].staffing[currentWeek]
       ? data[rowIndex].staffing[currentWeek]
       : []
     const currentProjects = projects.filter(
-      (item) => { return currentProjectStaffing[item] > 0 }
+      (project) => { return currentProjectStaffing[project] > 0 }
     )
     const upcomingProjects = projects.filter(
-      (item) => { return !currentProjects.includes(item) }
+      (project) => { return !currentProjects.includes(project) }
     )
     return (
       <Cell
