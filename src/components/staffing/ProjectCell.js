@@ -28,16 +28,20 @@ export default class ProjectCell extends React.Component {
     const upcomingProjects = projects.filter(
       (project) => { return !currentProjects.includes(project) }
     )
+    const currentProjectsText = currentProjects.join(', ')
+    const projectsConnectingText = currentProjects.length > 0 && upcomingProjects.length > 0 ? ', ' : ''
+    const upcomingProjectsText = upcomingProjects.join(', ')
+    const individualProjectText = data[rowIndex].projects ? '' : data[rowIndex][field]
     return (
       <Cell
         {...props}
         onClick={this.props.onClick.bind(this, data[rowIndex])}
         className="clickable"
       >
-        <b>{currentProjects.join(', ')}</b>
-        {currentProjects.length > 0 && upcomingProjects.length > 0 ? ', ' : ''}
-        {upcomingProjects.join(', ')}
-        {data[rowIndex].projects ? '' : data[rowIndex][field]}
+        <b>{currentProjectsText}</b>
+        {projectsConnectingText}
+        {upcomingProjectsText}
+        {individualProjectText}
       </Cell>
     )
   }
