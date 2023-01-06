@@ -1,8 +1,8 @@
 export const hasActiveCompanies = (companies, companyFilterState) => {
   return companies.reduce((acc, company) => {
-    return companyFilterState[company] || acc;
-  }, false);
-};
+    return companyFilterState[company] || acc
+  }, false)
+}
 
 export const mergeUnion = (sourceObject, overrideObject) => {
   if (!overrideObject) return sourceObject

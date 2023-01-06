@@ -17,6 +17,7 @@ export default class UserCell extends React.Component {
         <a
           href={`https://app.pickyourskills.com/profile/${data[rowIndex].userId}`}
           className="pickYourSkillLink"
+          rel="noopener noreferrer"
           target="_blank"
         >
           {data[rowIndex][field]}

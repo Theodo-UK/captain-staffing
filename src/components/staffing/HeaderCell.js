@@ -10,7 +10,7 @@ export default class HeaderCell extends React.Component {
   };
 
   render() {
-    const { rowIndex, field, data, ...props } = this.props;
+    const { rowIndex, field, data, ...props } = this.props
     return (
       <div>
         {field !== 'name' ? (
@@ -26,6 +26,7 @@ export default class HeaderCell extends React.Component {
             <a
               href={`https://app.pickyourskills.com/profile/${data[rowIndex].id}`}
               className="pickYourSkillLink"
+              rel="noopener noreferrer"
               target="_blank"
             >
               {data[rowIndex][field]}
@@ -33,6 +34,6 @@ export default class HeaderCell extends React.Component {
           </Cell>
         )}
       </div>
-    );
+    )
   }
 }
