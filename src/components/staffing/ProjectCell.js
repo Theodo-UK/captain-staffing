@@ -32,17 +32,23 @@ export default class ProjectCell extends React.Component {
     const currentProjectsText = currentProjects.join(', ')
     const separator = currentProjects.length > 0 && upcomingProjects.length > 0 ? ', ' : ''
     const upcomingProjectsText = upcomingProjects.join(', ')
-    const individualProjectText = data[rowIndex].projects ? '' : data[rowIndex][field]
+    const isIndividualProject = data[rowIndex].projects === undefined
+    const cellText = isIndividualProject ? data[rowIndex][field] : (
+      <div>
+        <b>
+          {currentProjectsText}
+        </b>
+        { separator }
+        { upcomingProjectsText }
+      </div>
+    )
     return (
       <Cell
         {...props}
         onClick={this.props.onClick.bind(this, data[rowIndex])}
         className="clickable"
       >
-        <b>{currentProjectsText}</b>
-        {separator}
-        {upcomingProjectsText}
-        {individualProjectText}
+        {cellText}
       </Cell>
     )
   }
