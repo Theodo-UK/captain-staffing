@@ -30,7 +30,7 @@ export default class ProjectCell extends React.Component {
       (project) => { return !currentProjects.includes(project) }
     )
     const currentProjectsText = currentProjects.join(', ')
-    const projectsConnectingText = currentProjects.length > 0 && upcomingProjects.length > 0 ? ', ' : ''
+    const separator = currentProjects.length > 0 && upcomingProjects.length > 0 ? ', ' : ''
     const upcomingProjectsText = upcomingProjects.join(', ')
     const individualProjectText = data[rowIndex].projects ? '' : data[rowIndex][field]
     return (
@@ -40,7 +40,7 @@ export default class ProjectCell extends React.Component {
         className="clickable"
       >
         <b>{currentProjectsText}</b>
-        {projectsConnectingText}
+        {separator}
         {upcomingProjectsText}
         {individualProjectText}
       </Cell>
