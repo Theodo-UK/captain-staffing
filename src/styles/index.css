@@ -14,6 +14,14 @@ body {
   cursor: pointer;
 }
 
+.pickYourSkillLink {
+  white-space: nowrap;
+  max-width: 10%;
+  width: 10%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .pickYourSkillLink:hover {
   font-weight: 600;
   color: purple;

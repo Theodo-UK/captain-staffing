@@ -10,6 +10,10 @@ export default class HeaderCell extends React.Component {
   };
 
   render() {
+    const addEllipsisToLongName = (name) => {
+      return name.length > 21 ? `${name.slice(0, 21)}...` : name
+    }
+
     const { rowIndex, field, data, ...props } = this.props
     return (
       <div>
@@ -29,7 +33,7 @@ export default class HeaderCell extends React.Component {
               rel="noopener noreferrer"
               target="_blank"
             >
-              {data[rowIndex][field]}
+              {addEllipsisToLongName(data[rowIndex][field])}
             </a>
           </Cell>
         )}
