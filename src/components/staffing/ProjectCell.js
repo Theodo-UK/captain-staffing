@@ -1,6 +1,6 @@
 import React from 'react'
 import { Cell } from 'fixed-data-table'
-import { IGNORED_PROJECT_NAMES } from '../../constants/ignoredProjectNames'
+import { IGNORED_PROJECT_NAMES } from '../../constants'
 
 export default class ProjectCell extends React.Component {
   static propTypes = {

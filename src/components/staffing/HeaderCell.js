@@ -1,5 +1,7 @@
 import React from 'react'
 import { Cell } from 'fixed-data-table'
+import { addEllipsisToLongString } from '../../helpers/utils'
+import { MAX_NAME_CHARS } from '../../constants'
 
 export default class HeaderCell extends React.Component {
   static propTypes = {
@@ -29,7 +31,7 @@ export default class HeaderCell extends React.Component {
               rel="noopener noreferrer"
               target="_blank"
             >
-              {data[rowIndex][field]}
+              {addEllipsisToLongString(data[rowIndex][field], MAX_NAME_CHARS)}
             </a>
           </Cell>
         )}
