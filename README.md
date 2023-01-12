@@ -48,3 +48,7 @@ Cosmetic               | :lipstick: `:lipstick:`
 Tooling                | :wrench: `:wrench:`
 Tests                  | :rotating_light: `:rotating_light:`
 Work In Progress (WIP) | :construction: `:construction:`
+
+## [Architecture Diagram](https://app.diagrams.net/#G1e2bzPIZCX5jeMCaOFt4A8heRurJYnbYe)
+
+![architecture-diagram](src/assets/captain-staffing-architecture.drawio.png)
