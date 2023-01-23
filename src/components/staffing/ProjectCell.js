@@ -1,6 +1,7 @@
 import React from 'react'
 import { Cell } from 'fixed-data-table'
-import { IGNORED_PROJECT_NAMES } from '../../constants'
+import { IGNORED_PROJECT_NAMES, MAP_PROJECT_NAMES } from '../../constants'
+import ProjectCellText from './ProjectCellText'
 
 export default class ProjectCell extends React.Component {
   static propTypes = {
@@ -29,19 +30,20 @@ export default class ProjectCell extends React.Component {
     const upcomingProjects = projects.filter(
       (project) => { return !currentProjects.includes(project) }
     )
-    const currentProjectsText = currentProjects.join(', ')
-    const separator = currentProjects.length > 0 && upcomingProjects.length > 0 ? ', ' : ''
-    const upcomingProjectsText = upcomingProjects.join(', ')
     const isIndividualProject = data[rowIndex].projects === undefined
-    const cellText = isIndividualProject ? data[rowIndex][field] : (
-      <div>
-        <b>
-          {currentProjectsText}
-        </b>
-        { separator }
-        { upcomingProjectsText }
-      </div>
+    const individualProjectText = isIndividualProject ? data[rowIndex][field] : ''
+    const individualProjectRenamedText = MAP_PROJECT_NAMES[individualProjectText]
+    ? MAP_PROJECT_NAMES[individualProjectText]
+    : individualProjectText
+    const cellText = isIndividualProject
+    ? individualProjectRenamedText
+    : (
+      <ProjectCellText
+        currentProjects={currentProjects}
+        upcomingProjects={upcomingProjects}
+      />
     )
+
     return (
       <Cell
         {...props}
