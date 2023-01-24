@@ -28,6 +28,7 @@ export function load(callback) {
         ranges: [
           'StaffingView!A1:AV2000',
           'ProjectView!A1:AV2000',
+          'Metadata!A1:AV2000',
         ],
       }
     ).then(
@@ -36,6 +37,9 @@ export function load(callback) {
 
         const staffingRows = response.result.valueRanges[0].values || []
         const projectRows = response.result.valueRanges[1].values || []
+
+        const lastUpdated = response.result.valueRanges[2].values
+        ? response.result.valueRanges[2].values[0][0] : ''
 
         let weeks = staffingRows[1].slice(4)
 
@@ -63,7 +67,8 @@ export function load(callback) {
           globalStaffing,
           companies,
           positions,
-          globalProjects
+          globalProjects,
+          lastUpdated
         )
       },
       (response) => {

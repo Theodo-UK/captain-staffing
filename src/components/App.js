@@ -29,6 +29,7 @@ import {
   sortButtonStyle,
   switchTabButtonStyle,
 } from './App.styles'
+import LastUpdatedText from './LastUpdatedText'
 
 const reload = () => {
   clearLocaleStorage()
@@ -217,6 +218,7 @@ class App extends Component {
     companies,
     positions,
     globalProjects,
+    lastUpdated,
     error
   ) {
     if (globalStaffing && globalProjects) {
@@ -284,6 +286,7 @@ class App extends Component {
         positions: positionSelection,
         globalStaffing: globalStaffingWithImportance,
         globalProjects: globalProjectsWithImportance,
+        lastUpdatedTime: lastUpdated,
       })
     } else {
       this.setState({
@@ -328,9 +331,12 @@ class App extends Component {
     }
 
     return (
-      <button onClick={reload} className="btn">
-        Reload
-      </button>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <LastUpdatedText lastUpdatedString={this.state.lastUpdatedTime} />
+        <button onClick={reload} className="btn">
+          Reload
+        </button>
+      </div>
     )
   }
 
