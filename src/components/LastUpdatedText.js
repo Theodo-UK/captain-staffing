@@ -1,4 +1,5 @@
 import React from 'react'
+import { getTimeDifference } from '../helpers/getTimeDifference'
 
 export default class LastUpdatedText extends React.Component {
 
@@ -10,20 +11,11 @@ export default class LastUpdatedText extends React.Component {
     this.state = { timeDifferenceInMinutes: 0 }
   }
 
-
-  getTimeDifference(lastUpdated) {
-    const lastUpdatedTime = lastUpdated
-    ? new Date(lastUpdated)
-    : new Date(this.props.lastUpdatedString)
-    const currentTime = new Date()
-    const timeDifference = currentTime - lastUpdatedTime
-    const timeDifferenceInMinutes = Math.floor(timeDifference / 60000)
-    return timeDifferenceInMinutes
-  }
-
   componentDidMount() {
     this.interval = setInterval(() => {
-      this.setState({ timeDifferenceInMinutes: this.getTimeDifference() })
+      this.setState({
+        timeDifferenceInMinutes: getTimeDifference(this.props.lastUpdatedString),
+      })
     }, 1000)
   }
   componentWillUnmount() {
@@ -32,7 +24,7 @@ export default class LastUpdatedText extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.lastUpdatedString) {
       this.setState({
-        timeDifferenceInMinutes: this.getTimeDifference(nextProps.lastUpdatedString),
+        timeDifferenceInMinutes: getTimeDifference(nextProps.lastUpdatedString),
       })
     }
   }
@@ -44,10 +36,12 @@ export default class LastUpdatedText extends React.Component {
       return null
     }
 
+    const text = `Last updated: ${this.state.timeDifferenceInMinutes} minute${this.state.timeDifferenceInMinutes !== 1 ? 's' : ''} ago`
+
 
     return (
       <div>
-        Last updated: {this.state.timeDifferenceInMinutes} minute{this.state.timeDifferenceInMinutes !== 1 ? 's' : ''} ago
+        {text}
       </div>
     )
   }
