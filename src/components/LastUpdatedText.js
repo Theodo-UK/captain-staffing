@@ -36,12 +36,12 @@ export default class LastUpdatedText extends React.Component {
       return null
     }
 
-    const timeText = `${this.state.timeDifferenceInMinutes} minute${this.state.timeDifferenceInMinutes !== 1 ? 's' : ''}`
+    const timePostfix = this.state.timeDifferenceInMinutes !== 1 ? 's' : ''
 
 
     return (
       <div>
-        Last updated: {timeText} ago
+        Last updated: {this.state.timeDifferenceInMinutes} minute{timePostfix} ago
       </div>
     )
   }
