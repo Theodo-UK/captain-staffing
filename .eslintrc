@@ -5,9 +5,10 @@
     "jest": true,
     "es6": true
   },
-  "extends": "airbnb",
+  "extends": ["airbnb", "eslint:recommended", "plugin:import/recommended"],
   "parser": "babel-eslint",
   "rules": {
+    "no-console": 1,
     "arrow-body-style": [2, "always"],
     "comma-dangle": [2, "always-multiline"],
     "import/prefer-default-export": 0,
@@ -21,15 +22,14 @@
     "react/sort-comp": 0,
     "react/no-array-index-key": 0,
     "react/prefer-stateless-function": 0,
-    "react/require-default-props": 0
+    "react/require-default-props": 0,
+    "max-lines": ["error", { "max": 300, "skipBlankLines": true }],
+    "complexity": ["error", 7]
   },
   "settings": {
     "import/resolver": {
       "node": {
-        "moduleDirectory": [
-          "node_modules",
-          "src"
-        ]
+        "moduleDirectory": ["node_modules", "src"]
       }
     }
   }
