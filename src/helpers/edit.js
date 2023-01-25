@@ -23,23 +23,23 @@ export function toggleByPeopleRow(peopleRow, data) {
   })
 
   if (index !== -1) {
+    const newRows = map(data[index].projects, (project) => {
+      return {
+        name: '',
+        staffing: data[index].staffing,
+        company: data[index].company,
+        position: data[index].position,
+        importance: data[index].importance,
+        project,
+        _name: data[index].name,
+      }
+    })
+    const filteredRows = newRows.filter((row) => { return isProjectStaffed(row) })
+
     if (data[index].isOpen) {
       data[index].isOpen = false
-      data.splice(index + 1, data[index].projects.length)
-    } else {
-      const newRows = map(data[index].projects, (project) => {
-        return {
-          name: '',
-          staffing: data[index].staffing,
-          company: data[index].company,
-          position: data[index].position,
-          importance: data[index].importance,
-          project,
-          _name: data[index].name,
-        }
-      })
-      const filteredRows = newRows.filter((row) => { return isProjectStaffed(row) })
-
+      data.splice(index + 1, filteredRows.length)
+    } else if (filteredRows.length !== 0) {
       data[index].isOpen = true
       data.splice(index + 1, 0, ...filteredRows)
     }
