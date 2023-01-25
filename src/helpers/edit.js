@@ -1,15 +1,11 @@
 import { findIndex, map } from 'lodash'
 
 function isProjectStaffed(projectRow) {
-  const projectName = projectRow.project
-  const isStaffed = Object.keys(projectRow.staffing).reduce((acc, val) => {
-    if (acc) return acc
-    const projectStaffing = projectRow.staffing[val][projectName]
-    if (projectStaffing !== null && projectStaffing > 0) {
-      return true
-    }
-    return false
-  }, false)
+  const { project: projectName } = projectRow
+  const isStaffed = Object.keys(projectRow.staffing).some((week) => {
+    const projectStaffing = projectRow.staffing[week][projectName]
+    return projectStaffing !== null && projectStaffing > 0
+  })
   return isStaffed
 }
 
