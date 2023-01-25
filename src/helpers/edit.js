@@ -1,5 +1,18 @@
 import { findIndex, map } from 'lodash'
 
+function isProjectStaffed(projectRow) {
+  const projectName = projectRow.project
+  const isStaffed = Object.keys(projectRow.staffing).reduce((acc, val) => {
+    if (acc) return acc
+    const projectStaffing = projectRow.staffing[val][projectName]
+    if (projectStaffing !== null && projectStaffing > 0) {
+      return true
+    }
+    return false
+  }, false)
+  return isStaffed
+}
+
 export function toggleByPeopleRow(peopleRow, data) {
   if (!peopleRow) {
     return data
@@ -25,9 +38,10 @@ export function toggleByPeopleRow(peopleRow, data) {
           _name: data[index].name,
         }
       })
+      const filteredRows = newRows.filter((row) => { return isProjectStaffed(row) })
 
       data[index].isOpen = true
-      data.splice(index + 1, 0, ...newRows)
+      data.splice(index + 1, 0, ...filteredRows)
     }
   }
 
