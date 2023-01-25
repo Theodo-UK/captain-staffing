@@ -23,8 +23,9 @@
     "react/no-array-index-key": 0,
     "react/prefer-stateless-function": 0,
     "react/require-default-props": 0,
+
     "max-lines": ["error", { "max": 300, "skipBlankLines": true }],
-    "complexity": ["error", 7]
+    "complexity": ["error", 6]
   },
   "settings": {
     "import/resolver": {
