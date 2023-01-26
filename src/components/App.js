@@ -30,6 +30,8 @@ import {
   switchTabButtonStyle,
 } from './App.styles'
 import LastUpdatedText from './LastUpdatedText'
+import { getSyncStatus } from '../helpers/spreadsheet'
+import ReloadButton from './ReloadButton'
 
 const reload = () => {
   clearLocaleStorage()
@@ -144,6 +146,7 @@ class App extends Component {
       globalProjects: undefined,
       isSortedByImportance: false,
       activeTab: TABS.STAFFING,
+      isSyncing: true,
     }
 
     this.lastClicked = undefined
@@ -153,6 +156,24 @@ class App extends Component {
     this.setState({
       googleAuthenticated: true,
     })
+    getSyncStatus(this.onSyncUpdate.bind(this))
+  }
+
+  onSyncUpdate(syncStatus, error) {
+    if (error) {
+      console.log('Error fetching sync status.')
+      return
+    }
+    this.setState({isSyncing: syncStatus})
+    console.log('Sync status:', this.state.isSyncing)
+  }
+
+  componentDidMount() {
+    this.interval = setInterval(() => {
+      if (this.state.googleAuthenticated){
+        getSyncStatus(this.onSyncUpdate.bind(this))
+      }
+    }, 5000)
   }
 
   onGoogleFailure() {
@@ -333,9 +354,7 @@ class App extends Component {
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <LastUpdatedText lastUpdatedString={this.state.lastUpdatedTime} />
-        <button onClick={reload} className="btn">
-          Reload
-        </button>
+        <ReloadButton reloadFunction={reload} syncStatus={this.state.isSyncing} />
       </div>
     )
   }
