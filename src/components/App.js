@@ -30,7 +30,7 @@ import {
   switchTabButtonStyle,
 } from './App.styles'
 import LastUpdatedText from './LastUpdatedText'
-import { getSyncStatus } from '../helpers/spreadsheet'
+import { getSyncStatus, scheduleUpdate } from '../helpers/spreadsheet'
 import ReloadButton from './ReloadButton'
 
 const reload = () => {
@@ -354,7 +354,7 @@ class App extends Component {
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <LastUpdatedText lastUpdatedString={this.state.lastUpdatedTime} />
-        <ReloadButton reloadFunction={reload} syncStatus={this.state.isSyncing} />
+        <ReloadButton reloadFunction={scheduleUpdate} syncStatus={this.state.isSyncing} />
       </div>
     )
   }

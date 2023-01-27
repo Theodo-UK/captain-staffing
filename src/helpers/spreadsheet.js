@@ -37,6 +37,21 @@ export function getSyncStatus(callback) {
   })
 }
 
+export function scheduleUpdate() {
+  window.gapi.client.load('sheets', 'v4', () => {
+    window.gapi.client.sheets.spreadsheets.values.update({
+      spreadsheetId: config.spreadsheetId,
+      range: 'Metadata!A3',
+      resource: {
+        values: [['UPDATE_SCHEDULED']],
+      },
+      valueInputOption: 'RAW',
+    }).then((response) => {
+      console.log(response)
+    })
+  })
+}
+
 /**
  * Load the content from the spreadsheet
  */
