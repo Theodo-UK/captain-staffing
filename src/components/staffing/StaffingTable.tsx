@@ -8,13 +8,13 @@ import moment from 'moment'
 
 import 'fixed-data-table/dist/fixed-data-table.css'
 
-export default class StaffingTable extends React.Component {
-  static propTypes = {
-    weeks: React.PropTypes.array.isRequired,
-    peopleStaffing: React.PropTypes.array.isRequired,
-    onRowClick: React.PropTypes.func,
-  }
+interface StaffingTableProps {
+  weeks: unknown[]
+  peopleStaffing: unknown[]
+  onRowClick?(...args: unknown[]): unknown
+}
 
+export default class StaffingTable extends React.Component<StaffingTableProps> {
   render() {
     return (
       <Table

@@ -3,14 +3,14 @@ import { Cell } from 'fixed-data-table'
 import { IGNORED_PROJECT_NAMES, MAP_PROJECT_NAMES } from '../../constants'
 import ProjectCellText from './ProjectCellText'
 
-export default class ProjectCell extends React.Component {
-  static propTypes = {
-    data: React.PropTypes.array.isRequired,
-    field: React.PropTypes.string,
-    rowIndex: React.PropTypes.number,
-    onClick: React.PropTypes.func,
-  };
+interface ProjectCellProps {
+  data: Array<any>
+  field?: string
+  rowIndex?: number
+  onClick?(...args: unknown[]): unknown
+}
 
+export default class ProjectCell extends React.Component<ProjectCellProps> {
   render() {
     const { rowIndex, field, data, ...props } = this.props
     const sortedWeeks = Object.keys(data[rowIndex].staffing)

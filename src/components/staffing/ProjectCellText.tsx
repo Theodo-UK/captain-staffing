@@ -1,13 +1,12 @@
 import React from 'react'
 import { MAP_PROJECT_NAMES } from '../../constants'
 
-export default class ProjectCellText extends React.Component {
+interface ProjectCellTextProps {
+  currentProjects: unknown[]
+  upcomingProjects: unknown[]
+}
 
-  static propTypes = {
-    currentProjects: React.PropTypes.array.isRequired,
-    upcomingProjects: React.PropTypes.array.isRequired,
-  };
-
+export default class ProjectCellText extends React.Component<ProjectCellTextProps> {
   render() {
     const { currentProjects, upcomingProjects } = this.props
     const renamedCurrentProjects = currentProjects.map(

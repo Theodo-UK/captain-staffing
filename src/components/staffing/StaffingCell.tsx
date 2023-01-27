@@ -43,14 +43,14 @@ const getValue = (row, week) => {
   return roundToOneDecimal(row.staffing[week]._total)
 }
 
-export default class StaffingCell extends React.Component {
-  static propTypes = {
-    data: React.PropTypes.array.isRequired,
-    week: React.PropTypes.string,
-    rowIndex: React.PropTypes.number,
-    onClick: React.PropTypes.func.isRequired,
-  };
+interface StaffingCellProps {
+  data: unknown[]
+  week?: string
+  rowIndex?: number
+  onClick(...args: unknown[]): unknown
+}
 
+export default class StaffingCell extends React.Component<StaffingCellProps> {
   render() {
     const { rowIndex, week, data, ...props } = this.props
     const backgroundColor = getColor(data[rowIndex], week)

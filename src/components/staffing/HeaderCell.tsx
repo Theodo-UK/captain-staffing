@@ -3,14 +3,14 @@ import { Cell } from 'fixed-data-table'
 import { addEllipsisToLongString } from '../../helpers/utils'
 import { MAX_NAME_CHARS } from '../../constants'
 
-export default class HeaderCell extends React.Component {
-  static propTypes = {
-    data: React.PropTypes.array.isRequired,
-    field: React.PropTypes.string,
-    rowIndex: React.PropTypes.number,
-    onClick: React.PropTypes.func,
-  };
+interface HeaderCellProps {
+  data: Array<any>
+  field?: string
+  rowIndex?: number
+  onClick?(...args: unknown[]): unknown
+}
 
+export default class HeaderCell extends React.Component<HeaderCellProps> {
   render() {
     const { rowIndex, field, data, ...props } = this.props
     return (
