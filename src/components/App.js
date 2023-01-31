@@ -33,10 +33,10 @@ import LastUpdatedText from './LastUpdatedText'
 import { getSyncStatus, scheduleUpdate } from '../helpers/spreadsheet'
 import ReloadButton from './ReloadButton'
 
-// const reload = () => {
-//   clearLocaleStorage()
-//   window.location.reload()
-// }
+const reload = () => {
+  clearLocaleStorage()
+  window.location.reload()
+}
 
 const TABS = {
   STAFFING: 'Staffing',
@@ -146,7 +146,8 @@ class App extends Component {
       globalProjects: undefined,
       isSortedByImportance: false,
       activeTab: TABS.STAFFING,
-      isSyncing: true,
+      isSyncing: false,
+      refreshRequired: false,
     }
 
     this.lastClicked = undefined
@@ -163,6 +164,9 @@ class App extends Component {
     if (error) {
       console.log('Error fetching sync status.')
       return
+    }
+    if (this.state.isSyncing && !syncStatus) {
+      this.setState({refreshRequired: true})
     }
     this.setState({isSyncing: syncStatus})
     console.log('Sync status:', this.state.isSyncing)
@@ -354,7 +358,7 @@ class App extends Component {
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <LastUpdatedText lastUpdatedString={this.state.lastUpdatedTime} />
-        <ReloadButton reloadFunction={scheduleUpdate} syncStatus={this.state.isSyncing} />
+        <ReloadButton reloadFunction={this.state.refreshRequired ? reload : scheduleUpdate} syncStatus={this.state.isSyncing} refreshRequired={this.state.refreshRequired} />
       </div>
     )
   }
