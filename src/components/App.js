@@ -33,10 +33,10 @@ import LastUpdatedText from './LastUpdatedText'
 import { getSyncStatus, scheduleUpdate } from '../helpers/spreadsheet'
 import ReloadButton from './ReloadButton'
 
-const reload = () => {
-  clearLocaleStorage()
-  window.location.reload()
-}
+// const reload = () => {
+//   clearLocaleStorage()
+//   window.location.reload()
+// }
 
 const TABS = {
   STAFFING: 'Staffing',
