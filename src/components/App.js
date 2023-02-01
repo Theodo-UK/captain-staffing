@@ -137,7 +137,7 @@ class App extends Component {
     super(props)
 
     this.state = {
-      googleAuthenticated: null,
+      isGoogleAuthenticated: null,
       tabToggle: 'staffing',
       companies: undefined,
       positions: undefined,
@@ -147,7 +147,7 @@ class App extends Component {
       isSortedByImportance: false,
       activeTab: TABS.STAFFING,
       isSyncing: false,
-      refreshRequired: false,
+      isRefreshRequired: false,
     }
 
     this.lastClicked = undefined
@@ -155,7 +155,7 @@ class App extends Component {
 
   onGoogleSuccess() {
     this.setState({
-      googleAuthenticated: true,
+      isGoogleAuthenticated: true,
     })
     getSyncStatus(this.onSyncUpdate.bind(this))
   }
@@ -166,7 +166,7 @@ class App extends Component {
       return
     }
     if (this.state.isSyncing && !syncStatus) {
-      this.setState({refreshRequired: true})
+      this.setState({isRefreshRequired: true})
     }
     this.setState({isSyncing: syncStatus})
     console.log('Sync status:', this.state.isSyncing)
@@ -174,7 +174,7 @@ class App extends Component {
 
   componentDidMount() {
     this.interval = setInterval(() => {
-      if (this.state.googleAuthenticated){
+      if (this.state.isGoogleAuthenticated){
         getSyncStatus(this.onSyncUpdate.bind(this))
       }
     }, 5000)
@@ -345,7 +345,7 @@ class App extends Component {
   }
 
   renderGoogle() {
-    if (!this.state.googleAuthenticated) {
+    if (!this.state.isGoogleAuthenticated) {
       return (
         <CaptainGoogle
           onSuccess={this.onGoogleSuccess.bind(this)}
@@ -358,7 +358,7 @@ class App extends Component {
     return (
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <LastUpdatedText lastUpdatedString={this.state.lastUpdatedTime} />
-        <ReloadButton reloadFunction={this.state.refreshRequired ? reload : scheduleUpdate} syncStatus={this.state.isSyncing} refreshRequired={this.state.refreshRequired} />
+        <ReloadButton reloadFunction={this.state.isRefreshRequired ? reload : scheduleUpdate} syncStatus={this.state.isSyncing} isRefreshRequired={this.state.isRefreshRequired} />
       </div>
     )
   }
@@ -521,7 +521,7 @@ class App extends Component {
       )
     } else if (this.state.error) {
       return <Alert error={this.state.error} />
-    } else if (this.state.googleAuthenticated) {
+    } else if (this.state.isGoogleAuthenticated) {
       return <div className="loader" />
     }
     return null

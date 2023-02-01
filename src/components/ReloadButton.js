@@ -5,7 +5,7 @@ export default class ReloadButton extends React.Component {
   static propTypes = {
     reloadFunction: React.PropTypes.func.isRequired,
     syncStatus: React.PropTypes.bool,
-    refreshRequired: React.PropTypes.bool,
+    isRefreshRequired: React.PropTypes.bool,
 
   };
   constructor(props) {
@@ -22,14 +22,14 @@ export default class ReloadButton extends React.Component {
   }
 
   render() {
-    const { reloadFunction, syncStatus, refreshRequired } = this.props
+    const { reloadFunction, syncStatus, isRefreshRequired } = this.props
 
     if (!reloadFunction) {
       return null
     }
 
     const buttonDisabled = syncStatus | this.state.buttonPressed
-    const activebuttonText = refreshRequired ? 'Reload Page' : 'Update Staffing'
+    const activebuttonText = isRefreshRequired ? 'Reload Page' : 'Update Staffing'
     const buttonText = buttonDisabled ? 'Updating...' : activebuttonText
 
 
