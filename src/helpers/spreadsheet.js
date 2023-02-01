@@ -17,6 +17,41 @@ export function checkAuth(immediate, callback) {
   )
 }
 
+export function getSyncStatus(callback) {
+  window.gapi.client.load('sheets', 'v4', () => {
+    window.gapi.client.sheets.spreadsheets.values.get({
+      spreadsheetId: config.spreadsheetId,
+      range: 'Metadata!A1:AV2000',
+    }).then(
+      (response) => {
+        console.log('[Sync Response]', response)
+        const statusValue = response.result.values[1][0]
+        ? response.result.values[1][0] : ''
+        const isSyncing = statusValue === 'running'
+        callback(isSyncing)
+      },
+      (response) => {
+        callback(null, response.result.error)
+      }
+    )
+  })
+}
+
+export function scheduleUpdate() {
+  window.gapi.client.load('sheets', 'v4', () => {
+    window.gapi.client.sheets.spreadsheets.values.update({
+      spreadsheetId: config.spreadsheetId,
+      range: 'Metadata!A3',
+      resource: {
+        values: [['UPDATE_SCHEDULED']],
+      },
+      valueInputOption: 'RAW',
+    }).then((response) => {
+      console.log(response)
+    })
+  })
+}
+
 /**
  * Load the content from the spreadsheet
  */

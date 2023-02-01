@@ -21,3 +21,10 @@
     position: relative;
     top: 1px;
   }
+  .btn:disabled {
+    background-color: #c4c4c4;
+    cursor: default;
+  }
+  .btn:disabled:active{
+    top: 0
+  }
