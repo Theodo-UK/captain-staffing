@@ -61,8 +61,8 @@ export function load(callback) {
       {
         spreadsheetId: config.spreadsheetId,
         ranges: [
-          'StaffingView!A1:AV2000',
-          'ProjectView!A1:AV2000',
+          'StaffingView!A1:AV4000',
+          'ProjectView!A1:AV4000',
           'Metadata!A1:AV2000',
         ],
       }
