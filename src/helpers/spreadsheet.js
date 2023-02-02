@@ -21,7 +21,7 @@ export function getSyncStatus(callback) {
   window.gapi.client.load('sheets', 'v4', () => {
     window.gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: config.spreadsheetId,
-      range: 'Metadata!A1:AV2000',
+      range: 'Metadata!A1:AV',
     }).then(
       (response) => {
         console.log('[Sync Response]', response)
@@ -61,9 +61,9 @@ export function load(callback) {
       {
         spreadsheetId: config.spreadsheetId,
         ranges: [
-          'StaffingView!A1:AV4000',
-          'ProjectView!A1:AV4000',
-          'Metadata!A1:AV2000',
+          'StaffingView!A1:AV',
+          'ProjectView!A1:AV',
+          'Metadata!A1:AV',
         ],
       }
     ).then(
