@@ -15,7 +15,7 @@ import Alert from './Alert'
 
 import StaffingTable from './staffing/StaffingTable'
 import ProjectTable from './project/ProjectTable'
-import { getPositionForFilter } from '../helpers/formatter'
+import { getPositionForFilter, columnData, columnTitles} from '../helpers/formatter'
 
 import CaptainGoogle from './CaptainGoogle'
 
@@ -148,6 +148,8 @@ class App extends Component {
       activeTab: TABS.STAFFING,
       isSyncing: false,
       isRefreshRequired: false,
+      columnOrder: Object.keys(columnTitles),
+      columnData: columnData,
     }
 
     this.lastClicked = undefined
@@ -418,6 +420,20 @@ class App extends Component {
     })
   }
 
+  handleColumnHide (currentNode, selectedNodes){
+    console.log(currentNode.label)
+    console.log(this.state.columnOrder)
+      const newColumnOrder = this.state.columnOrder.filter((column) => {if(column !== currentNode.label){
+        return column
+      }})
+      this.setState({
+        columnOrder: newColumnOrder,
+      })
+
+
+    console.log(newColumnOrder)
+  }
+
   renderStaffing() {
     if (this.state.globalStaffing && this.state.globalProjects) {
       const staffingToDisplay = this.state.globalStaffing
@@ -431,6 +447,7 @@ class App extends Component {
       const inStaffingCrisis = staffingToDisplay.filter(
         (staffing) => { return staffing.isInStaffingCrisis }
       ).length
+      
       const inStaffingAlert =
         staffingToDisplay.filter((staffing) => { return staffing.isInStaffingAlert })
           .length - inStaffingCrisis
@@ -500,10 +517,18 @@ class App extends Component {
                   Staffing crisis count: <span>{inStaffingCrisis}</span>
                 </span>
               </div>
+              <div style={{ float: 'right'}}>
+                <DropdownTreeSelect
+                  className="positionDropdown"
+                  data={columnData}
+                  onChange={this.handleColumnHide.bind(this)}
+                />
+              </div>
               <StaffingTable
                 peopleStaffing={staffingToDisplay}
                 onRowClick={this.onStaffingTableRowClick.bind(this)}
                 weeks={this.state.weeks}
+                columnOrder={this.state.columnOrder}
               />
             </div>
           )}

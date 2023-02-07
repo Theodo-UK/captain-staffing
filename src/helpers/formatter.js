@@ -26,6 +26,27 @@ export const subTypes = {
   Other: ['Externe', 'Head of Tribe', 'R&D', 'Evangelist', 'Dirigeant'],
 }
 
+export const columnData = [
+  {
+    label: 'name',
+    checked : true,
+  },
+  {
+    label: 'company',
+    checked : true,
+  },
+  {
+    label: 'project',
+    checked : true,
+  },
+]
+
+export const columnTitles = {
+  name: 'name',
+  company: 'company',
+  project: 'project',
+}
+
 const STAFFING_ALERT_THRESHOLD = 10
 const STAFFING_CRISIS_THRESHOLD = 5
 

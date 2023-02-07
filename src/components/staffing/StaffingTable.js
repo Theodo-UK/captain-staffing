@@ -8,14 +8,18 @@ import moment from 'moment'
 
 import 'fixed-data-table/dist/fixed-data-table.css'
 
+
 export default class StaffingTable extends React.Component {
   static propTypes = {
     weeks: React.PropTypes.array.isRequired,
     peopleStaffing: React.PropTypes.array.isRequired,
     onRowClick: React.PropTypes.func,
+    columnOrder: React.PropTypes.array,
   }
 
+
   render() {
+    console.log(this.props.columnOrder)
     return (
       <Table
         width={window.innerWidth - 20}
@@ -26,42 +30,48 @@ export default class StaffingTable extends React.Component {
         maxHeight={750}
         headerHeight={40}
       >
-        <Column
-          header="User"
-          cell={
-            <HeaderCell
-              data={this.props.peopleStaffing}
-              onClick={this.props.onRowClick}
-              field="name"
-            />
-          }
-          width={200}
-          fixed
-        />
-        <Column
-          header="Company"
-          cell={
-            <HeaderCell
-              data={this.props.peopleStaffing}
-              onClick={this.props.onRowClick}
-              field="company"
-            />
-          }
-          width={120}
-          fixed
-        />
-        <Column
-          header="Project"
+        {this.props.columnOrder.map((columnKey, i) => {
+            return (
+              
+              <Column
+                header={columnKey}
+                key={i}
+
+
+                cell={
+                  
+                  columnKey !== 'project' ? (
+
+                  <HeaderCell
+                    data={this.props.peopleStaffing}
+                    onClick={this.props.onRowClick}
+                    field={columnKey}
+                  />) : (
+
+                    <ProjectCell
+                      data={this.props.peopleStaffing}
+                      onClick={this.props.onRowClick}
+                      field={columnKey}
+                    />
+                  )
+              
+              }
+                width={200}
+              />
+            )
+          })}
+         {/* <Column
+          header={this.props.columnOrder[2]}
           cell={
             <ProjectCell
               data={this.props.peopleStaffing}
               onClick={this.props.onRowClick}
-              field="project"
+              field={this.props.columnOrder[2]}
             />
           }
-          width={250}
+          width={200}
           fixed
-        />
+        /> */}
         {this.props.weeks.map((week, i) => {
           return (
             <Column
