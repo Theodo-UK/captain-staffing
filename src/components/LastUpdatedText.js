@@ -8,13 +8,15 @@ export default class LastUpdatedText extends React.Component {
   };
   constructor(props) {
     super(props)
-    this.state = { timeDifferenceInMinutes: 0 }
+    this.state = { timeDifferenceInMinutes: 0, timeDifferenceInHours: 0 }
   }
 
   componentDidMount() {
     this.interval = setInterval(() => {
+      const timeDifference = getTimeDifference(this.props.lastUpdatedString)
       this.setState({
-        timeDifferenceInMinutes: getTimeDifference(this.props.lastUpdatedString),
+        timeDifferenceInMinutes: timeDifference.minutes,
+        timeDifferenceInHours: timeDifference.hours,
       })
     }, 1000)
   }
@@ -23,8 +25,10 @@ export default class LastUpdatedText extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.lastUpdatedString) {
+      const timeDifference = getTimeDifference(this.props.lastUpdatedString)
       this.setState({
-        timeDifferenceInMinutes: getTimeDifference(nextProps.lastUpdatedString),
+        timeDifferenceInMinutes: timeDifference.minutes,
+        timeDifferenceInHours: timeDifference.hours,
       })
     }
   }
@@ -36,12 +40,15 @@ export default class LastUpdatedText extends React.Component {
       return null
     }
 
-    const timePostfix = this.state.timeDifferenceInMinutes !== 1 ? 's' : ''
+    const hoursPostfix = this.state.timeDifferenceInHours !== 1 ? 's' : ''
+    const minutesPostfix = this.state.timeDifferenceInMinutes !== 1 ? 's' : ''
+
+    const hoursText = this.state.timeDifferenceInHours > 0 ? `${this.state.timeDifferenceInHours} hour${hoursPostfix} ` : ''
 
 
     return (
       <div>
-        Last updated: {this.state.timeDifferenceInMinutes} minute{timePostfix} ago
+        Last updated: {hoursText}{this.state.timeDifferenceInMinutes} minute{minutesPostfix} ago
       </div>
     )
   }
