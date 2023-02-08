@@ -39,12 +39,17 @@ export const columnData = [
     label: 'project',
     checked : true,
   },
+  {
+    label: 'calender',
+    checked : true,
+  },
 ]
 
 export const columnTitles = {
   name: 'name',
   company: 'company',
   project: 'project',
+  calender: 'calender',
 }
 
 const STAFFING_ALERT_THRESHOLD = 10
@@ -98,6 +103,10 @@ export const getColumnFilter = (selected) => {
     {
       label: 'project',
       checked : selected.includes('project'),
+    },
+    {
+      label: 'calender',
+      checked : selected.includes('calender'),
     },
   ]
 }

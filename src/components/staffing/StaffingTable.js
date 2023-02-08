@@ -19,7 +19,6 @@ export default class StaffingTable extends React.Component {
 
 
   render() {
-    console.log(this.props.columnOrder)
     return (
       <Table
         width={window.innerWidth - 20}
@@ -42,17 +41,17 @@ export default class StaffingTable extends React.Component {
                   
                   columnKey !== 'project' ? (
 
-                  <HeaderCell
-                    data={this.props.peopleStaffing}
-                    onClick={this.props.onRowClick}
-                    field={columnKey}
-                  />) : (
-
-                    <ProjectCell
+                    <HeaderCell
                       data={this.props.peopleStaffing}
                       onClick={this.props.onRowClick}
                       field={columnKey}
-                    />
+                    />) : (
+
+                      <ProjectCell
+                        data={this.props.peopleStaffing}
+                        onClick={this.props.onRowClick}
+                        field={columnKey}
+                      />
                   )
               
               }
@@ -60,18 +59,6 @@ export default class StaffingTable extends React.Component {
               />
             )
           })}
-         {/* <Column
-          header={this.props.columnOrder[2]}
-          cell={
-            <ProjectCell
-              data={this.props.peopleStaffing}
-              onClick={this.props.onRowClick}
-              field={this.props.columnOrder[2]}
-            />
-          }
-          width={200}
-          fixed
-        /> */}
         {this.props.weeks.map((week, i) => {
           return (
             <Column

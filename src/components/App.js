@@ -421,18 +421,10 @@ class App extends Component {
   }
 
   handleColumnHide (currentNode, selectedNodes){
-    console.log(currentNode.label)
-    console.log(this.state.columnOrder)
-    console.log(Object.values(selectedNodes))
-      const newColumnOrder = this.state.columnOrder.filter((column) => {if(column !== currentNode.label){
-        return column
-      }})
-      this.setState({
-        columnOrder: newColumnOrder,
-      })
-
-
-    console.log(newColumnOrder)
+    const selected = selectedNodes.map((node) => {return node.label})
+    this.setState({
+        columnOrder: Object.values(selected),
+    })
   }
 
   renderStaffing() {
@@ -510,22 +502,25 @@ class App extends Component {
           </div>
           {this.state.activeTab === TABS.STAFFING && (
             <div>
-              <div className="stats-container">
-                <span className="stats-indicator">
-                  Staffing alert count: <span>{inStaffingAlert}</span>
-                </span>
-                <span className="stats-indicator">
+              <div>
+                <div className="stats-container">
+                  <span className="stats-indicator">
+                    Staffing alert count: <span>{inStaffingAlert}</span>
+                  </span>
+                  <span className="stats-indicator">
                   Staffing crisis count: <span>{inStaffingCrisis}</span>
-                </span>
+                  </span>
+                </div>
+                <div style={{ float: 'right'}}>
+                  <DropdownTreeSelect
+                    texts={{ placeholder: 'Filter Columns' }}
+                    className="positionDropdown"
+                    data={getColumnFilter(this.state.columnOrder)}
+                    onChange={this.handleColumnHide.bind(this)}
+                  />
+                </div>
               </div>
-              <div style={{ float: 'right'}}>
-                <DropdownTreeSelect
-                  texts={{ placeholder: 'Filter Columns' }}
-                  className="positionDropdown"
-                  data={getColumnFilter(this.state.columnOrder)}
-                  onChange={this.handleColumnHide.bind(this)}
-                />
-              </div>
+              
               <StaffingTable
                 peopleStaffing={staffingToDisplay}
                 onRowClick={this.onStaffingTableRowClick.bind(this)}
