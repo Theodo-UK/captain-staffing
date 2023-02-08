@@ -31,7 +31,7 @@ export default class StaffingTable extends React.Component {
       >
         
         {
-        (this.props.columnOrder.includes('User') || this.props.columnOrder.includes('all')) && (
+        (this.props.columnOrder.includes('User')) && (
         <Column
           header="User"
           cell={
@@ -50,7 +50,7 @@ export default class StaffingTable extends React.Component {
         
 
         {
-        (this.props.columnOrder.includes('Company') || this.props.columnOrder.includes('all')) && (
+        (this.props.columnOrder.includes('Company')) && (
         <Column
           header="Company"
           cell={
@@ -68,7 +68,7 @@ export default class StaffingTable extends React.Component {
         }
         
         {
-        (this.props.columnOrder.includes('Project') || this.props.columnOrder.includes('all')) && (
+        (this.props.columnOrder.includes('Project')) && (
         <Column
           header="Project"
           cell={
