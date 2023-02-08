@@ -31,6 +31,8 @@ export default class StaffingTable extends React.Component {
       >
         {this.props.columnOrder.map((columnKey, i) => {
             return (
+
+              columnKey != 'calender' && (
               
               <Column
                 header={columnKey}
@@ -58,8 +60,11 @@ export default class StaffingTable extends React.Component {
                 width={200}
               />
             )
+            )
           })}
-        {this.props.weeks.map((week, i) => {
+        {
+        this.props.columnOrder.includes('calender') && (
+        this.props.weeks.map((week, i) => {
           return (
             <Column
               key={i}
@@ -76,7 +81,7 @@ export default class StaffingTable extends React.Component {
               width={60}
             />
           )
-        })}
+        }))}
       </Table>
     )
   }
