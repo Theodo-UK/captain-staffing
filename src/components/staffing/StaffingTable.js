@@ -60,18 +60,6 @@ export default class StaffingTable extends React.Component {
               />
             )
           })}
-         {/* <Column
-          header={this.props.columnOrder[2]}
-          cell={
-            <ProjectCell
-              data={this.props.peopleStaffing}
-              onClick={this.props.onRowClick}
-              field={this.props.columnOrder[2]}
-            />
-          }
-          width={200}
-          fixed
-        /> */}
         {this.props.weeks.map((week, i) => {
           return (
             <Column
