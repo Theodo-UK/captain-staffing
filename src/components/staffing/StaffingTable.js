@@ -84,7 +84,7 @@ export default class StaffingTable extends React.Component {
         )
         }        
         {
-        this.props.columnOrder.includes('Calender') && (
+        this.props.columnOrder.includes('Calendar') && (
         this.props.weeks.map((week, i) => {
           return (
             <Column

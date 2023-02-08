@@ -30,7 +30,7 @@ export const columnTitles = {
   User: 'user',
   Company: 'company',
   Project: 'project',
-  Calender: 'calender',
+  Calendar: 'calendar',
 }
 
 const STAFFING_ALERT_THRESHOLD = 10
@@ -86,8 +86,8 @@ export const getColumnFilter = (selected) => {
       checked : selected.includes('Project'),
     },
     {
-      label: 'Calender',
-      checked : selected.includes('Calender'),
+      label: 'Calendar',
+      checked : selected.includes('Calendar'),
     },
   ]
 }
