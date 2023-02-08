@@ -15,7 +15,7 @@ import Alert from './Alert'
 
 import StaffingTable from './staffing/StaffingTable'
 import ProjectTable from './project/ProjectTable'
-import { getPositionForFilter, columnData, columnTitles} from '../helpers/formatter'
+import { getPositionForFilter, columnData, columnTitles, getColumnFilter} from '../helpers/formatter'
 
 import CaptainGoogle from './CaptainGoogle'
 
@@ -423,6 +423,7 @@ class App extends Component {
   handleColumnHide (currentNode, selectedNodes){
     console.log(currentNode.label)
     console.log(this.state.columnOrder)
+    console.log(Object.values(selectedNodes))
       const newColumnOrder = this.state.columnOrder.filter((column) => {if(column !== currentNode.label){
         return column
       }})
@@ -519,8 +520,9 @@ class App extends Component {
               </div>
               <div style={{ float: 'right'}}>
                 <DropdownTreeSelect
+                  texts={{ placeholder: 'Filter Columns' }}
                   className="positionDropdown"
-                  data={columnData}
+                  data={getColumnFilter(this.state.columnOrder)}
                   onChange={this.handleColumnHide.bind(this)}
                 />
               </div>

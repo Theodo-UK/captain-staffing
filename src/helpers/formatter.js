@@ -85,6 +85,22 @@ const formatPositions = (options, positionSelectedPairs) => {
       return { label: position, value: position, children: [], checked: isSelected, id: position }
     })
 }
+export const getColumnFilter = (selected) => {
+  return [
+    {
+      label: 'name',
+      checked : selected.includes('name'),
+    },
+    {
+      label: 'company',
+      checked : selected.includes('company'),
+    },
+    {
+      label: 'project',
+      checked : selected.includes('project'),
+    },
+  ]
+}
 
 export const getPositionForFilter = (positionSelectedPairs, lastClicked = undefined) => {
   const devPositions = formatPositions(subTypes.Devs, positionSelectedPairs)
