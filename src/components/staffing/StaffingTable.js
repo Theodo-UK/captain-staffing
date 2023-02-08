@@ -29,41 +29,62 @@ export default class StaffingTable extends React.Component {
         maxHeight={750}
         headerHeight={40}
       >
-        {this.props.columnOrder.map((columnKey, i) => {
-            return (
-
-              columnKey != 'calender' && (
-              
-              <Column
-                header={columnKey}
-                key={i}
-
-
-                cell={
-                  
-                  columnKey !== 'project' ? (
-
-                    <HeaderCell
-                      data={this.props.peopleStaffing}
-                      onClick={this.props.onRowClick}
-                      field={columnKey}
-                    />) : (
-
-                      <ProjectCell
-                        data={this.props.peopleStaffing}
-                        onClick={this.props.onRowClick}
-                        field={columnKey}
-                      />
-                  )
-              
-              }
-                width={200}
-              />
-            )
-            )
-          })}
+        
         {
-        this.props.columnOrder.includes('calender') && (
+        (this.props.columnOrder.includes('User') || this.props.columnOrder.includes('all')) && (
+        <Column
+          header="User"
+          cell={
+            <HeaderCell
+              data={this.props.peopleStaffing}
+              onClick={this.props.onRowClick}
+              field="name"
+            />
+          }
+          width={200}
+          fixed
+        />
+        )
+
+        }
+        
+
+        {
+        (this.props.columnOrder.includes('Company') || this.props.columnOrder.includes('all')) && (
+        <Column
+          header="Company"
+          cell={
+            <HeaderCell
+              data={this.props.peopleStaffing}
+              onClick={this.props.onRowClick}
+              field="company"
+            />
+          }
+          width={200}
+          fixed
+        />
+        )
+
+        }
+        
+        {
+        (this.props.columnOrder.includes('Project') || this.props.columnOrder.includes('all')) && (
+        <Column
+          header="Project"
+          cell={
+            <ProjectCell
+              data={this.props.peopleStaffing}
+              onClick={this.props.onRowClick}
+              field="name"
+            />
+          }
+          width={200}
+          fixed
+        />
+        )
+        }        
+        {
+        this.props.columnOrder.includes('Calender') && (
         this.props.weeks.map((week, i) => {
           return (
             <Column

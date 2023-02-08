@@ -27,10 +27,10 @@ export const subTypes = {
 }
 
 export const columnTitles = {
-  name: 'name',
-  company: 'company',
-  project: 'project',
-  calender: 'calender',
+  User: 'user',
+  Company: 'company',
+  Project: 'project',
+  Calender: 'calender',
 }
 
 const STAFFING_ALERT_THRESHOLD = 10
@@ -74,20 +74,20 @@ const formatPositions = (options, positionSelectedPairs) => {
 export const getColumnFilter = (selected) => {
   return [
     {
-      label: 'name',
-      checked : selected.includes('name'),
+      label: 'User',
+      checked : selected.includes('User'),
     },
     {
-      label: 'company',
-      checked : selected.includes('company'),
+      label: 'Company',
+      checked : selected.includes('Company'),
     },
     {
-      label: 'project',
-      checked : selected.includes('project'),
+      label: 'Project',
+      checked : selected.includes('Project'),
     },
     {
-      label: 'calender',
-      checked : selected.includes('calender'),
+      label: 'Calender',
+      checked : selected.includes('Calender'),
     },
   ]
 }
