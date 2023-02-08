@@ -26,25 +26,6 @@ export const subTypes = {
   Other: ['Externe', 'Head of Tribe', 'R&D', 'Evangelist', 'Dirigeant'],
 }
 
-export const columnData = [
-  {
-    label: 'name',
-    checked : true,
-  },
-  {
-    label: 'company',
-    checked : true,
-  },
-  {
-    label: 'project',
-    checked : true,
-  },
-  {
-    label: 'calender',
-    checked : true,
-  },
-]
-
 export const columnTitles = {
   name: 'name',
   company: 'company',

@@ -15,7 +15,7 @@ import Alert from './Alert'
 
 import StaffingTable from './staffing/StaffingTable'
 import ProjectTable from './project/ProjectTable'
-import { getPositionForFilter, columnData, columnTitles, getColumnFilter} from '../helpers/formatter'
+import { getPositionForFilter, columnTitles, getColumnFilter} from '../helpers/formatter'
 
 import CaptainGoogle from './CaptainGoogle'
 
@@ -149,7 +149,6 @@ class App extends Component {
       isSyncing: false,
       isRefreshRequired: false,
       columnOrder: Object.keys(columnTitles),
-      columnData: columnData,
     }
 
     this.lastClicked = undefined
