@@ -15,7 +15,7 @@ import Alert from './Alert'
 
 import StaffingTable from './staffing/StaffingTable'
 import ProjectTable from './project/ProjectTable'
-import { getPositionForFilter } from '../helpers/formatter'
+import { getPositionForFilter, columnTitles, getColumnFilter} from '../helpers/formatter'
 
 import CaptainGoogle from './CaptainGoogle'
 
@@ -148,6 +148,7 @@ class App extends Component {
       activeTab: TABS.STAFFING,
       isSyncing: false,
       isRefreshRequired: false,
+      columnOrder: Object.keys(columnTitles),
     }
 
     this.lastClicked = undefined
@@ -418,6 +419,13 @@ class App extends Component {
     })
   }
 
+  handleColumnHide (currentNode, selectedNodes){
+    const selected = selectedNodes.map((node) => {return node.label})
+    this.setState({
+        columnOrder: Object.values(selected),
+    })
+  }
+
   renderStaffing() {
     if (this.state.globalStaffing && this.state.globalProjects) {
       const staffingToDisplay = this.state.globalStaffing
@@ -431,6 +439,7 @@ class App extends Component {
       const inStaffingCrisis = staffingToDisplay.filter(
         (staffing) => { return staffing.isInStaffingCrisis }
       ).length
+      
       const inStaffingAlert =
         staffingToDisplay.filter((staffing) => { return staffing.isInStaffingAlert })
           .length - inStaffingCrisis
@@ -492,18 +501,30 @@ class App extends Component {
           </div>
           {this.state.activeTab === TABS.STAFFING && (
             <div>
-              <div className="stats-container">
-                <span className="stats-indicator">
-                  Staffing alert count: <span>{inStaffingAlert}</span>
-                </span>
-                <span className="stats-indicator">
+              <div>
+                <div className="stats-container">
+                  <span className="stats-indicator">
+                    Staffing alert count: <span>{inStaffingAlert}</span>
+                  </span>
+                  <span className="stats-indicator">
                   Staffing crisis count: <span>{inStaffingCrisis}</span>
-                </span>
+                  </span>
+                </div>
+                <div style={{ float: 'right'}}>
+                  <DropdownTreeSelect
+                    texts={{ placeholder: 'Filter Columns' }}
+                    className="positionDropdown"
+                    data={getColumnFilter(this.state.columnOrder)}
+                    onChange={this.handleColumnHide.bind(this)}
+                  />
+                </div>
               </div>
+              
               <StaffingTable
                 peopleStaffing={staffingToDisplay}
                 onRowClick={this.onStaffingTableRowClick.bind(this)}
                 weeks={this.state.weeks}
+                columnOrder={this.state.columnOrder}
               />
             </div>
           )}

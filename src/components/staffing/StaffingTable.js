@@ -8,12 +8,15 @@ import moment from 'moment'
 
 import 'fixed-data-table/dist/fixed-data-table.css'
 
+
 export default class StaffingTable extends React.Component {
   static propTypes = {
     weeks: React.PropTypes.array.isRequired,
     peopleStaffing: React.PropTypes.array.isRequired,
     onRowClick: React.PropTypes.func,
+    columnOrder: React.PropTypes.array,
   }
+
 
   render() {
     return (
@@ -26,6 +29,9 @@ export default class StaffingTable extends React.Component {
         maxHeight={750}
         headerHeight={40}
       >
+        
+        {
+        (this.props.columnOrder.includes('User')) && (
         <Column
           header="User"
           cell={
@@ -38,6 +44,13 @@ export default class StaffingTable extends React.Component {
           width={200}
           fixed
         />
+        )
+
+        }
+        
+
+        {
+        (this.props.columnOrder.includes('Company')) && (
         <Column
           header="Company"
           cell={
@@ -47,22 +60,32 @@ export default class StaffingTable extends React.Component {
               field="company"
             />
           }
-          width={120}
+          width={200}
           fixed
         />
+        )
+
+        }
+        
+        {
+        (this.props.columnOrder.includes('Project')) && (
         <Column
           header="Project"
           cell={
             <ProjectCell
               data={this.props.peopleStaffing}
               onClick={this.props.onRowClick}
-              field="project"
+              field="name"
             />
           }
-          width={250}
+          width={200}
           fixed
         />
-        {this.props.weeks.map((week, i) => {
+        )
+        }        
+        {
+        this.props.columnOrder.includes('Calendar') && (
+        this.props.weeks.map((week, i) => {
           return (
             <Column
               key={i}
@@ -79,7 +102,7 @@ export default class StaffingTable extends React.Component {
               width={60}
             />
           )
-        })}
+        }))}
       </Table>
     )
   }
