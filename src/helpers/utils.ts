@@ -1,4 +1,5 @@
-export const hasActiveCompanies = (companies, companyFilterState) => {
+// TODO: Not sure what the state and object types are
+export const hasActiveCompanies = (companies: string[], companyFilterState) => {
   return companies.reduce((acc, company) => {
     return companyFilterState[company] || acc
   }, false)
@@ -16,6 +17,6 @@ export const mergeUnion = (sourceObject, overrideObject) => {
   return { ...sourceObject, ...Object.fromEntries(new Map(union)) }
 }
 
-export const addEllipsisToLongString = (str, maxChars) => {
-  return str.length > maxChars ? `${str.slice(0, maxChars)}...` : str
+export const addEllipsisToLongString = (text: string, maxChars: number) => {
+  return text.length > maxChars ? `${text.slice(0, maxChars)}...` : text
 }

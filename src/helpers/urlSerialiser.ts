@@ -1,4 +1,4 @@
-export const serializeTruthyFilters = (object) => {
+export const serializeTruthyFilters = (object: {}) => {
   return Object.entries(object).filter((entry) => {
     return entry[1]
   }).map((entry) => {
@@ -6,6 +6,7 @@ export const serializeTruthyFilters = (object) => {
   })
 }
 
+// TODO: what type is queryOptions
 export const deserializeTruthyFilters = (queryOptions) => {
   return queryOptions.reduce((acc, option) => {
     acc[decodeURIComponent(option)] = true

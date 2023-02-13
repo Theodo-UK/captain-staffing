@@ -1,5 +1,7 @@
 import { orderBy } from 'lodash'
 
+// TODO: typing for whole file, it's a mess
+
 import config from '../configs/config'
 import { buildProjects, buildStaffing, removePastWeeks } from './formatter'
 

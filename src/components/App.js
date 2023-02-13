@@ -439,7 +439,7 @@ class App extends Component {
       const inStaffingCrisis = staffingToDisplay.filter(
         (staffing) => { return staffing.isInStaffingCrisis }
       ).length
-      
+
       const inStaffingAlert =
         staffingToDisplay.filter((staffing) => { return staffing.isInStaffingAlert })
           .length - inStaffingCrisis
@@ -519,7 +519,7 @@ class App extends Component {
                   />
                 </div>
               </div>
-              
+
               <StaffingTable
                 peopleStaffing={staffingToDisplay}
                 onRowClick={this.onStaffingTableRowClick.bind(this)}

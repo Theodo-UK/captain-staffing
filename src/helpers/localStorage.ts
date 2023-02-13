@@ -4,15 +4,15 @@
  * @param {string} key                  The key in localStorage
  * @returns {string|undefined}          The value found
  */
-export function loadLocalStorageItem(key) {
+export function loadLocalStorageItem(key: string) {
   try {
-    const serializedItem = localStorage.getItem(key)
+    const serializedItem = localStorage.getItem(key);
     if (serializedItem === null) {
-      return undefined
+      return undefined;
     }
-    return JSON.parse(serializedItem)
+    return JSON.parse(serializedItem);
   } catch (err) {
-    return undefined
+    return undefined;
   }
 }
 
@@ -21,9 +21,9 @@ export function loadLocalStorageItem(key) {
  *
  * @param {string} key                  The key used in localStorage
  */
-export function removeLocaleStorageItem(key) {
+export function removeLocaleStorageItem(key: string) {
   try {
-    localStorage.removeItem(key)
+    localStorage.removeItem(key);
   } catch (err) {
     // Ignore write errors.
   }
@@ -35,15 +35,15 @@ export function removeLocaleStorageItem(key) {
  * @param {string} key                  The key used in localStorage
  * @param {string|object|JSON} value    The value saved
  */
-export function saveLocaleStorageItem(key, value) {
+export function saveLocaleStorageItem(key: string, value: string | object | JSON) {
   try {
-    const serializedValue = JSON.stringify(value)
-    localStorage.setItem(key, serializedValue)
+    const serializedValue = JSON.stringify(value);
+    localStorage.setItem(key, serializedValue);
   } catch (err) {
     // Ignore write errors.
   }
 }
 
 export function clearLocaleStorage() {
-  localStorage.clear()
+  localStorage.clear();
 }
