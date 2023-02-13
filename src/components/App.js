@@ -436,7 +436,6 @@ class App extends Component {
       }
       )
 
-
       const inStaffingCrisis = staffingToDisplay.filter(
         (staffing) => { return staffing.isInStaffingCrisis }
       ).length
