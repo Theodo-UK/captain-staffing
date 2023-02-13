@@ -432,7 +432,7 @@ class App extends Component {
         .filter((staffing) => { return this.state.companies[staffing.company] })
         .filter((staffing) => { return this.state.positions[staffing.position] })
       const projectToDisplay = this.state.globalProjects.filter((project) => {
-        return hasActiveCompanies(project.companies, this.state.companies)
+        return project.companies.some(company => {return(this.state.companies[company])})
       }
       )
 
