@@ -2,23 +2,43 @@
 
 [https://theodo.github.io/captain-staffing](https://theodo.github.io/captain-staffing)
 
+Captain Staffing is a staffing management tool to keep track of projects and holidays across all staff members by presenting data from Napta in a more readable format. Built on React with Javascript, and deployed to GitHub Pages.
+
+More details on development and main functionality can be found in the [Onboarding Notes](https://www.notion.so/m33/Onboarding-Notes-Captain-Staffing-8b28e8b80a274fb6a1928f487cb9e379)
+
 ## Requirements
 
-Node v4+
+- Node v16.17.0
+- To view staffing data, view access is required for the [GlobalStaffingReport](https://docs.google.com/spreadsheets/d/1tSvNVwSP080fkQwG7drmQ4c2lPYNWUMZ1_STaWQXXsM/edit#gid=32245808) spreadsheet (or the [staging](https://docs.google.com/spreadsheets/d/1L7BDXbzl-wjxjXQC2nzPr_Y5f0yRUchhRWD0SbIcex4/edit#gid=0) sheet).
+  - Edit permissions are required to use the Update Staffing button
+  - Please contact Ambroise/Simon to be added.
+
+## Installation
+
+```
+npm install
+```
+- If packages fail during installation, you may need to install them manually with npm
 
 ## Config
 
-Copy the dev config file:
+The config file can be automatically created for development by running
 
 ```
 npm run env:dev
 ```
 
-You can fill-in the fields with your own settings.
-You need to create an app and generate a Client-ID on
-[console.developers.google.com/apis](https://console.developers.google.com/apis/).
+to display the staging data, or
 
-## Work
+```
+npm run env:prod
+```
+
+to display production data.
+
+The config can be manually edited by creating/modifying the `/src/configs/config.js` file.
+
+## Develop Locally
 
 ```
 npm start
@@ -35,19 +55,6 @@ npm run build
 ```
 npm run deploy
 ```
-
-## Commit emoji
-
-Commit Type            | Emoji
------------------------|--------------
-New Feature            | :sparkles: `:sparkles:`
-Bugfix                 | :bug: `:bug:`
-Refactoring            | :package: `:package:`
-Documentation          | :books: `:books:`
-Cosmetic               | :lipstick: `:lipstick:`
-Tooling                | :wrench: `:wrench:`
-Tests                  | :rotating_light: `:rotating_light:`
-Work In Progress (WIP) | :construction: `:construction:`
 
 ## [Architecture Diagram](https://app.diagrams.net/#G1e2bzPIZCX5jeMCaOFt4A8heRurJYnbYe)
 
