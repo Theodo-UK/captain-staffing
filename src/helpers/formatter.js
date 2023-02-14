@@ -13,6 +13,7 @@ const projectColumnToIndex = {
   userId: 2,
   position: 3,
   company: 4,
+  projectId:5,
 }
 
 
@@ -275,12 +276,15 @@ export function buildProjects(projectResponse) {
       new Set(map(rows, (row) => { return row[projectColumnToIndex.company] }))
     )
 
+    const project_id = rows[0][projectColumnToIndex.projectId]
+
     return {
       name,
       _name: name,
       staffing,
       users,
       companies,
+      project_id,
     }
   })
 }
