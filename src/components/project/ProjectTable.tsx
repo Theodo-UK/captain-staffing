@@ -1,20 +1,19 @@
-import React from 'react'
-import { Table, Column, Cell } from 'fixed-data-table'
-import HeaderCell from './HeaderCell'
-import StaffingCell from './StaffingCell'
-import UserCell from './UserCell'
 
-import moment from 'moment'
+import * as React from 'react';
+import { Table, Column, Cell } from 'fixed-data-table';
+import HeaderCell from './HeaderCell.js';
+import StaffingCell from './StaffingCell.js';
+import UserCell from './UserCell.js';
+import moment from 'moment';
+import 'fixed-data-table/dist/fixed-data-table.css';
 
-import 'fixed-data-table/dist/fixed-data-table.css'
+interface ProjectTableProps {
+  weeks: Array<string>;
+  projectStaffing: Array<any>;
+  onRowClick: React.MouseEventHandler<Cell>;
+}
 
-export default class ProjectTable extends React.Component {
-  static propTypes = {
-    weeks: React.PropTypes.array.isRequired,
-    projectStaffing: React.PropTypes.array.isRequired,
-    onRowClick: React.PropTypes.func,
-  }
-
+export default class ProjectTable extends React.Component<ProjectTableProps> {
   render() {
     return (
       <Table
@@ -72,12 +71,12 @@ export default class ProjectTable extends React.Component {
           width={120}
           fixed
         />
-        {this.props.weeks.map((week, i) => {
+        {this.props.weeks.map((week: string, i: number) => {
           return (
             <Column
               key={i}
-              header={<Cell>{moment(week, 'YYYY/MM/DD').format('DD/MM')}</Cell>}
-              headerClassName={`staffingHeaderCell staffingHeaderCell--${i}`}
+              header={<Cell key={i}>{moment(week, 'YYYY/MM/DD').format('DD/MM')}</Cell>}
+              columnKey={`staffingHeaderCell staffingHeaderCell--${i}`}
               cell={
                 <StaffingCell
                   data={this.props.projectStaffing}
@@ -85,7 +84,7 @@ export default class ProjectTable extends React.Component {
                   week={week}
                 />
               }
-              cellClassName={`staffingCell staffingCell--${i}`}
+              // cellClassName={`staffingCell staffingCell--${i}`}   deprecated in Typescript transition
               width={60}
             />
           )
@@ -94,3 +93,5 @@ export default class ProjectTable extends React.Component {
     )
   }
 }
+
+// TODO: fix headerClassName
