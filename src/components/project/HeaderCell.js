@@ -13,12 +13,10 @@ export default class HeaderCell extends React.Component {
 
   render() {
     const { rowIndex, field, data, ...props } = this.props
+    const noHyperLink = (field !== 'name' || data[rowIndex].project_id === "NO PROJECT ID")
     return (
       <div>
-    const shouldShowTextHeader = (field !== 'name' || data[rowIndex].project_id === "NO PROJECT ID")
-    return (
-      <div>
-        {shouldShowTextHeader ? (
+        {noHyperLink ? (
           <Cell
             {...props}
             onClick={this.props.onClick.bind(this, data[rowIndex])}
