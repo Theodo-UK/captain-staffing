@@ -26,7 +26,7 @@ export function getSyncStatus(callback) {
       (response) => {
         console.log('[Sync Response]', response)
         const statusValue = response.result.values[1][0]
-        ? response.result.values[1][0] : ''
+          ? response.result.values[1][0] : ''
         const isSyncing = statusValue === 'running'
         callback(isSyncing)
       },
@@ -48,8 +48,11 @@ export function scheduleUpdate() {
       valueInputOption: 'RAW',
     }).then((response) => {
       console.log(response)
-    })
+    }, (response) => {
+      window.alert('error: ' + response.result.error.message);
+    });
   })
+
 }
 
 /**
@@ -74,7 +77,7 @@ export function load(callback) {
         const projectRows = response.result.valueRanges[1].values || []
 
         const lastUpdated = response.result.valueRanges[2].values
-        ? response.result.valueRanges[2].values[0][0] : ''
+          ? response.result.valueRanges[2].values[0][0] : ''
 
         let weeks = staffingRows[1].slice(4)
 
