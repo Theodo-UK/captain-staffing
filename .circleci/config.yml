@@ -25,8 +25,21 @@ jobs:
           key: npm-packages-{{ checksum "package-lock.json"}}
           paths: [node_modules]
       - run:
-          name: Hello World
-          command: echo "hello Henry!"
+          name: Setup production config
+          command: |
+            npm run env:prod
+      - run:
+          name: Run build
+          command: |
+            npm run build
+      - run:
+          name: Publish GitHub pages
+          command: |
+            git checkout -B gh-pages
+            git add -f build
+            git commit -n -am "Rebuild website"
+            git filter-branch -f --prune-empty --subdirectory-filter build
+
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
