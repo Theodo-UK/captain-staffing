@@ -1,0 +1,40 @@
+version: 2.1
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+jobs:
+  deploy-to-production:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    docker:
+      - image: circleci/node:14
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore cache
+          keys:
+            - npm-packages-{{ checksum "package-lock.json"}}
+      - run:
+          name: Install Dependencies
+          command: |
+            npm install
+      - save_cache:
+          name: Save cache
+          key: npm-packages-{{ checksum "package-lock.json"}}
+          paths: [node_modules]
+      - run:
+          name: Hello World
+          command: echo "hello Henry!"
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  deploy-workflow:
+    jobs:
+      - deploy-to-production:
+        filters:
+          branches:
+            only:
+              - main
+              - feat/setup-circle-ci
