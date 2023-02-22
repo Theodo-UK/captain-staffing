@@ -41,6 +41,7 @@ jobs:
             git add -f build
             git commit -n -am "Rebuild website"
             git filter-branch -f --prune-empty --subdirectory-filter build
+            git push -f origin gh-pages
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
