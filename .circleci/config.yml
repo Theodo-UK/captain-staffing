@@ -35,6 +35,8 @@ jobs:
       - run:
           name: Publish GitHub pages
           command: |
+            git config user.email "circleci@theodo.co.uk"
+            git config user.name "CircleCI"
             git checkout -B gh-pages
             git add -f build
             git commit -n -am "Rebuild website"
