@@ -20,7 +20,7 @@ const projectColumnToIndex = {
 export const subTypes = {
   Devs: ['Dev'],
   Lead: ['Architecte', 'Engineering Manager', 'Senior architect', 'VP Tech'],
-  BizDev: ['CA / PO', 'Operations (Finance) ', 'DP / PM / AM', 'Marketing', 'Growth Team', 'Sales', 'Data Product Manager', 'DP', 'PM'],
+  BizDev: ['CA / PO', 'Operations (Finance) ', 'DP / PM / AM', 'Marketing', 'Growth Team', 'Sales', 'Data Product Manager', 'DP', 'PM', 'QARA'],
   Designers: ['Lead Designer', 'Designer Confirmé', 'Designer Junior'],
   DevOps: ['LeadDevOps', 'DevOps', 'DevOps [FREE]', 'SecOps', 'LeadSecOps'],
   Data: ['Lead Data Scientist', 'Lead Data Engineer', 'Ingénieur IA'],
