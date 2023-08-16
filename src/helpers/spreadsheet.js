@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { orderBy } from 'lodash'
 
 import config from '../configs/config'
@@ -49,8 +50,8 @@ export function scheduleUpdate() {
     }).then((response) => {
       console.log(response)
     }, (response) => {
-      window.alert('error: ' + response.result.error.message);
-    });
+      window.alert('error: ' + response.result.error.message)
+    })
   })
 
 }

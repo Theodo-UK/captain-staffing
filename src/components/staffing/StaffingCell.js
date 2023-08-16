@@ -1,6 +1,7 @@
 import React from 'react'
 import { Cell } from 'fixed-data-table'
 
+// eslint-disable-next-line complexity
 const getColor = (row, week) => {
   if (row.project) {
     // if it's a line project

@@ -1,9 +1,10 @@
+/* eslint-disable max-lines */
 import React, { Component } from 'react'
 import _ from 'lodash'
 import moment from 'moment'
 
 import { toggleByPeopleRow, toggleByProjectRow } from '../helpers/edit'
-import { hasActiveCompanies, mergeUnion } from '../helpers/utils'
+import { mergeUnion } from '../helpers/utils'
 import {
   deserializeTruthyFilters,
   serializeTruthyFilters,
@@ -163,6 +164,7 @@ class App extends Component {
 
   onSyncUpdate(syncStatus, error) {
     if (error) {
+      // eslint-disable-next-line no-console
       console.log('Error fetching sync status.')
       return
     }
@@ -170,6 +172,7 @@ class App extends Component {
       this.setState({isRefreshRequired: true})
     }
     this.setState({isSyncing: syncStatus})
+    // eslint-disable-next-line no-console
     console.log('Sync status:', this.state.isSyncing)
   }
 
