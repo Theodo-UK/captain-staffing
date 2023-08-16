@@ -1,15 +1,9 @@
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  deploy-to-production:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  pr-checks:
     docker:
-      - image: circleci/node:16
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: cimg/node:16.19
     steps:
       - checkout
       - restore_cache:
@@ -18,38 +12,25 @@ jobs:
             - npm-packages-{{ checksum "package-lock.json"}}
       - run:
           name: Install Dependencies
-          command: |
-            npm install
+          command: npm install
       - save_cache:
           name: Save cache
           key: npm-packages-{{ checksum "package-lock.json"}}
           paths: [node_modules]
       - run:
-          name: Setup production config
-          command: |
-            npm run env:prod
+          name: Setup env
+          command: npm run env:dev
       - run:
-          name: Run build
-          command: |
-            npm run build
+          name: Check build succeeds
+          command: npm run build
       - run:
-          name: Publish GitHub pages
-          command: |
-            git config user.email "circleci@theodo.co.uk"
-            git config user.name "CircleCI"
-            git checkout -B gh-pages
-            git add -f build
-            git commit -n -am "Rebuild website"
-            git filter-branch -f --prune-empty --subdirectory-filter build
-            git push -f origin gh-pages
+          name: Check lint
+          command: npm run lint      
+      - run:
+          name: Check tests
+          command: npm run test
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  deploy-workflow:
+  pr-workflow:
     jobs:
-      - deploy-to-production:
-        filters:
-          branches:
-            only:
-              - master
+      - pr-checks
