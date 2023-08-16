@@ -8,6 +8,28 @@
   "license": "MIT",
   "author": "Nicolas Girault",
   "private": true,
+  "scripts": {
+    "env:dev": "cp src/configs/config.dev.js src/configs/config.js",
+    "env:prod": "cp src/configs/config.prod.js src/configs/config.js",
+    "env:save": "cp src/configs/config.js src/configs/config.save.js",
+    "env:restore": "cp src/configs/config.save.js src/configs/config.js",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
+    "deploy": "./deploy.sh",
+    "test": "jest --config .jestrc --verbose --watch",
+    "lint": "eslint -- src/",
+    "lint:staged": "lint-staged"
+  },
+  "dependencies": {
+    "react-dom": "^15.7.0",
+    "react-dropdown-tree-select": "^2.0.0",
+    "react": "^15.7.0",
+    "date-fns": "^1.3.0",
+    "fixed-data-table": "^0.6.3",
+    "lodash": "^4.15.0",
+    "moment": "^2.17.1"
+  },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "babel-jest": "^18.0.0",
@@ -27,28 +49,6 @@
     "pre-commit": "^1.2.2",
     "react-addons-test-utils": "^15.4.2",
     "react-scripts": "0.2.1"
-  },
-  "dependencies": {
-    "react-dom": "^15.7.0",
-    "react-dropdown-tree-select": "^2.0.0",
-    "react": "^15.7.0",
-    "date-fns": "^1.3.0",
-    "fixed-data-table": "^0.6.3",
-    "lodash": "^4.15.0",
-    "moment": "^2.17.1"
-  },
-  "scripts": {
-    "env:dev": "cp src/configs/config.dev.js src/configs/config.js",
-    "env:prod": "cp src/configs/config.prod.js src/configs/config.js",
-    "env:save": "cp src/configs/config.js src/configs/config.save.js",
-    "env:restore": "cp src/configs/config.save.js src/configs/config.js",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject",
-    "deploy": "./deploy.sh",
-    "test": "jest --config .jestrc --verbose --watch",
-    "lint": "eslint -- src/",
-    "lint:staged": "lint-staged"
   },
   "pre-commit": "lint:staged",
   "lint-staged": {
