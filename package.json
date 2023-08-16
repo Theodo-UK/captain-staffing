@@ -5,7 +5,6 @@
     "type": "git",
     "url": "https://github.com/theodo/captain-staffing.git"
   },
-  "homepage": "https://theodo.github.io/captain-staffing",
   "license": "MIT",
   "author": "Nicolas Girault",
   "private": true,
