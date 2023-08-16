@@ -17,7 +17,8 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "deploy": "./deploy.sh",
-    "test": "jest --config .jestrc --verbose --watch",
+    "test:watch": "npm run test -- --watch",
+    "test": "jest --config .jestrc",
     "lint": "eslint -- src/",
     "lint:staged": "lint-staged"
   },
