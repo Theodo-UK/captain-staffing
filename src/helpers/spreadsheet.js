@@ -8,14 +8,14 @@ import { buildProjects, buildStaffing, removePastWeeks } from './formatter'
  * Get the user authentication status
  */
 export function checkAuth(immediate, callback) {
-  window.gapi.auth.authorize(
-    {
-      client_id: config.clientId,
-      scope: config.scope,
-      immediate,
-    },
-    callback
-  )
+  // window.gapi.auth.authorize(
+  //   {
+  //     client_id: config.clientId,
+  //     scope: config.scope,
+  //     immediate,
+  //   },
+  //   callback
+  // )
 }
 
 export function getSyncStatus(callback) {
@@ -72,7 +72,7 @@ export function load(callback) {
       }
     ).then(
       (response) => {
-        console.log('[Response]', response)
+        console.log('[Sheets content Response]', response)
 
         const staffingRows = response.result.valueRanges[0].values || []
         const projectRows = response.result.valueRanges[1].values || []
