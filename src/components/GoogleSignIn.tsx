@@ -1,9 +1,7 @@
 import { useGoogleLogin } from "@react-oauth/google";
 import { FC } from "react";
-import { observable } from "@legendapp/state";
 import { observer } from "@legendapp/state/react";
-
-const loginState$ = observable({ isGoogleAuthenticated: false, token: "" });
+import { loginState$ } from "../state/auth";
 
 interface Props {}
 

@@ -1,5 +1,6 @@
 import "./App.css";
 import GoogleSignIn from "./components/GoogleSignIn";
+import Staffing from "./components/Staffing";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
             <GoogleSignIn />
           </div>
         </div>
+        <Staffing />
         {/* <div className="content">{this.renderStaffing()}</div> */}
       </div>
     </>
