@@ -12,7 +12,6 @@ export default class HeaderCell extends React.Component {
   // };
 
   render() {
-    return null;
     const { rowIndex, field, data, ...props } = this.props;
     const noHyperLink =
       field !== "name" || data[rowIndex].project_id === "NO PROJECT ID";
