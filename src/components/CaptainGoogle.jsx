@@ -16,7 +16,7 @@ export const CaptainGoogle = ({ onSuccess, onFailure, onLoad }) => {
 
   const handleAuth = (authResult) => {
     if (authResult && !authResult.error) {
-      Cookies.set("authResult", JSON.stringify(authResult), { expires: 7 });
+      Cookies.set("authResult", JSON.stringify(authResult), { expires: 1 });
 
       onSuccess();
       load(onLoad, authResult);
