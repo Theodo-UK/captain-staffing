@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
+import Cookies from "js-cookie";
 import { load } from "../helpers/spreadsheet";
 
 export const CaptainGoogle = ({ onSuccess, onFailure, onLoad }) => {
-  const storedAuthResult = JSON.parse(localStorage.getItem("authResult"));
+  const storedAuthResult = Cookies.get("authResult");
 
   const login = useGoogleLogin({
     onSuccess: (authResult) => {
@@ -15,7 +16,7 @@ export const CaptainGoogle = ({ onSuccess, onFailure, onLoad }) => {
 
   const handleAuth = (authResult) => {
     if (authResult && !authResult.error) {
-      localStorage.setItem("authResult", JSON.stringify(authResult));
+      Cookies.set("authResult", JSON.stringify(authResult), { expires: 7 });
 
       onSuccess();
       load(onLoad, authResult);
@@ -27,7 +28,7 @@ export const CaptainGoogle = ({ onSuccess, onFailure, onLoad }) => {
   useEffect(() => {
     if (storedAuthResult) {
       onSuccess();
-      load(onLoad, storedAuthResult);
+      load(onLoad, JSON.parse(storedAuthResult));
     }
   }, [onSuccess, onLoad, storedAuthResult]);
 
