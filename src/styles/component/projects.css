@@ -1,0 +1,23 @@
+.project {
+  background: url('https://upload.wikimedia.org/wikipedia/commons/1/1a/Captain_America_Shield.svg') no-repeat;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.projects-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.project-name {
+  background-color: rgba(255, 255, 255, 0.75);
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-family: Roboto Slab, Roboto, sans-serif;
+  padding: 5px;
+}

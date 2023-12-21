@@ -1,0 +1,28 @@
+body {
+  margin: 0;
+  padding: 0 15px;
+
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: #004262;
+  line-height: 1.4;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.pickYourSkillLink {
+  white-space: nowrap;
+  max-width: 10%;
+  width: 10%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pickYourSkillLink:hover {
+  font-weight: 600;
+  color: purple;
+}

@@ -1,0 +1,7 @@
+/* Highlight the fifth and tenth columns */
+.staffingCell--4,
+.staffingCell--9,
+.staffingHeaderCell--4,
+.staffingHeaderCell--9 {
+  border-right: 5px double;
+}
