@@ -167,10 +167,10 @@ export const load = async (callback, authResult) => {
 
   const lastUpdated = response[2]?.headerValues[0];
 
-  let weeks = staffingData.headerValues.slice(5);
+  let weeks = staffingData.headerValues.slice(4);
 
-  let globalStaffing = buildStaffing(staffingRows);
-  let globalProjects = buildProjects(projectRows);
+  let globalStaffing = buildStaffing(staffingRows, weeks);
+  let globalProjects = buildProjects(projectRows, weeks);
 
   globalStaffing = orderBy(
     globalStaffing,

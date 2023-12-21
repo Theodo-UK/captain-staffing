@@ -263,9 +263,7 @@ export function buildWeekStaffing(rows, weekIndex, columnIndex) {
   return weekStaffing;
 }
 
-export function buildStaffing(peopleResponse) {
-  console.log(peopleResponse);
-  const weeks = peopleResponse[1].slice(4);
+export function buildStaffing(peopleResponse, weeks) {
   const staffingArray = unMergeCells(tail(peopleResponse), 0);
   const staffingByName = groupBy(staffingArray, (someoneStaffing) => {
     return someoneStaffing[0];
@@ -309,9 +307,7 @@ export function buildStaffing(peopleResponse) {
   });
 }
 
-export function buildProjects(projectResponse) {
-  const weeks = projectResponse[1].slice(4);
-
+export function buildProjects(projectResponse, weeks) {
   const staffingArray = unMergeCells(tail(projectResponse), 0);
   const staffingByProject = groupBy(staffingArray, (projectName) => {
     return projectName[0];
