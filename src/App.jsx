@@ -555,8 +555,7 @@ class App extends Component {
       );
     } else if (this.state.error) {
       console.log(this.state.error);
-      return null;
-      // return <Alert error={this.state.error} />;
+      return <Alert error={this.state.error} />;
     } else if (this.state.isGoogleAuthenticated) {
       return <div className="loader" />;
     }
