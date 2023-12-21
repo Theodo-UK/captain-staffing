@@ -12,6 +12,7 @@
   "dependencies": {
     "@legendapp/state": "^2.1.4",
     "@react-oauth/google": "^0.12.1",
+    "google-spreadsheet": "^4.1.1",
     "googleapis": "^129.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

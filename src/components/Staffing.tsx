@@ -1,6 +1,7 @@
 import { FC, useEffect } from "react";
 import { observer } from "@legendapp/state/react";
 import { loginState$ } from "../state/auth";
+import { GoogleSpreadsheet } from "google-spreadsheet";
 
 interface Props {}
 
@@ -16,27 +17,13 @@ const Staffing: FC<Props> = observer(() => {
 
   const accessSpreadsheet = async () => {
     const spreadsheetId = import.meta.env.VITE_GOOGLE_SPREADSHEET_ID;
+    const token = loginState$.token.get();
 
-    try {
-      const response = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${loginState$.token.get()}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Spreadsheet Details:", data);
-      } else {
-        console.error("Error accessing spreadsheet:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error accessing spreadsheet:", error);
-    }
+    const doc = new GoogleSpreadsheet(spreadsheetId, { token });
+    await doc.loadInfo(); // loads document properties and worksheets
+    console.log(doc.title);
+    const sheet = doc.sheetsByIndex[0]; // or use `doc.sheetsById[id]` or `doc.sheetsByTitle[title]`
+    console.log(sheet);
   };
 
   return <div>hi</div>;
