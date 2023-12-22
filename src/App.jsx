@@ -158,7 +158,7 @@ class App extends Component {
     this.setState({
       isGoogleAuthenticated: true,
     });
-    // getSyncStatus(this.onSyncUpdate.bind(this));
+    getSyncStatus(this.onSyncUpdate.bind(this));
   }
 
   onSyncUpdate(syncStatus, error) {
@@ -176,9 +176,9 @@ class App extends Component {
   componentDidMount() {
     this.interval = setInterval(() => {
       if (this.state.isGoogleAuthenticated) {
-        // getSyncStatus(this.onSyncUpdate.bind(this));
+        getSyncStatus(this.onSyncUpdate.bind(this));
       }
-    }, 5000);
+    }, 50000);
   }
 
   onGoogleFailure() {

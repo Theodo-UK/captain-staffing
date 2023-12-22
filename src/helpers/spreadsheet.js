@@ -1,53 +1,50 @@
 import { orderBy } from "lodash";
 import { GoogleSpreadsheet } from "google-spreadsheet";
+import Cookies from "js-cookie";
 
 import { buildProjects, buildStaffing, removePastWeeks } from "./formatter";
 
 const spreadsheetId = import.meta.env.VITE_GOOGLE_SPREADSHEET_ID;
 
-export function getSyncStatus(callback) {
-  window.gapi.client.load("sheets", "v4", () => {
-    window.gapi.client.sheets.spreadsheets.values
-      .get({
-        spreadsheetId: spreadsheetId,
-        range: "Metadata!A:AV",
-      })
-      .then(
-        (response) => {
-          console.log("[Sync Response]", response);
-          const statusValue = response.result.values[1][0]
-            ? response.result.values[1][0]
-            : "";
-          const isSyncing = statusValue === "running";
-          callback(isSyncing);
-        },
-        (response) => {
-          callback(null, response.result.error);
-        }
-      );
+export async function getSyncStatus(callback) {
+  const storedAuthResult = Cookies.get("authResult");
+  const authResult = JSON.parse(storedAuthResult);
+
+  const doc = new GoogleSpreadsheet(spreadsheetId, {
+    token: authResult.access_token,
   });
+
+  await doc.loadInfo();
+
+  const sheet = doc.sheetsByTitle["Metadata"];
+
+  const range = "A:AV";
+
+  const cells = await sheet.getCellsInRange(range);
+
+  // Assuming the status value is in the second row (1-based index) of the first column (0-based index)
+  const statusValue = cells[1][0] || "";
+  const isSyncing = statusValue.toLowerCase() === "running";
+
+  callback(isSyncing);
 }
 
-export function scheduleUpdate() {
-  window.gapi.client.load("sheets", "v4", () => {
-    window.gapi.client.sheets.spreadsheets.values
-      .update({
-        spreadsheetId: spreadsheetId,
-        range: "Metadata!A3",
-        resource: {
-          values: [["UPDATE_SCHEDULED"]],
-        },
-        valueInputOption: "RAW",
-      })
-      .then(
-        (response) => {
-          console.log(response);
-        },
-        (response) => {
-          window.alert("error: " + response.result.error.message);
-        }
-      );
+export async function scheduleUpdate() {
+  const spreadsheetId = import.meta.env.VITE_GOOGLE_SPREADSHEET_ID;
+  const storedAuthResult = Cookies.get("authResult");
+  const authResult = JSON.parse(storedAuthResult);
+
+  const doc = new GoogleSpreadsheet(spreadsheetId, {
+    token: authResult.access_token,
   });
+  await doc.loadInfo(); // loads document properties and worksheets
+  const sheet = doc.sheetsByTitle["Metadata"];
+  await sheet.loadCells("A1:A3");
+  const a1 = sheet.getCell(2, 0);
+  a1.value = "UPDATE_SCHEDULED";
+
+  // Save the changes
+  await sheet.saveUpdatedCells();
 }
 
 export const load = async (callback, authResult) => {
