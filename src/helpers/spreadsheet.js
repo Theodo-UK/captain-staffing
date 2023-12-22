@@ -108,7 +108,7 @@ export const load = async (callback, authResult) => {
           return staffing.company;
         })
         .filter((company) => {
-          return company !== undefined && company !== "BU";
+          return company !== undefined && company !== "BU" && company !== "";
         })
     )
   );
