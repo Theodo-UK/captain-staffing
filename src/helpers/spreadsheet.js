@@ -43,8 +43,12 @@ export async function scheduleUpdate() {
   const a1 = sheet.getCell(2, 0);
   a1.value = "UPDATE_SCHEDULED";
 
-  // Save the changes
-  await sheet.saveUpdatedCells();
+  try {
+    // Save the changes
+    await sheet.saveUpdatedCells();
+  } catch (e) {
+    window.alert("error: " + e.response.data.error.message);
+  }
 }
 
 export const load = async (callback, authResult) => {
