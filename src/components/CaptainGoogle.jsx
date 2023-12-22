@@ -19,7 +19,7 @@ export const CaptainGoogle = ({ onSuccess, onFailure, onLoad }) => {
       Cookies.set("authResult", JSON.stringify(authResult), { expires: 1 });
 
       onSuccess();
-      load(onLoad, authResult);
+      load(onLoad);
     } else {
       onFailure();
     }
@@ -28,7 +28,7 @@ export const CaptainGoogle = ({ onSuccess, onFailure, onLoad }) => {
   useEffect(() => {
     if (storedAuthResult) {
       onSuccess();
-      load(onLoad, JSON.parse(storedAuthResult));
+      load(onLoad);
     }
   }, [onSuccess, onLoad, storedAuthResult]);
 

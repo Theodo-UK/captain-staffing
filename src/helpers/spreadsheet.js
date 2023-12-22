@@ -6,15 +6,20 @@ import { buildProjects, buildStaffing, removePastWeeks } from "./formatter";
 
 const spreadsheetId = import.meta.env.VITE_GOOGLE_SPREADSHEET_ID;
 
-export async function getSyncStatus(callback) {
+const getSpreadsheetDocument = async () => {
   const storedAuthResult = Cookies.get("authResult");
   const authResult = JSON.parse(storedAuthResult);
 
   const doc = new GoogleSpreadsheet(spreadsheetId, {
     token: authResult.access_token,
   });
-
   await doc.loadInfo();
+
+  return doc;
+};
+
+export async function getSyncStatus(callback) {
+  const doc = await getSpreadsheetDocument();
 
   const sheet = doc.sheetsByTitle["Metadata"];
 
@@ -30,14 +35,8 @@ export async function getSyncStatus(callback) {
 }
 
 export async function scheduleUpdate() {
-  const spreadsheetId = import.meta.env.VITE_GOOGLE_SPREADSHEET_ID;
-  const storedAuthResult = Cookies.get("authResult");
-  const authResult = JSON.parse(storedAuthResult);
+  const doc = await getSpreadsheetDocument();
 
-  const doc = new GoogleSpreadsheet(spreadsheetId, {
-    token: authResult.access_token,
-  });
-  await doc.loadInfo(); // loads document properties and worksheets
   const sheet = doc.sheetsByTitle["Metadata"];
   await sheet.loadCells("A1:A3");
   const a1 = sheet.getCell(2, 0);
@@ -51,15 +50,8 @@ export async function scheduleUpdate() {
   }
 }
 
-export const load = async (callback, authResult) => {
-  const spreadsheetId = import.meta.env.VITE_GOOGLE_SPREADSHEET_ID;
-
-  console.log("loading spreadsheets..");
-
-  const doc = new GoogleSpreadsheet(spreadsheetId, {
-    token: authResult.access_token,
-  });
-  await doc.loadInfo(); // loads document properties and worksheets
+export const load = async (callback) => {
+  const doc = await getSpreadsheetDocument();
 
   const ranges = ["StaffingView", "ProjectView", "Metadata"];
 
