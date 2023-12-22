@@ -11,7 +11,7 @@ import {
 
 import { clearLocaleStorage } from "./helpers/localStorage";
 
-// import Alert from "./components/Alert";
+import Alert from "./components/Alert";
 
 import StaffingTable from "./components/staffing/StaffingTable";
 import ProjectTable from "./components/project/ProjectTable";

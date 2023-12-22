@@ -1,9 +1,9 @@
 import React from "react";
 
 export default class Alert extends React.Component {
-  static propTypes = {
-    error: React.PropTypes.object.isRequired,
-  };
+  // static propTypes = {
+  //   error: React.PropTypes.object.isRequired,
+  // };
 
   render() {
     let message;
