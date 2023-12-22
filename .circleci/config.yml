@@ -9,17 +9,17 @@ jobs:
       - restore_cache:
           name: Restore cache
           keys:
-            - npm-packages-{{ checksum "package-lock.json"}}
+            - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
           name: Install Dependencies
-          command: npm install
+          command: yarn install
       - save_cache:
           name: Save cache
-          key: npm-packages-{{ checksum "package-lock.json"}}
+          key: yarn-packages-{{ checksum "yarn.lock" }}
           paths: [node_modules]
       - run:
           name: Check lint
-          command: npm run lint
+          command: yarn lint
 
 workflows:
   pr-workflow:
