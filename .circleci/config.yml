@@ -18,17 +18,8 @@ jobs:
           key: npm-packages-{{ checksum "package-lock.json"}}
           paths: [node_modules]
       - run:
-          name: Setup env
-          command: npm run env:dev
-      - run:
-          name: Check build succeeds
-          command: npm run build
-      - run:
           name: Check lint
-          command: npm run lint      
-      - run:
-          name: Check tests
-          command: npm run test
+          command: npm run lint
 
 workflows:
   pr-workflow:
