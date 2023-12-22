@@ -16,7 +16,14 @@ export const CaptainGoogle = ({ onSuccess, onFailure, onLoad }) => {
 
   const handleAuth = (authResult) => {
     if (authResult && !authResult.error) {
-      Cookies.set("authResult", JSON.stringify(authResult), { expires: 1 });
+      // Calculate expiration time based on expires_in (convert seconds to milliseconds)
+      const expirationTime = Date.now() + authResult.expires_in * 1000;
+
+      Cookies.set(
+        "authResult",
+        JSON.stringify({ ...authResult, expires_at: expirationTime }),
+        { expires: 7 }
+      );
 
       onSuccess();
       load(onLoad);

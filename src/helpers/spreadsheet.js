@@ -10,12 +10,23 @@ const getSpreadsheetDocument = async () => {
   const storedAuthResult = Cookies.get("authResult");
   const authResult = JSON.parse(storedAuthResult);
 
-  const doc = new GoogleSpreadsheet(spreadsheetId, {
-    token: authResult.access_token,
-  });
-  await doc.loadInfo();
+  const isAccessTokenExpired = Date.now() > authResult.expires_at * 1000;
 
-  return doc;
+  if (isAccessTokenExpired) {
+    Cookies.remove("authResult");
+    window.location.reload();
+    return;
+  }
+
+  try {
+    const doc = new GoogleSpreadsheet(spreadsheetId, {
+      token: authResult.access_token,
+    });
+    await doc.loadInfo();
+    return doc;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export async function getSyncStatus(callback) {
