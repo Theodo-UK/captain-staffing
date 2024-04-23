@@ -52,7 +52,6 @@ export const sortButtonStyle = {
   backgroundColor: '#56ba81',
   color: 'white',
   border: 'none',
-  marginLeft: '40px',
 }
 
 export const switchTabButtonStyle = {
@@ -60,5 +59,4 @@ export const switchTabButtonStyle = {
   backgroundColor: '#900C3F',
   color: 'white',
   border: 'none',
-  marginLeft: '40px',
 }

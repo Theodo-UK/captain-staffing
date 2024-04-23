@@ -495,6 +495,8 @@ class App extends Component {
             >
               Toggle None
             </button>
+          </div>
+          <div style={{ display: "flex" }}>
             <button
               onClick={this.changeStaffingList.bind(this)}
               style={sortButtonStyle}
