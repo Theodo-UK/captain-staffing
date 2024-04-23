@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-//@ts-ignore
+// @ts-expect-error This will be fixed when migrating the rest of the app to TS
 import App from "./App.jsx";
 import "./styles/index.css";
 
@@ -21,5 +21,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <App />
     </GoogleOAuthProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
