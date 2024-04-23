@@ -1,8 +1,6 @@
 coverage
 node_modules
 .DS_Store
-src/configs/config.js
-src/configs/config.save.js
 build
 
 # Errors
