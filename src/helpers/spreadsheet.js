@@ -10,7 +10,7 @@ const getSpreadsheetDocument = async () => {
   const storedAuthResult = Cookies.get("authResult");
   const authResult = JSON.parse(storedAuthResult);
 
-  const isAccessTokenExpired = Date.now() > authResult.expires_at * 1000;
+  const isAccessTokenExpired = Date.now() > authResult.expires_at;
 
   if (isAccessTokenExpired) {
     Cookies.remove("authResult");
