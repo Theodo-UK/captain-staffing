@@ -1,17 +1,16 @@
-import React from 'react'
-import { Cell } from 'fixed-data-table'
+import React from "react";
+import { Cell } from "fixed-data-table-2";
 
 export default class UserCell extends React.Component {
-
-  static propTypes = {
-    data: React.PropTypes.array.isRequired,
-    field: React.PropTypes.string,
-    rowIndex: React.PropTypes.number,
-    onClick: React.PropTypes.func,
-  }
+  // static propTypes = {
+  //   data: React.PropTypes.array.isRequired,
+  //   field: React.PropTypes.string,
+  //   rowIndex: React.PropTypes.number,
+  //   onClick: React.PropTypes.func,
+  // };
 
   render() {
-    const { rowIndex, field, data, ...props } = this.props
+    const { rowIndex, field, data, ...props } = this.props;
     return (
       <Cell {...props}>
         <a
@@ -23,6 +22,6 @@ export default class UserCell extends React.Component {
           {data[rowIndex][field]}
         </a>
       </Cell>
-    )
+    );
   }
 }

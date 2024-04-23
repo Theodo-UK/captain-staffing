@@ -1,25 +1,27 @@
-import React from 'react'
-import { Table, Column, Cell } from 'fixed-data-table'
-import HeaderCell from './HeaderCell'
-import StaffingCell from './StaffingCell'
-import UserCell from './UserCell'
+import React from "react";
+import { Table, Column, Cell } from "fixed-data-table-2";
+import HeaderCell from "./HeaderCell";
+import StaffingCell from "./StaffingCell";
+import UserCell from "./UserCell";
 
-import moment from 'moment'
+import moment from "moment";
 
-import 'fixed-data-table/dist/fixed-data-table.css'
+import "fixed-data-table-2/dist/fixed-data-table.css";
 
 export default class ProjectTable extends React.Component {
-  static propTypes = {
-    weeks: React.PropTypes.array.isRequired,
-    projectStaffing: React.PropTypes.array.isRequired,
-    onRowClick: React.PropTypes.func,
-  }
+  // static propTypes = {
+  //   weeks: React.PropTypes.array.isRequired,
+  //   projectStaffing: React.PropTypes.array.isRequired,
+  //   onRowClick: React.PropTypes.func,
+  // };
 
   render() {
     return (
       <Table
         width={window.innerWidth - 20}
-        rowsCount={this.props.projectStaffing ? this.props.projectStaffing.length : 0}
+        rowsCount={
+          this.props.projectStaffing ? this.props.projectStaffing.length : 0
+        }
         rowHeight={30}
         maxHeight={750}
         headerHeight={40}
@@ -76,7 +78,7 @@ export default class ProjectTable extends React.Component {
           return (
             <Column
               key={i}
-              header={<Cell>{moment(week, 'YYYY/MM/DD').format('DD/MM')}</Cell>}
+              header={<Cell>{moment(week, "YYYY/MM/DD").format("DD/MM")}</Cell>}
               headerClassName={`staffingHeaderCell staffingHeaderCell--${i}`}
               cell={
                 <StaffingCell
@@ -88,9 +90,9 @@ export default class ProjectTable extends React.Component {
               cellClassName={`staffingCell staffingCell--${i}`}
               width={60}
             />
-          )
+          );
         })}
       </Table>
-    )
+    );
   }
 }

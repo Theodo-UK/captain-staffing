@@ -1,22 +1,21 @@
-import React from 'react'
-import { Cell } from 'fixed-data-table'
-import { addEllipsisToLongString } from '../../helpers/utils'
-import { MAX_NAME_CHARS } from '../../constants'
+import React from "react";
+import { Cell } from "fixed-data-table-2";
+import { addEllipsisToLongString } from "../../helpers/utils";
+import { MAX_NAME_CHARS } from "../../constants";
 
 export default class HeaderCell extends React.Component {
-  static propTypes = {
-    data: React.PropTypes.array.isRequired,
-    field: React.PropTypes.string,
-    rowIndex: React.PropTypes.number,
-    onClick: React.PropTypes.func,
-  };
+  // static propTypes = {
+  //   data: React.PropTypes.array.isRequired,
+  //   field: React.PropTypes.string,
+  //   rowIndex: React.PropTypes.number,
+  //   onClick: React.PropTypes.func,
+  // };
 
   render() {
-    const { rowIndex, field, data, ...props } = this.props
-    const noHyperLink = (field !== 'name' || data[rowIndex].project_id === "NO PROJECT ID")
+    const { rowIndex, field, data, ...props } = this.props;
     return (
       <div>
-        {noHyperLink ? (
+        {field !== "name" ? (
           <Cell
             {...props}
             onClick={this.props.onClick.bind(this, data[rowIndex])}
@@ -27,7 +26,7 @@ export default class HeaderCell extends React.Component {
         ) : (
           <Cell {...props}>
             <a
-              href={`https://app.pickyourskills.com/projects/${data[rowIndex].project_id}`}
+              href={`https://app.pickyourskills.com/profile/${data[rowIndex].id}`}
               className="pickYourSkillLink"
               rel="noopener noreferrer"
               target="_blank"
@@ -37,6 +36,6 @@ export default class HeaderCell extends React.Component {
           </Cell>
         )}
       </div>
-    )
+    );
   }
 }
