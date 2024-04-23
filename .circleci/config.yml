@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   pr-checks:
     docker:
-      - image: cimg/node:16.19
+      - image: cimg/node:18.20
     steps:
       - checkout
       - restore_cache:
