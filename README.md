@@ -1,30 +1,61 @@
-# React + TypeScript + Vite
+# Captain Staffing
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[https://theodo.github.io/captain-staffing](https://theodo.github.io/captain-staffing)
 
-Currently, two official plugins are available:
+Captain Staffing is a staffing management tool to keep track of projects and holidays across all staff members by presenting data from Napta in a more readable format. Built on React with Javascript, and deployed to GitHub Pages.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+More details on development and main functionality can be found in the [Onboarding Notes](https://www.notion.so/m33/Onboarding-Notes-Captain-Staffing-8b28e8b80a274fb6a1928f487cb9e379)
 
-## Expanding the ESLint configuration
+## Requirements
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Node v16.17.0
+- To view staffing data, view access is required for the [GlobalStaffingReport](https://docs.google.com/spreadsheets/d/1tSvNVwSP080fkQwG7drmQ4c2lPYNWUMZ1_STaWQXXsM/edit#gid=32245808) spreadsheet (or the [staging](https://docs.google.com/spreadsheets/d/1L7BDXbzl-wjxjXQC2nzPr_Y5f0yRUchhRWD0SbIcex4/edit#gid=0) sheet).
+  - Edit permissions are required to use the Update Staffing button
+  - Please contact Ambroise/Simon to be added.
 
-- Configure the top-level `parserOptions` property like this:
+## Installation
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```
+npm install
+```
+- If packages fail during installation, you may need to install them manually with npm
+
+## Config
+
+The config file can be automatically created for development by running
+
+```
+npm run env:dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+to display the staging data, or
+
+```
+npm run env:prod
+```
+
+to display production data.
+
+The config can be manually edited by creating/modifying the `/src/configs/config.js` file.
+
+## Develop Locally
+
+```
+npm start
+```
+
+## Build
+
+```
+npm run build
+```
+
+## Deploy to Github Pages
+
+```
+npm run deploy
+```
+
+## [Architecture Diagram](https://app.diagrams.net/#G1e2bzPIZCX5jeMCaOFt4A8heRurJYnbYe)
+
+![architecture-diagram](src/assets/captain-staffing-architecture.drawio.png)
