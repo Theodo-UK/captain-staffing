@@ -22,20 +22,15 @@ import CaptainGoogle from "./components/CaptainGoogle";
 import DropdownTreeSelect from "react-dropdown-tree-select";
 import "react-dropdown-tree-select/dist/styles.css";
 
-import { sortButtonStyle, switchTabButtonStyle } from "./components/App.styles";
 import LastUpdatedText from "./components/LastUpdatedText";
 import { getSyncStatus, scheduleUpdate } from "./helpers/spreadsheet";
 import ReloadButton from "./components/ReloadButton";
 import { Toolbar } from "./components/Toolbar/Toolbar";
+import { TABS } from "./constants";
 
 const reload = () => {
   clearLocaleStorage();
   window.location.reload();
-};
-
-const TABS = {
-  STAFFING: "Staffing",
-  PROJECT: " Project",
 };
 
 const LOCAL_FILTERS = {
@@ -431,25 +426,12 @@ class App extends Component {
             toggleCompanyFilter={this.toggleCompanyFilter.bind(this)}
             toggleAllActive={this.toggleAllActive.bind(this)}
             toggleNoneActive={this.toggleNoneActive.bind(this)}
+            changeStaffingList={this.changeStaffingList.bind(this)}
+            isSortedByImportance={this.state.isSortedByImportance}
+            changeActiveTab={this.changeActiveTab.bind(this)}
+            activeTab={this.state.activeTab}
           />
-          <div style={{ display: "flex" }}>
-            <button
-              onClick={this.changeStaffingList.bind(this)}
-              style={sortButtonStyle}
-            >
-              {this.state.isSortedByImportance
-                ? "Sort by company"
-                : "Sort by importance"}
-            </button>
-            <button
-              onClick={this.changeActiveTab.bind(this)}
-              style={switchTabButtonStyle}
-            >
-              {this.state.activeTab === TABS.STAFFING
-                ? "View projects"
-                : "View staffing"}
-            </button>
-          </div>
+
           {this.state.activeTab === TABS.STAFFING && (
             <div>
               <div>
