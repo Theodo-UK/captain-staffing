@@ -121,7 +121,7 @@ export function MultiSelect({
                 );
               })}
             </CommandGroup>
-            <MultiSelectButton
+            <MultiSelectBottomOptions
               clearFilter={clearFilter}
               selectAll={selectAll}
             />
@@ -132,12 +132,12 @@ export function MultiSelect({
   );
 }
 
-interface MultiSelectButtonProps {
+interface MultiSelectBottomOptionsProps {
   clearFilter?: () => void;
   selectAll?: () => void;
 }
 
-const MultiSelectButton: React.FC<MultiSelectButtonProps> = ({
+const MultiSelectBottomOptions: React.FC<MultiSelectBottomOptionsProps> = ({
   clearFilter,
   selectAll
 }) => {
