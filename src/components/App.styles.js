@@ -10,21 +10,6 @@ export const commonFilterStyles = {
   fontSize: '14px',
 }
 
-export const companySelectedFilterStyle = {
-  ...commonFilterStyles,
-  border: '2px solid #004262',
-  backgroundColor: '#004262',
-  color: 'white',
-}
-
-export const companyUnselectedFilterStyle = {
-  ...commonFilterStyles,
-  border: '2px solid #004262',
-  backgroundColor: 'white',
-  color: '#004262',
-  opacity: '0.8',
-}
-
 export const positionSelectedFilterStyle = {
   ...commonFilterStyles,
   border: '2px solid #A020F0',
@@ -38,13 +23,6 @@ export const positionUnselectedFilterStyle = {
   backgroundColor: 'white',
   color: '#A020F0',
   opacity: '0.8',
-}
-
-export const customFilterStyle = {
-  ...commonFilterStyles,
-  backgroundColor: '#33A5FF',
-  color: 'white',
-  border: 'none',
 }
 
 export const sortButtonStyle = {

@@ -16,7 +16,6 @@ import Alert from "./components/Alert";
 import StaffingTable from "./components/staffing/StaffingTable";
 import ProjectTable from "./components/project/ProjectTable";
 import {
-  getPositionForFilter,
   columnTitles,
   getColumnFilter,
 } from "./helpers/formatter";
@@ -27,15 +26,13 @@ import DropdownTreeSelect from "react-dropdown-tree-select";
 import "react-dropdown-tree-select/dist/styles.css";
 
 import {
-  companySelectedFilterStyle,
-  companyUnselectedFilterStyle,
-  customFilterStyle,
   sortButtonStyle,
   switchTabButtonStyle,
 } from "./components/App.styles";
 import LastUpdatedText from "./components/LastUpdatedText";
 import { getSyncStatus, scheduleUpdate } from "./helpers/spreadsheet";
 import ReloadButton from "./components/ReloadButton";
+import { FilterBar } from "./components/filters/FilterBar";
 
 const reload = () => {
   clearLocaleStorage();
@@ -458,44 +455,15 @@ class App extends Component {
         }).length - inStaffingCrisis;
       return (
         <div>
-          <DropdownTreeSelect
-            className="positionDropdown"
-            data={getPositionForFilter(this.state.positions, this.lastClicked)}
-            onChange={this.positionsSelectorOnChange.bind(this)}
+          <FilterBar
+            positions={this.state.positions}
+            positionLastClicked={this.lastClicked}
+            positionsSelectorOnChange={this.positionsSelectorOnChange.bind(this)}
+            companies={this.state.companies}
+            toggleCompanyFilter={this.toggleCompanyFilter.bind(this)}
+            toggleAllActive={this.toggleAllActive.bind(this)}
+            toggleNoneActive={this.toggleNoneActive.bind(this)}
           />
-          <div className="filter-container">
-            {Object.entries(this.state.companies).map(
-              ([companyName, isSelected]) => {
-                return (
-                  <button
-                    key={companyName}
-                    style={
-                      isSelected
-                        ? companySelectedFilterStyle
-                        : companyUnselectedFilterStyle
-                    }
-                    onClick={() => {
-                      this.toggleCompanyFilter(companyName);
-                    }}
-                  >
-                    {companyName}
-                  </button>
-                );
-              }
-            )}
-            <button
-              style={customFilterStyle}
-              onClick={this.toggleAllActive.bind(this)}
-            >
-              Toggle All
-            </button>
-            <button
-              style={customFilterStyle}
-              onClick={this.toggleNoneActive.bind(this)}
-            >
-              Toggle None
-            </button>
-          </div>
           <div style={{ display: "flex" }}>
             <button
               onClick={this.changeStaffingList.bind(this)}
