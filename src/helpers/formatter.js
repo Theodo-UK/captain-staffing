@@ -37,13 +37,6 @@ export const subTypes = {
   Other: ["Externe", "Head of Tribe", "R&D", "Evangelist", "Dirigeant"],
 };
 
-export const COLUMN_TITLES = {
-  User: "user",
-  Company: "company",
-  Project: "project",
-  Calendar: "calendar",
-};
-
 const STAFFING_ALERT_THRESHOLD = 10;
 const STAFFING_CRISIS_THRESHOLD = 5;
 
@@ -80,24 +73,6 @@ const formatPositions = (options, positionSelectedPairs) =>
       checked: isSelected,
       id: position,
     }));
-export const getColumnFilter = (selected) => [
-  {
-    label: "User",
-    checked: selected.includes("User"),
-  },
-  {
-    label: "Company",
-    checked: selected.includes("Company"),
-  },
-  {
-    label: "Project",
-    checked: selected.includes("Project"),
-  },
-  {
-    label: "Calendar",
-    checked: selected.includes("Calendar"),
-  },
-];
 
 export const getPositionForFilter = (
   positionSelectedPairs,

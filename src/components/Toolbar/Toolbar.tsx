@@ -1,11 +1,18 @@
 import DropdownTreeSelect from "react-dropdown-tree-select";
 // @ts-expect-error file is not typed yet
-import { getPositionForFilter, getColumnFilter } from "../../helpers/formatter";
+import { getPositionForFilter } from "../../helpers/formatter";
 
 import { FilterCompanies } from "./FilterCompanies";
-import { TABS } from '../../constants';
+import { TABS } from "../../constants";
 import { Button } from "@/design-system/ui/button";
-import { ArrowDownIcon, BackpackIcon, PersonIcon } from "@radix-ui/react-icons";
+import {
+  ArrowDownIcon,
+  BackpackIcon,
+  ColumnsIcon,
+  PersonIcon
+} from "@radix-ui/react-icons";
+import { MultiSelect } from "@/design-system/ui/multiselect/MultiSelect";
+import { IColumn } from "./FilterColumns/FilterColumns.utils";
 
 interface ToolbarProps {
   // Positions
@@ -26,8 +33,8 @@ interface ToolbarProps {
   activeTab: keyof typeof TABS;
 
   // Table Columns
-  tableColumns: string[];
-  toggleTableColumn: () => void;
+  tableColumns: IColumn[];
+  toggleTableColumn: (columnName: string) => void;
 }
 
 export const Toolbar: React.FC<ToolbarProps> = ({
@@ -57,31 +64,28 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       toggleCompanyFilter={toggleCompanyFilter}
       companiesState={companiesState}
     />
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={changeStaffingList}
-    >
+    <Button variant="outline" size="sm" onClick={changeStaffingList}>
       <ArrowDownIcon className="mr-2 h-4 w-4" />
-      {isSortedByImportance
-        ? "Sort by company"
-        : "Sort by importance"}
+      {isSortedByImportance ? "Sort by company" : "Sort by importance"}
     </Button>
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={changeActiveTab}
-    >
-      {activeTab === TABS.STAFFING
-        ? <ProjectButtonContent />
-        : <StaffingButtonContent />}
+    <Button variant="outline" size="sm" onClick={changeActiveTab}>
+      {activeTab === TABS.STAFFING ? (
+        <ProjectButtonContent />
+      ) : (
+        <StaffingButtonContent />
+      )}
     </Button>
-    <div style={{ float: "right" }}>
-      <DropdownTreeSelect
-        texts={{ placeholder: "Filter Columns" }}
-        className="positionDropdown"
-        data={getColumnFilter(tableColumns)}
-        onChange={toggleTableColumn}
+    <div className="flex flex-1 flex-row-reverse space-x-2">
+      <MultiSelect
+        toggleOption={toggleTableColumn}
+        title="Columns"
+        options={tableColumns.map((tc) => ({
+          label: tc.name,
+          value: tc.name,
+          isSelected: tc.isSelected
+        }))}
+        showSelected={false}
+        Icon={ColumnsIcon}
       />
     </div>
   </div>

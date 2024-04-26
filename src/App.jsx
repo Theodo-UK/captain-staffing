@@ -15,7 +15,6 @@ import Alert from "./components/Alert";
 
 import StaffingTable from "./components/staffing/StaffingTable";
 import ProjectTable from "./components/project/ProjectTable";
-import { COLUMN_TITLES } from "./helpers/formatter";
 
 import CaptainGoogle from "./components/CaptainGoogle";
 
@@ -25,6 +24,7 @@ import LastUpdatedText from "./components/LastUpdatedText";
 import { getSyncStatus, scheduleUpdate } from "./helpers/spreadsheet";
 import ReloadButton from "./components/ReloadButton";
 import { Toolbar } from "./components/Toolbar/Toolbar";
+import { INITIAL_COLUMN_STATE } from "./components/Toolbar/FilterColumns/FilterColumns.utils";
 import { TABS } from "./constants";
 
 const reload = () => {
@@ -133,7 +133,7 @@ class App extends Component {
       activeTab: TABS.STAFFING,
       isSyncing: false,
       isRefreshRequired: false,
-      tableColumns: Object.keys(COLUMN_TITLES),
+      tableColumns: INITIAL_COLUMN_STATE,
     };
 
     this.lastClicked = undefined;
@@ -390,11 +390,16 @@ class App extends Component {
     });
   }
 
-  toggleTableColumn(currentNode, selectedNodes) {
-    const selected = selectedNodes.map((node) => node.label);
-    this.setState({
-      tableColumns: Object.values(selected),
-    });
+  toggleTableColumn(targetTableColumn) {
+    const newTableColumns = [...this.state.tableColumns].map((tableColumn) => ({
+      ...tableColumn,
+      isSelected:
+        tableColumn.name === targetTableColumn
+          ? !tableColumn.isSelected
+          : tableColumn.isSelected,
+    }));
+
+    this.setState({ tableColumns: newTableColumns });
   }
 
   renderStaffing() {

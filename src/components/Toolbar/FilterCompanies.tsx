@@ -1,4 +1,4 @@
-import { MultiSelect } from "@/design-system/ui/MultiSelect";
+import { MultiSelect } from "@/design-system/ui/multiselect/MultiSelect";
 
 type Company = {
   name: string;

@@ -2,7 +2,6 @@ import * as React from "react";
 import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 
 import { cn } from "@/lib/utils";
-import { Badge } from "@/design-system/ui/badge";
 import { Button } from "@/design-system/ui/button";
 import {
   Command,
@@ -16,20 +15,18 @@ import {
   PopoverContent,
   PopoverTrigger
 } from "@/design-system/ui/popover";
-import { Separator } from "@/design-system/ui/separator";
+import { Option } from "./MultiSelect.types";
+import { MultiSelectBadges } from "./MultiSelect.badges";
 
-const MAX_SELECTED_OPTIONS_BEFORE_GROUPED = 3;
 
 interface MultiSelectProps {
   clearFilter?: () => void;
   selectAll?: () => void;
   toggleOption: (value: string) => void;
   title?: string;
-  options: {
-    label: string;
-    value: string;
-    isSelected: boolean;
-  }[];
+  options: Option[];
+  showSelected?: boolean;
+  Icon?: React.ComponentType<{ className?: string }>;
 }
 
 export function MultiSelect({
@@ -37,51 +34,24 @@ export function MultiSelect({
   selectAll,
   toggleOption,
   title,
-  options
+  options,
+  showSelected = true,
+  Icon = PlusCircledIcon
 }: MultiSelectProps) {
   const selectedValues = new Set(
     options.filter((o) => o.isSelected).map((o) => o.value)
   );
 
+  const selectedOptions = options
+    .filter((option) => selectedValues.has(option.value));
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
-          <PlusCircledIcon className="mr-2 h-4 w-4" />
+          <Icon className="mr-2 h-4 w-4" />
           {title}
-          {selectedValues?.size > 0 && (
-            <>
-              <Separator orientation="vertical" className="mx-2 h-4" />
-              <Badge
-                variant="secondary"
-                className="rounded-sm px-1 font-normal lg:hidden"
-              >
-                {selectedValues.size}
-              </Badge>
-              <div className="hidden space-x-1 lg:flex">
-                {selectedValues.size > MAX_SELECTED_OPTIONS_BEFORE_GROUPED ? (
-                  <Badge
-                    variant="secondary"
-                    className="rounded-sm px-1 font-normal"
-                  >
-                    {selectedValues.size} selected
-                  </Badge>
-                ) : (
-                  options
-                    .filter((option) => selectedValues.has(option.value))
-                    .map((option) => (
-                      <Badge
-                        variant="secondary"
-                        key={option.value}
-                        className="rounded-sm px-1 font-normal"
-                      >
-                        {option.label}
-                      </Badge>
-                    ))
-                )}
-              </div>
-            </>
-          )}
+          <MultiSelectBadges showSelected={showSelected} selectedOptions={selectedOptions} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0" align="start">
