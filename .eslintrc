@@ -9,7 +9,7 @@
   "parser": "@typescript-eslint/parser",
   "rules": {
     "no-console": "error",
-    "arrow-body-style": ["error", "always"],
+    "arrow-body-style": ["error", "as-needed"],
     "comma-dangle": ["error", "always-multiline"],
     "import/prefer-default-export": "off",
     "import/first": "off",
