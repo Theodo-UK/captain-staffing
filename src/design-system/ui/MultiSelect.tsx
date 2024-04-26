@@ -29,7 +29,6 @@ interface MultiSelectProps {
     label: string;
     value: string;
     isSelected: boolean;
-    icon?: React.ComponentType<{ className?: string }>;
   }[];
 }
 
@@ -113,9 +112,6 @@ export function MultiSelect({
                     >
                       <CheckIcon className={cn("h-4 w-4")} />
                     </div>
-                    {/* {option.icon && (
-                      <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-                    )} */}
                     <span>{option.label}</span>
                   </CommandItem>
                 );
