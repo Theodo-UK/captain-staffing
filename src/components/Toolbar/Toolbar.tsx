@@ -1,23 +1,33 @@
 import DropdownTreeSelect from "react-dropdown-tree-select";
 // @ts-expect-error file is not typed yet
-import { getPositionForFilter } from "../../helpers/formatter";
+import { getPositionForFilter, getColumnFilter } from "../../helpers/formatter";
+
 import { FilterCompanies } from "./FilterCompanies";
 import { TABS } from '../../constants';
 import { Button } from "@/design-system/ui/button";
 import { ArrowDownIcon, BackpackIcon, PersonIcon } from "@radix-ui/react-icons";
 
 interface ToolbarProps {
+  // Positions
   positionsState: { [positionName: string]: boolean };
   positionLastClicked: string | undefined;
   positionsSelectorOnChange: () => void;
+
+  // Companies
   companiesState: { [companyName: string]: boolean };
   toggleCompanyFilter: (companyName: string) => void;
   toggleAllActive: () => void;
   toggleNoneActive: () => void;
+
+  // Sort buttons
   changeStaffingList: () => void;
   isSortedByImportance: boolean;
   changeActiveTab: () => void;
   activeTab: keyof typeof TABS;
+
+  // Table Columns
+  tableColumns: string[];
+  toggleTableColumn: () => void;
 }
 
 export const Toolbar: React.FC<ToolbarProps> = ({
@@ -31,7 +41,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   changeStaffingList,
   isSortedByImportance,
   changeActiveTab,
-  activeTab
+  activeTab,
+  tableColumns,
+  toggleTableColumn
 }) => (
   <div className="flex items-center space-x-2">
     <DropdownTreeSelect
@@ -64,6 +76,14 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         ? <ProjectButtonContent />
         : <StaffingButtonContent />}
     </Button>
+    <div style={{ float: "right" }}>
+      <DropdownTreeSelect
+        texts={{ placeholder: "Filter Columns" }}
+        className="positionDropdown"
+        data={getColumnFilter(tableColumns)}
+        onChange={toggleTableColumn}
+      />
+    </div>
   </div>
 );
 

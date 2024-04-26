@@ -13,7 +13,7 @@ export default class StaffingTable extends React.Component {
   //   weeks: React.PropTypes.array.isRequired,
   //   peopleStaffing: React.PropTypes.array.isRequired,
   //   onRowClick: React.PropTypes.func,
-  //   columnOrder: React.PropTypes.array,
+  //   tableColumns: React.PropTypes.array,
   // };
 
   render() {
@@ -27,7 +27,7 @@ export default class StaffingTable extends React.Component {
         maxHeight={750}
         headerHeight={40}
       >
-        {this.props.columnOrder.includes("User") && (
+        {this.props.tableColumns.includes("User") && (
           <Column
             header="User"
             cell={
@@ -42,7 +42,7 @@ export default class StaffingTable extends React.Component {
           />
         )}
 
-        {this.props.columnOrder.includes("Company") && (
+        {this.props.tableColumns.includes("Company") && (
           <Column
             header="Company"
             cell={
@@ -57,7 +57,7 @@ export default class StaffingTable extends React.Component {
           />
         )}
 
-        {this.props.columnOrder.includes("Project") && (
+        {this.props.tableColumns.includes("Project") && (
           <Column
             header="Project"
             cell={
@@ -71,27 +71,23 @@ export default class StaffingTable extends React.Component {
             fixed
           />
         )}
-        {this.props.columnOrder.includes("Calendar") &&
-          this.props.weeks.map((week, i) => {
-            return (
-              <Column
-                key={i}
-                header={
-                  <Cell>{moment(week, "YYYY/MM/DD").format("DD/MM")}</Cell>
-                }
-                headerClassName={`staffingHeaderCell staffingHeaderCell--${i}`}
-                cell={
-                  <StaffingCell
-                    data={this.props.peopleStaffing}
-                    onClick={this.props.onRowClick}
-                    week={week}
-                  />
-                }
-                cellClassName={`staffingCell staffingCell--${i}`}
-                width={60}
-              />
-            );
-          })}
+        {this.props.tableColumns.includes("Calendar") &&
+          this.props.weeks.map((week, i) => (
+            <Column
+              key={i}
+              header={<Cell>{moment(week, "YYYY/MM/DD").format("DD/MM")}</Cell>}
+              headerClassName={`staffingHeaderCell staffingHeaderCell--${i}`}
+              cell={
+                <StaffingCell
+                  data={this.props.peopleStaffing}
+                  onClick={this.props.onRowClick}
+                  week={week}
+                />
+              }
+              cellClassName={`staffingCell staffingCell--${i}`}
+              width={60}
+            />
+          ))}
       </Table>
     );
   }
