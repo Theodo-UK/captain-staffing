@@ -46,6 +46,11 @@ interface FilterBarProps {
   toggleNoneActive: () => void;
 }
 
+type Company = {
+  name: string;
+  isSelected: boolean;
+};
+
 export const FilterBar: React.FC<FilterBarProps> = ({
   positionsState,
   positionLastClicked,
@@ -55,6 +60,10 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   toggleAllActive,
   toggleNoneActive,
 }) => {
+  const companies: Company[] = Object.entries(companiesState).map(
+    ([companyName, isSelected]) => ({ name: companyName, isSelected })
+  );
+
   return (
     <>
       <DropdownTreeSelect
@@ -63,21 +72,21 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         onChange={positionsSelectorOnChange}
       />
       <div className="filter-container">
-        {Object.entries(companiesState).map(([companyName, isSelected]) => (
-            <button
-              key={companyName}
-              style={
-                isSelected
-                  ? companySelectedFilterStyle
-                  : companyUnselectedFilterStyle
-              }
-              onClick={() => {
-                toggleCompanyFilter(companyName);
-              }}
-            >
-              {companyName}
-            </button>
-          ))}
+        {companies.map(({ name, isSelected }) => (
+          <button
+            key={name}
+            style={
+              isSelected
+                ? companySelectedFilterStyle
+                : companyUnselectedFilterStyle
+            }
+            onClick={() => {
+              toggleCompanyFilter(name);
+            }}
+          >
+            {name}
+          </button>
+        ))}
         <button style={customFilterStyle} onClick={toggleAllActive}>
           Toggle All
         </button>
