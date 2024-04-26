@@ -456,10 +456,10 @@ class App extends Component {
       return (
         <div>
           <FilterBar
-            positions={this.state.positions}
+            positionsState={this.state.positions}
             positionLastClicked={this.lastClicked}
             positionsSelectorOnChange={this.positionsSelectorOnChange.bind(this)}
-            companies={this.state.companies}
+            companiesState={this.state.companies}
             toggleCompanyFilter={this.toggleCompanyFilter.bind(this)}
             toggleAllActive={this.toggleAllActive.bind(this)}
             toggleNoneActive={this.toggleNoneActive.bind(this)}

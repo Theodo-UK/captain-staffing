@@ -38,25 +38,26 @@ const companyUnselectedFilterStyle = {
 
 
 interface FilterBarProps {
-  positions: { [positionName: string]: boolean}
+  positionsState: { [positionName: string]: boolean}
   positionLastClicked: string | undefined;
   positionsSelectorOnChange: () => void
-  companies: { [companyName: string]: boolean}
+  companiesState: { [companyName: string]: boolean}
   toggleCompanyFilter: (companyName: string) => void;
   toggleAllActive: () => void;
   toggleNoneActive: () => void;
 }
 
-export const FilterBar: React.FC<FilterBarProps> = ({positions, positionLastClicked, positionsSelectorOnChange, companies, toggleCompanyFilter, toggleAllActive, toggleNoneActive}) => {
+export const FilterBar: React.FC<FilterBarProps> = ({positionsState, positionLastClicked, positionsSelectorOnChange, companiesState, toggleCompanyFilter, toggleAllActive, toggleNoneActive}) => {
+
   return (
     <>
       <DropdownTreeSelect
         className="positionDropdown"
-        data={getPositionForFilter(positions, positionLastClicked)}
+        data={getPositionForFilter(positionsState, positionLastClicked)}
         onChange={positionsSelectorOnChange}
       />
       <div className="filter-container">
-        {Object.entries(companies).map(
+        {Object.entries(companiesState).map(
           ([companyName, isSelected]) => {
             return (
               <button
