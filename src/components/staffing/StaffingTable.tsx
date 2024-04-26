@@ -58,7 +58,7 @@ const StaffingTable: React.FC<StaffingTableProps> = ({ weeks, peopleStaffing, on
               field="company"
             />
           }
-          width={200}
+          width={120}
           fixed
         />
       )}
