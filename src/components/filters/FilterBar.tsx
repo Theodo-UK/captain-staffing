@@ -11,21 +11,21 @@ const commonFilterStyles = {
   alignItems: "center",
   borderRadius: "4px",
   border: "2px solid #004262",
-  fontSize: "14px",
+  fontSize: "14px"
 };
 
 const customFilterStyle = {
   ...commonFilterStyles,
   backgroundColor: "#33A5FF",
   color: "white",
-  border: "none",
+  border: "none"
 };
 
 const companySelectedFilterStyle = {
   ...commonFilterStyles,
   border: "2px solid #004262",
   backgroundColor: "#004262",
-  color: "white",
+  color: "white"
 };
 
 const companyUnselectedFilterStyle = {
@@ -33,7 +33,7 @@ const companyUnselectedFilterStyle = {
   border: "2px solid #004262",
   backgroundColor: "white",
   color: "#004262",
-  opacity: "0.8",
+  opacity: "0.8"
 };
 
 interface FilterBarProps {
@@ -58,7 +58,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   companiesState,
   toggleCompanyFilter,
   toggleAllActive,
-  toggleNoneActive,
+  toggleNoneActive
 }) => {
   const companies: Company[] = Object.entries(companiesState).map(
     ([companyName, isSelected]) => ({ name: companyName, isSelected })
