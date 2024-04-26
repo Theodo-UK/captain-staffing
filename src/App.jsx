@@ -206,19 +206,8 @@ class App extends Component {
       {}
     );
     updateFilterStorage(LOCAL_FILTERS.COMPANIES, newCompanies);
-    const newPositions = Object.keys(this.state.positions).reduce(
-      (acc, position) => {
-        acc[position] = true;
-        return acc;
-      },
-      {}
-    );
-    updateFilterStorage(LOCAL_FILTERS.POSITIONS, newPositions);
 
-    this.setState({
-      companies: newCompanies,
-      positions: newPositions,
-    });
+    this.setState({ companies: newCompanies });
   }
 
   toggleNoneActive() {

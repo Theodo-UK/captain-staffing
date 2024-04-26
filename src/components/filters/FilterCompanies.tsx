@@ -7,12 +7,14 @@ type Company = {
 
 interface FilterCompaniesProps {
   toggleNoneActive: () => void;
+  toggleAllActive: () => void;
   toggleCompanyFilter: (value: string) => void;
   companiesState: { [companyName: string]: boolean };
 }
 
 export function FilterCompanies({
   toggleNoneActive,
+  toggleAllActive,
   toggleCompanyFilter,
   companiesState
 }: FilterCompaniesProps) {
@@ -31,6 +33,7 @@ export function FilterCompanies({
   return (
     <MultiSelect
       clearFilter={toggleNoneActive}
+      selectAll={toggleAllActive}
       toggleOption={toggleCompanyFilter}
       title="Company"
       options={sortedCompanies}

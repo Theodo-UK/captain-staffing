@@ -19,7 +19,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   positionsSelectorOnChange,
   companiesState = {},
   toggleCompanyFilter,
-  // toggleAllActive,
+  toggleAllActive,
   toggleNoneActive
 }) => (
   <div className="flex items-center space-x-4">
@@ -30,6 +30,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     />
     <FilterCompanies
       toggleNoneActive={toggleNoneActive}
+      toggleAllActive={toggleAllActive}
       toggleCompanyFilter={toggleCompanyFilter}
       companiesState={companiesState}
     />

@@ -22,24 +22,27 @@ const MAX_SELECTED_OPTIONS_BEFORE_GROUPED = 3;
 
 interface MultiSelectProps {
   clearFilter?: () => void;
+  selectAll?: () => void;
   toggleOption: (value: string) => void;
-  title?: string
+  title?: string;
   options: {
     label: string;
     value: string;
     isSelected: boolean;
-    icon?: React.ComponentType<{ className?: string }>
-  }[]
+    icon?: React.ComponentType<{ className?: string }>;
+  }[];
 }
 
 export function MultiSelect({
   clearFilter,
+  selectAll,
   toggleOption,
   title,
   options
 }: MultiSelectProps) {
-  const selectedValues = new Set(options.filter(o => o.isSelected).map(o => o.value));
-  const shouldShowClearFilter = clearFilter && selectedValues.size > 0;
+  const selectedValues = new Set(
+    options.filter((o) => o.isSelected).map((o) => o.value)
+  );
 
   return (
     <Popover>
@@ -118,22 +121,54 @@ export function MultiSelect({
                 );
               })}
             </CommandGroup>
-            {shouldShowClearFilter && (
-              <>
-                <CommandSeparator />
-                <CommandGroup>
-                  <CommandItem
-                    onSelect={clearFilter}
-                    className="justify-center text-center"
-                  >
-                    Clear filter
-                  </CommandItem>
-                </CommandGroup>
-              </>
-            )}
+            <MultiSelectButton
+              clearFilter={clearFilter}
+              selectAll={selectAll}
+            />
           </CommandList>
         </Command>
       </PopoverContent>
     </Popover>
   );
 }
+
+interface MultiSelectButtonProps {
+  clearFilter?: () => void;
+  selectAll?: () => void;
+}
+
+const MultiSelectButton: React.FC<MultiSelectButtonProps> = ({
+  clearFilter,
+  selectAll
+}) => {
+  const showClearFilter = Boolean(clearFilter);
+  const showSelectAll = Boolean(selectAll);
+
+  if (!showClearFilter && !showSelectAll) {
+    return null;
+  }
+
+  return (
+    <>
+      <CommandSeparator />
+      <CommandGroup>
+        {showClearFilter && (
+          <CommandItem
+            onSelect={clearFilter}
+            className="justify-center text-center"
+          >
+            Clear filter
+          </CommandItem>
+        )}
+        {showSelectAll && (
+          <CommandItem
+            onSelect={selectAll}
+            className="justify-center text-center"
+          >
+            Select all
+          </CommandItem>
+        )}
+      </CommandGroup>
+    </>
+  );
+};
