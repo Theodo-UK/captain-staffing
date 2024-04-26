@@ -3,7 +3,7 @@ import DropdownTreeSelect from "react-dropdown-tree-select";
 import { getPositionForFilter } from "../../helpers/formatter";
 import { FilterCompanies } from "./FilterCompanies";
 
-interface FilterBarProps {
+interface ToolbarProps {
   positionsState: { [positionName: string]: boolean };
   positionLastClicked: string | undefined;
   positionsSelectorOnChange: () => void;
@@ -13,7 +13,7 @@ interface FilterBarProps {
   toggleNoneActive: () => void;
 }
 
-export const FilterBar: React.FC<FilterBarProps> = ({
+export const Toolbar: React.FC<ToolbarProps> = ({
   positionsState = {},
   positionLastClicked,
   positionsSelectorOnChange,

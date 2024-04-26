@@ -15,24 +15,18 @@ import Alert from "./components/Alert";
 
 import StaffingTable from "./components/staffing/StaffingTable";
 import ProjectTable from "./components/project/ProjectTable";
-import {
-  columnTitles,
-  getColumnFilter,
-} from "./helpers/formatter";
+import { columnTitles, getColumnFilter } from "./helpers/formatter";
 
 import CaptainGoogle from "./components/CaptainGoogle";
 
 import DropdownTreeSelect from "react-dropdown-tree-select";
 import "react-dropdown-tree-select/dist/styles.css";
 
-import {
-  sortButtonStyle,
-  switchTabButtonStyle,
-} from "./components/App.styles";
+import { sortButtonStyle, switchTabButtonStyle } from "./components/App.styles";
 import LastUpdatedText from "./components/LastUpdatedText";
 import { getSyncStatus, scheduleUpdate } from "./helpers/spreadsheet";
 import ReloadButton from "./components/ReloadButton";
-import { FilterBar } from "./components/filters/FilterBar";
+import { Toolbar } from "./components/Toolbar/Toolbar";
 
 const reload = () => {
   clearLocaleStorage();
@@ -55,9 +49,9 @@ const getImportanceLookup = (weeks) => {
     1, 1, 1,
   ];
   const importanceValuesWithDate = {};
-  weeks.forEach((week) => {
-    return (importanceValuesWithDate[week] = baseImportanceValues.shift());
-  });
+  weeks.forEach(
+    (week) => (importanceValuesWithDate[week] = baseImportanceValues.shift())
+  );
   return importanceValuesWithDate;
 };
 
@@ -265,28 +259,24 @@ class App extends Component {
         storagePositionsFilter
       );
 
-      const formattedWeeks = weeks.map((week) => {
-        return moment(week, "DD/MM/YYYY").format("YYYY/MM/DD");
-      });
+      const formattedWeeks = weeks.map((week) =>
+        moment(week, "DD/MM/YYYY").format("YYYY/MM/DD")
+      );
 
-      const globalStaffingWithImportance = globalStaffing.map((staff) => {
-        return {
-          ...staff,
-          importance: getStaffingImportance(
-            staff,
-            getImportanceLookup(formattedWeeks)
-          ),
-        };
-      });
-      const globalProjectsWithImportance = globalProjects.map((staff) => {
-        return {
-          ...staff,
-          importance: getProjectImportance(
-            staff,
-            getImportanceLookup(formattedWeeks)
-          ),
-        };
-      });
+      const globalStaffingWithImportance = globalStaffing.map((staff) => ({
+        ...staff,
+        importance: getStaffingImportance(
+          staff,
+          getImportanceLookup(formattedWeeks)
+        ),
+      }));
+      const globalProjectsWithImportance = globalProjects.map((staff) => ({
+        ...staff,
+        importance: getProjectImportance(
+          staff,
+          getImportanceLookup(formattedWeeks)
+        ),
+      }));
 
       updateFilterStorage(LOCAL_FILTERS.COMPANIES, companiesSelection);
       updateFilterStorage(LOCAL_FILTERS.POSITIONS, positionSelection);
@@ -372,20 +362,16 @@ class App extends Component {
   }
 
   changeActiveTab() {
-    this.setState((state) => {
-      return {
-        activeTab:
-          state.activeTab === TABS.STAFFING ? TABS.PROJECT : TABS.STAFFING,
-      };
-    });
+    this.setState((state) => ({
+      activeTab:
+        state.activeTab === TABS.STAFFING ? TABS.PROJECT : TABS.STAFFING,
+    }));
   }
 
   positionsSelectorOnChange(currentNode, selectedNodes) {
     const newPositions = Object.keys(this.state.positions).reduce(
       (acc, position) => {
-        acc[position] = selectedNodes.some((node) => {
-          return node.label === "All";
-        });
+        acc[position] = selectedNodes.some((node) => node.label === "All");
         return acc;
       },
       {}
@@ -411,9 +397,7 @@ class App extends Component {
   }
 
   handleColumnHide(currentNode, selectedNodes) {
-    const selected = selectedNodes.map((node) => {
-      return node.label;
-    });
+    const selected = selectedNodes.map((node) => node.label);
     this.setState({
       columnOrder: Object.values(selected),
     });
@@ -422,32 +406,27 @@ class App extends Component {
   renderStaffing() {
     if (this.state.globalStaffing && this.state.globalProjects) {
       const staffingToDisplay = this.state.globalStaffing
-        .filter((staffing) => {
-          return this.state.companies[staffing.company];
-        })
-        .filter((staffing) => {
-          return this.state.positions[staffing.position];
-        });
-      const projectToDisplay = this.state.globalProjects.filter((project) => {
-        return project.companies.some((company) => {
-          return this.state.companies[company];
-        });
-      });
+        .filter((staffing) => this.state.companies[staffing.company])
+        .filter((staffing) => this.state.positions[staffing.position]);
+      const projectToDisplay = this.state.globalProjects.filter((project) =>
+        project.companies.some((company) => this.state.companies[company])
+      );
 
-      const inStaffingCrisis = staffingToDisplay.filter((staffing) => {
-        return staffing.isInStaffingCrisis;
-      }).length;
+      const inStaffingCrisis = staffingToDisplay.filter(
+        (staffing) => staffing.isInStaffingCrisis
+      ).length;
 
       const inStaffingAlert =
-        staffingToDisplay.filter((staffing) => {
-          return staffing.isInStaffingAlert;
-        }).length - inStaffingCrisis;
+        staffingToDisplay.filter((staffing) => staffing.isInStaffingAlert)
+          .length - inStaffingCrisis;
       return (
         <div>
-          <FilterBar
+          <Toolbar
             positionsState={this.state.positions}
             positionLastClicked={this.lastClicked}
-            positionsSelectorOnChange={this.positionsSelectorOnChange.bind(this)}
+            positionsSelectorOnChange={this.positionsSelectorOnChange.bind(
+              this
+            )}
             companiesState={this.state.companies}
             toggleCompanyFilter={this.toggleCompanyFilter.bind(this)}
             toggleAllActive={this.toggleAllActive.bind(this)}
