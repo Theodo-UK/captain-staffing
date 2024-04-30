@@ -52,7 +52,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   tableColumns,
   toggleTableColumn
 }) => (
-  <div className="flex items-center space-x-2">
+  <div className="flex items-center space-x-2 my-4">
     <DropdownTreeSelect
       className="positionDropdown"
       data={getPositionForFilter(positionsState, positionLastClicked)}
