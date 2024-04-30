@@ -37,29 +37,13 @@ export const subTypes = {
   Other: ["Externe", "Head of Tribe", "R&D", "Evangelist", "Dirigeant"],
 };
 
-export const columnTitles = {
-  User: "user",
-  Company: "company",
-  Project: "project",
-  Calendar: "calendar",
-};
-
 const STAFFING_ALERT_THRESHOLD = 10;
 const STAFFING_CRISIS_THRESHOLD = 5;
 
-const getArrayFromColumnId = (rows, index) => {
-  return Array.from(
-    new Set(
-      rows
-        .map((row) => {
-          return row[index];
-        })
-        .filter((item) => {
-          return item !== undefined;
-        })
-    )
+const getArrayFromColumnId = (rows, index) =>
+  Array.from(
+    new Set(rows.map((row) => row[index]).filter((item) => item !== undefined))
   );
-};
 
 const getCompany = (rows, columnIndex) => {
   if (Array.isArray(rows)) {
@@ -79,41 +63,16 @@ const getPosition = (rows, columnIndex) => {
   return "Other";
 };
 
-const formatPositions = (options, positionSelectedPairs) => {
-  return Object.entries(positionSelectedPairs)
-    .filter(([position]) => {
-      return options.includes(position);
-    })
-    .map(([position, isSelected]) => {
-      return {
-        label: position,
-        value: position,
-        children: [],
-        checked: isSelected,
-        id: position,
-      };
-    });
-};
-export const getColumnFilter = (selected) => {
-  return [
-    {
-      label: "User",
-      checked: selected.includes("User"),
-    },
-    {
-      label: "Company",
-      checked: selected.includes("Company"),
-    },
-    {
-      label: "Project",
-      checked: selected.includes("Project"),
-    },
-    {
-      label: "Calendar",
-      checked: selected.includes("Calendar"),
-    },
-  ];
-};
+const formatPositions = (options, positionSelectedPairs) =>
+  Object.entries(positionSelectedPairs)
+    .filter(([position]) => options.includes(position))
+    .map(([position, isSelected]) => ({
+      label: position,
+      value: position,
+      children: [],
+      checked: isSelected,
+      id: position,
+    }));
 
 export const getPositionForFilter = (
   positionSelectedPairs,
@@ -144,63 +103,49 @@ export const getPositionForFilter = (
         label: "Devs",
         id: "Devs",
         children: devPositions,
-        checked: devPositions.every((position) => {
-          return position.checked;
-        }),
+        checked: devPositions.every((position) => position.checked),
         expanded: subTypes.Devs.includes(lastClicked),
       },
       {
         label: "Lead",
         id: "Lead",
         children: leadPositions,
-        checked: leadPositions.every((position) => {
-          return position.checked;
-        }),
+        checked: leadPositions.every((position) => position.checked),
         expanded: subTypes.Lead.includes(lastClicked),
       },
       {
         label: "Biz Dev",
         id: "Biz Dev",
         children: bizDevPositions,
-        checked: bizDevPositions.every((position) => {
-          return position.checked;
-        }),
+        checked: bizDevPositions.every((position) => position.checked),
         expanded: subTypes.BizDev.includes(lastClicked),
       },
       {
         label: "Designers",
         id: "Designers",
         children: designerPositions,
-        checked: designerPositions.every((position) => {
-          return position.checked;
-        }),
+        checked: designerPositions.every((position) => position.checked),
         expanded: subTypes.Designers.includes(lastClicked),
       },
       {
         label: "Dev Ops",
         id: "Dev Ops",
         children: devOpsPositions,
-        checked: devOpsPositions.every((position) => {
-          return position.checked;
-        }),
+        checked: devOpsPositions.every((position) => position.checked),
         expanded: subTypes.DevOps.includes(lastClicked),
       },
       {
         label: "Data",
         id: "Data",
         children: dataPositions,
-        checked: dataPositions.every((position) => {
-          return position.checked;
-        }),
+        checked: dataPositions.every((position) => position.checked),
         expanded: subTypes.Data.includes(lastClicked),
       },
       {
         label: "Other",
         id: "Other",
         children: otherPositions,
-        checked: otherPositions.every((position) => {
-          return position.checked;
-        }),
+        checked: otherPositions.every((position) => position.checked),
         expanded: subTypes.Other.includes(lastClicked),
       },
     ],
@@ -216,14 +161,11 @@ const getId = (rows, columnIndex) => {
   return "Other";
 };
 
-const hasAvailabiltiesFromWeekNumber = (staffing, weekNumber) => {
-  return !Object.keys(staffing)
+const hasAvailabiltiesFromWeekNumber = (staffing, weekNumber) =>
+  !Object.keys(staffing)
     .sort()
     .slice(0, weekNumber)
-    .reduce((acc, val) => {
-      return staffing[val]._total >= 5 && acc;
-    }, true);
-};
+    .reduce((acc, val) => staffing[val]._total >= 5 && acc, true);
 
 export function unMergeCells(data, columnIndex) {
   let buffer = null;
@@ -265,9 +207,10 @@ export function buildWeekStaffing(rows, weekIndex, columnIndex) {
 
 export function buildStaffing(peopleResponse, weeks) {
   const staffingArray = unMergeCells(tail(peopleResponse), 0);
-  const staffingByName = groupBy(staffingArray, (someoneStaffing) => {
-    return someoneStaffing[0];
-  });
+  const staffingByName = groupBy(
+    staffingArray,
+    (someoneStaffing) => someoneStaffing[0]
+  );
 
   return map(staffingByName, (rows, name) => {
     const staffing = {};
@@ -280,9 +223,7 @@ export function buildStaffing(peopleResponse, weeks) {
       );
     });
 
-    const projects = map(rows, (row) => {
-      return row[staffingColumnToIndex.project];
-    });
+    const projects = map(rows, (row) => row[staffingColumnToIndex.project]);
 
     const isInStaffingAlert = hasAvailabiltiesFromWeekNumber(
       staffing,
@@ -309,9 +250,10 @@ export function buildStaffing(peopleResponse, weeks) {
 
 export function buildProjects(projectResponse, weeks) {
   const staffingArray = unMergeCells(tail(projectResponse), 0);
-  const staffingByProject = groupBy(staffingArray, (projectName) => {
-    return projectName[0];
-  });
+  const staffingByProject = groupBy(
+    staffingArray,
+    (projectName) => projectName[0]
+  );
 
   return map(staffingByProject, (rows, name) => {
     const staffing = {};
@@ -324,21 +266,15 @@ export function buildProjects(projectResponse, weeks) {
       );
     });
 
-    const users = map(rows, (row) => {
-      return {
-        user: row[projectColumnToIndex.user],
-        userId: row[projectColumnToIndex.userId],
-        company: row[projectColumnToIndex.company],
-        position: row[projectColumnToIndex.position],
-      };
-    });
+    const users = map(rows, (row) => ({
+      user: row[projectColumnToIndex.user],
+      userId: row[projectColumnToIndex.userId],
+      company: row[projectColumnToIndex.company],
+      position: row[projectColumnToIndex.position],
+    }));
 
     const companies = Array.from(
-      new Set(
-        map(rows, (row) => {
-          return row[projectColumnToIndex.company];
-        })
-      )
+      new Set(map(rows, (row) => row[projectColumnToIndex.company]))
     );
 
     const project_id = rows[0][projectColumnToIndex.projectId];
@@ -355,7 +291,8 @@ export function buildProjects(projectResponse, weeks) {
 }
 
 export function removePastWeeks(weeks) {
-  return filter(weeks, (week) => {
-    return moment(week, "DD/MM/YYYY") > moment().subtract(7, "days");
-  });
+  return filter(
+    weeks,
+    (week) => moment(week, "DD/MM/YYYY") > moment().subtract(7, "days")
+  );
 }

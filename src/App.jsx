@@ -15,36 +15,21 @@ import Alert from "./components/Alert";
 
 import StaffingTable from "./components/staffing/StaffingTable";
 import ProjectTable from "./components/project/ProjectTable";
-import {
-  getPositionForFilter,
-  columnTitles,
-  getColumnFilter,
-} from "./helpers/formatter";
 
 import CaptainGoogle from "./components/CaptainGoogle";
 
-import DropdownTreeSelect from "react-dropdown-tree-select";
 import "react-dropdown-tree-select/dist/styles.css";
 
-import {
-  companySelectedFilterStyle,
-  companyUnselectedFilterStyle,
-  customFilterStyle,
-  sortButtonStyle,
-  switchTabButtonStyle,
-} from "./components/App.styles";
 import LastUpdatedText from "./components/LastUpdatedText";
 import { getSyncStatus, scheduleUpdate } from "./helpers/spreadsheet";
 import ReloadButton from "./components/ReloadButton";
+import { Toolbar } from "./components/Toolbar/Toolbar";
+import { INITIAL_COLUMN_STATE } from "./components/Toolbar/FilterColumns/FilterColumns.utils";
+import { TABS } from "./constants";
 
 const reload = () => {
   clearLocaleStorage();
   window.location.reload();
-};
-
-const TABS = {
-  STAFFING: "Staffing",
-  PROJECT: " Project",
 };
 
 const LOCAL_FILTERS = {
@@ -58,9 +43,9 @@ const getImportanceLookup = (weeks) => {
     1, 1, 1,
   ];
   const importanceValuesWithDate = {};
-  weeks.forEach((week) => {
-    return (importanceValuesWithDate[week] = baseImportanceValues.shift());
-  });
+  weeks.forEach(
+    (week) => (importanceValuesWithDate[week] = baseImportanceValues.shift())
+  );
   return importanceValuesWithDate;
 };
 
@@ -148,7 +133,7 @@ class App extends Component {
       activeTab: TABS.STAFFING,
       isSyncing: false,
       isRefreshRequired: false,
-      columnOrder: Object.keys(columnTitles),
+      tableColumns: INITIAL_COLUMN_STATE,
     };
 
     this.lastClicked = undefined;
@@ -209,19 +194,8 @@ class App extends Component {
       {}
     );
     updateFilterStorage(LOCAL_FILTERS.COMPANIES, newCompanies);
-    const newPositions = Object.keys(this.state.positions).reduce(
-      (acc, position) => {
-        acc[position] = true;
-        return acc;
-      },
-      {}
-    );
-    updateFilterStorage(LOCAL_FILTERS.POSITIONS, newPositions);
 
-    this.setState({
-      companies: newCompanies,
-      positions: newPositions,
-    });
+    this.setState({ companies: newCompanies });
   }
 
   toggleNoneActive() {
@@ -279,28 +253,24 @@ class App extends Component {
         storagePositionsFilter
       );
 
-      const formattedWeeks = weeks.map((week) => {
-        return moment(week, "DD/MM/YYYY").format("YYYY/MM/DD");
-      });
+      const formattedWeeks = weeks.map((week) =>
+        moment(week, "DD/MM/YYYY").format("YYYY/MM/DD")
+      );
 
-      const globalStaffingWithImportance = globalStaffing.map((staff) => {
-        return {
-          ...staff,
-          importance: getStaffingImportance(
-            staff,
-            getImportanceLookup(formattedWeeks)
-          ),
-        };
-      });
-      const globalProjectsWithImportance = globalProjects.map((staff) => {
-        return {
-          ...staff,
-          importance: getProjectImportance(
-            staff,
-            getImportanceLookup(formattedWeeks)
-          ),
-        };
-      });
+      const globalStaffingWithImportance = globalStaffing.map((staff) => ({
+        ...staff,
+        importance: getStaffingImportance(
+          staff,
+          getImportanceLookup(formattedWeeks)
+        ),
+      }));
+      const globalProjectsWithImportance = globalProjects.map((staff) => ({
+        ...staff,
+        importance: getProjectImportance(
+          staff,
+          getImportanceLookup(formattedWeeks)
+        ),
+      }));
 
       updateFilterStorage(LOCAL_FILTERS.COMPANIES, companiesSelection);
       updateFilterStorage(LOCAL_FILTERS.POSITIONS, positionSelection);
@@ -386,20 +356,16 @@ class App extends Component {
   }
 
   changeActiveTab() {
-    this.setState((state) => {
-      return {
-        activeTab:
-          state.activeTab === TABS.STAFFING ? TABS.PROJECT : TABS.STAFFING,
-      };
-    });
+    this.setState((state) => ({
+      activeTab:
+        state.activeTab === TABS.STAFFING ? TABS.PROJECT : TABS.STAFFING,
+    }));
   }
 
   positionsSelectorOnChange(currentNode, selectedNodes) {
     const newPositions = Object.keys(this.state.positions).reduce(
       (acc, position) => {
-        acc[position] = selectedNodes.some((node) => {
-          return node.label === "All";
-        });
+        acc[position] = selectedNodes.some((node) => node.label === "All");
         return acc;
       },
       {}
@@ -424,94 +390,54 @@ class App extends Component {
     });
   }
 
-  handleColumnHide(currentNode, selectedNodes) {
-    const selected = selectedNodes.map((node) => {
-      return node.label;
-    });
-    this.setState({
-      columnOrder: Object.values(selected),
-    });
+  toggleTableColumn(targetTableColumn) {
+    const newTableColumns = [...this.state.tableColumns].map((tableColumn) => ({
+      ...tableColumn,
+      isSelected:
+        tableColumn.name === targetTableColumn
+          ? !tableColumn.isSelected
+          : tableColumn.isSelected,
+    }));
+
+    this.setState({ tableColumns: newTableColumns });
   }
 
   renderStaffing() {
     if (this.state.globalStaffing && this.state.globalProjects) {
       const staffingToDisplay = this.state.globalStaffing
-        .filter((staffing) => {
-          return this.state.companies[staffing.company];
-        })
-        .filter((staffing) => {
-          return this.state.positions[staffing.position];
-        });
-      const projectToDisplay = this.state.globalProjects.filter((project) => {
-        return project.companies.some((company) => {
-          return this.state.companies[company];
-        });
-      });
+        .filter((staffing) => this.state.companies[staffing.company])
+        .filter((staffing) => this.state.positions[staffing.position]);
+      const projectToDisplay = this.state.globalProjects.filter((project) =>
+        project.companies.some((company) => this.state.companies[company])
+      );
 
-      const inStaffingCrisis = staffingToDisplay.filter((staffing) => {
-        return staffing.isInStaffingCrisis;
-      }).length;
+      const inStaffingCrisis = staffingToDisplay.filter(
+        (staffing) => staffing.isInStaffingCrisis
+      ).length;
 
       const inStaffingAlert =
-        staffingToDisplay.filter((staffing) => {
-          return staffing.isInStaffingAlert;
-        }).length - inStaffingCrisis;
+        staffingToDisplay.filter((staffing) => staffing.isInStaffingAlert)
+          .length - inStaffingCrisis;
       return (
         <div>
-          <DropdownTreeSelect
-            className="positionDropdown"
-            data={getPositionForFilter(this.state.positions, this.lastClicked)}
-            onChange={this.positionsSelectorOnChange.bind(this)}
-          />
-          <div className="filter-container">
-            {Object.entries(this.state.companies).map(
-              ([companyName, isSelected]) => {
-                return (
-                  <button
-                    key={companyName}
-                    style={
-                      isSelected
-                        ? companySelectedFilterStyle
-                        : companyUnselectedFilterStyle
-                    }
-                    onClick={() => {
-                      this.toggleCompanyFilter(companyName);
-                    }}
-                  >
-                    {companyName}
-                  </button>
-                );
-              }
+          <Toolbar
+            positionsState={this.state.positions}
+            positionLastClicked={this.lastClicked}
+            positionsSelectorOnChange={this.positionsSelectorOnChange.bind(
+              this
             )}
-            <button
-              style={customFilterStyle}
-              onClick={this.toggleAllActive.bind(this)}
-            >
-              Toggle All
-            </button>
-            <button
-              style={customFilterStyle}
-              onClick={this.toggleNoneActive.bind(this)}
-            >
-              Toggle None
-            </button>
-            <button
-              onClick={this.changeStaffingList.bind(this)}
-              style={sortButtonStyle}
-            >
-              {this.state.isSortedByImportance
-                ? "Sort by company"
-                : "Sort by importance"}
-            </button>
-            <button
-              onClick={this.changeActiveTab.bind(this)}
-              style={switchTabButtonStyle}
-            >
-              {this.state.activeTab === TABS.STAFFING
-                ? "View projects"
-                : "View staffing"}
-            </button>
-          </div>
+            companiesState={this.state.companies}
+            toggleCompanyFilter={this.toggleCompanyFilter.bind(this)}
+            toggleAllActive={this.toggleAllActive.bind(this)}
+            toggleNoneActive={this.toggleNoneActive.bind(this)}
+            changeStaffingList={this.changeStaffingList.bind(this)}
+            isSortedByImportance={this.state.isSortedByImportance}
+            changeActiveTab={this.changeActiveTab.bind(this)}
+            activeTab={this.state.activeTab}
+            toggleTableColumn={this.toggleTableColumn.bind(this)}
+            tableColumns={this.state.tableColumns}
+          />
+
           {this.state.activeTab === TABS.STAFFING && (
             <div>
               <div>
@@ -523,21 +449,13 @@ class App extends Component {
                     Staffing crisis count: <span>{inStaffingCrisis}</span>
                   </span>
                 </div>
-                <div style={{ float: "right" }}>
-                  <DropdownTreeSelect
-                    texts={{ placeholder: "Filter Columns" }}
-                    className="positionDropdown"
-                    data={getColumnFilter(this.state.columnOrder)}
-                    onChange={this.handleColumnHide.bind(this)}
-                  />
-                </div>
               </div>
 
               <StaffingTable
                 peopleStaffing={staffingToDisplay}
                 onRowClick={this.onStaffingTableRowClick.bind(this)}
                 weeks={this.state.weeks}
-                columnOrder={this.state.columnOrder}
+                tableColumns={this.state.tableColumns}
               />
             </div>
           )}
