@@ -13,25 +13,28 @@ export const ALL_ROLES_MAPPING: RoleMapping = {
   "Engineering Manager": "Lead",
   "Senior architect": "Lead",
   "VP Tech": "Lead",
+  "Tech Specialist": "Lead",
 
   "CA / PO": "BizDev",
   "Operations (Finance) ": "BizDev",
-  "DP / PM / AM": "BizDev",
   "Marketing": "BizDev",
   "Growth Team": "BizDev",
   "Sales": "BizDev",
+  "Sales / AM": "BizDev",
   "Data Product Manager": "BizDev",
   "DP": "BizDev",
   "PM": "BizDev",
   "QARA": "BizDev",
+  "Qara Principal": "BizDev",
+  "KAM": "BizDev",
 
   "Lead Designer": "Designers",
   "Designer Confirmé": "Designers",
   "Designer Junior": "Designers",
+  "Design Manager": "Designers",
 
   "LeadDevOps": "DevOps",
   "DevOps": "DevOps",
-  "DevOps [FREE]": "DevOps",
   "SecOps": "DevOps",
   "LeadSecOps": "DevOps",
 
@@ -39,9 +42,15 @@ export const ALL_ROLES_MAPPING: RoleMapping = {
   "Lead Data Engineer": "Data",
   "Ingénieur IA": "Data",
 
-  "Externe": "Other",
   "Head of Tribe": "Other",
   "R&D": "Other",
-  "Evangelist": "Other",
   "Dirigeant": "Other"
 };
+
+/* 
+
+Idea: 
+- Business Unit: Tech | Bizdev | UX
+- Lead: boolean
+
+*/
