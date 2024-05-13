@@ -1,7 +1,6 @@
 import { LOCAL_FILTERS, updateFilterStorage } from "@/helpers/urlSerialiser";
-// @ts-expect-error file is not typed yet
-import { subTypes as ALL_ROLES_MAPPING } from "../../../helpers/formatter";
 import { MultiSelect } from "@/design-system/ui/multiselect/MultiSelect";
+import { ALL_ROLES_MAPPING } from "./Roles.constant";
 
 interface FilterRolesProps {
   positionsState: { [positionName: string]: boolean };
