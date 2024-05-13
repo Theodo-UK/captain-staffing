@@ -28,6 +28,11 @@ import { Toolbar } from "./components/Toolbar/Toolbar";
 import { INITIAL_COLUMN_STATE } from "./components/Toolbar/FilterColumns/FilterColumns.utils";
 import { TABS } from "./constants";
 
+const IS_SORTED_BY_IMPORTANCE_DEFAULT = true;
+
+const sortByImportance = (inputArray) =>
+  _.orderBy(inputArray, ["importance"], ["asc"]);
+
 const reload = () => {
   clearLocaleStorage();
   window.location.reload();
@@ -79,7 +84,7 @@ class App extends Component {
       weeks: undefined,
       globalStaffing: undefined,
       globalProjects: undefined,
-      isSortedByImportance: false,
+      isSortedByImportance: IS_SORTED_BY_IMPORTANCE_DEFAULT,
       activeTab: TABS.STAFFING,
       isSyncing: false,
       isRefreshRequired: false,
@@ -205,14 +210,14 @@ class App extends Component {
         moment(week, "DD/MM/YYYY").format("YYYY/MM/DD")
       );
 
-      const globalStaffingWithImportance = globalStaffing.map((staff) => ({
+      let globalStaffingWithImportance = globalStaffing.map((staff) => ({
         ...staff,
         importance: getStaffingImportance(
           staff,
           getImportanceLookup(formattedWeeks)
         ),
       }));
-      const globalProjectsWithImportance = globalProjects.map((staff) => ({
+      let globalProjectsWithImportance = globalProjects.map((staff) => ({
         ...staff,
         importance: getProjectImportance(
           staff,
@@ -222,6 +227,15 @@ class App extends Component {
 
       updateFilterStorage(LOCAL_FILTERS.COMPANIES, companiesSelection);
       updateFilterStorage(LOCAL_FILTERS.POSITIONS, positionSelection);
+
+      if (this.state.isSortedByImportance) {
+        globalStaffingWithImportance = sortByImportance(
+          globalStaffingWithImportance
+        );
+        globalProjectsWithImportance = sortByImportance(
+          globalProjectsWithImportance
+        );
+      }
 
       this.setState({
         weeks: formattedWeeks,
@@ -295,10 +309,10 @@ class App extends Component {
             ["company", "_name"],
             ["asc", "asc"]
           )
-        : _.orderBy(this.state.globalStaffing, ["importance"], ["asc"]),
+        : sortByImportance(this.state.globalStaffing),
       globalProjects: this.state.isSortedByImportance
         ? _.orderBy(this.state.globalProjects, ["_name"], ["asc"])
-        : _.orderBy(this.state.globalProjects, ["importance"], ["asc"]),
+        : sortByImportance(this.state.globalProjects),
       isSortedByImportance: !this.state.isSortedByImportance,
     });
   }
