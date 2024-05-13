@@ -1,6 +1,6 @@
 import { LOCAL_FILTERS, updateFilterStorage } from "@/helpers/urlSerialiser";
 import { MultiSelect } from "@/design-system/ui/multiselect/MultiSelect";
-import { ALL_ROLES_MAPPING } from "./Roles.constant";
+import { ALL_ROLES_MAPPING, ALL_ROLE_GROUPS } from "./Roles.constant";
 
 interface FilterRolesProps {
   positionsState: { [positionName: string]: boolean };
@@ -14,28 +14,27 @@ interface Role {
 
 export const FilterRoles: React.FC<FilterRolesProps> = ({ positionsState, setState }) => {
 
-  const selectedRolesLvl2: Role[] = Object.entries(positionsState).filter(([roleName]) => Boolean(roleName)).map(
+  const selectedRoles: Role[] = Object.entries(positionsState).filter(([roleName]) => Boolean(roleName)).map(
     ([roleName, isSelected]) => ({
       name: roleName,
       isSelected
     })
   ).sort((a, b) => a.name.localeCompare(b.name));
 
-  const ALL_ROLES_LVL_1: string[] = Object.keys(ALL_ROLES_MAPPING);
-  const selectedRolesLvl1 = ALL_ROLES_LVL_1.map(roleName => {
-    const subRoles = selectedRolesLvl2.filter(r => ALL_ROLES_MAPPING[roleName].includes(r.name));
+  const selectedRoleGroups = ALL_ROLE_GROUPS.map(roleGroup => {
+    const subRoles = selectedRoles.filter(r => ALL_ROLES_MAPPING[roleGroup].includes(r.name));
 
     return ({
-      name: roleName,
-      isSelected: subRoles.every(r => r.isSelected)
+      name: roleGroup,
+      isSelected: subRoles.every(r => r.isSelected) // TODO add indeterminate state
     });
   });
 
-  const toggleRoleLvl1 = (roleName: string) => {
-    const newFlag = !selectedRolesLvl1.find(r => r.name === roleName)?.isSelected;
+  const toggleRoleGroup = (roleGroup: string) => {
+    const newFlag = !selectedRoleGroups.find(r => r.name === roleGroup)?.isSelected;
 
-    const newPositions = selectedRolesLvl2.reduce((acc, role) => {
-      const isSubRole = ALL_ROLES_MAPPING[roleName].includes(role.name);
+    const newPositions = selectedRoles.reduce((acc, role) => {
+      const isSubRole = ALL_ROLES_MAPPING[roleGroup].includes(role.name);
       if (isSubRole) {
         acc[role.name] = newFlag;
       }
@@ -47,7 +46,7 @@ export const FilterRoles: React.FC<FilterRolesProps> = ({ positionsState, setSta
     updateFilterStorage(LOCAL_FILTERS.POSITIONS, newPositions);
   };
 
-  const toggleRoleLvl2 = (roleName: string) => {
+  const toggleRole = (roleName: string) => {
     const newPositions = { ...positionsState, [roleName]: !positionsState[roleName] };
     setState({ positions: newPositions });
 
@@ -58,18 +57,18 @@ export const FilterRoles: React.FC<FilterRolesProps> = ({ positionsState, setSta
   return (
     <>
       <MultiSelect
-        toggleOption={toggleRoleLvl2}
+        toggleOption={toggleRole}
         title="Roles"
-        options={selectedRolesLvl2.map((r) => ({
+        options={selectedRoles.map((r) => ({
           label: r.name,
           value: r.name,
           isSelected: r.isSelected
         }))}
       />
       <MultiSelect
-        toggleOption={toggleRoleLvl1}
+        toggleOption={toggleRoleGroup}
         title="Roles"
-        options={selectedRolesLvl1.map((r) => ({
+        options={selectedRoleGroups.map((r) => ({
           label: r.name,
           value: r.name,
           isSelected: r.isSelected

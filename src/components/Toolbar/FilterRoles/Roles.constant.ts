@@ -28,3 +28,5 @@ export const ALL_ROLES_MAPPING: RoleMapping = {
   Data: ["Lead Data Scientist", "Lead Data Engineer", "Ingénieur IA"],
   Other: ["Externe", "Head of Tribe", "R&D", "Evangelist", "Dirigeant"]
 } as const;
+
+export const ALL_ROLE_GROUPS: string[] = Object.keys(ALL_ROLES_MAPPING);
