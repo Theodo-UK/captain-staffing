@@ -21,8 +21,6 @@ import ProjectTable from "./components/project/ProjectTable";
 
 import CaptainGoogle from "./components/CaptainGoogle";
 
-import "react-dropdown-tree-select/dist/styles.css";
-
 import LastUpdatedText from "./components/LastUpdatedText";
 import { getSyncStatus, scheduleUpdate } from "./helpers/spreadsheet";
 import ReloadButton from "./components/ReloadButton";
