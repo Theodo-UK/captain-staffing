@@ -1,32 +1,47 @@
-interface RoleMapping {
-  [RoleGroup: string]: string[]
-}
+export const ALL_ROLE_GROUPS = [
+  'Devs', 'Lead', 'BizDev', 'Designers', 'DevOps', 'Data', 'Other'
+] as const;
+
+type RoleGroup = (typeof ALL_ROLE_GROUPS)[number]
+type RoleMapping = { [roleName: string]: RoleGroup }
 
 export const ALL_ROLES_MAPPING: RoleMapping = {
-  Devs: ["Dev"],
-  Lead: [
-    "Architecte",
-    "Archi volant",
-    "Engineering Manager",
-    "Senior architect",
-    "VP Tech"
-  ],
-  BizDev: [
-    "CA / PO",
-    "Operations (Finance) ",
-    "DP / PM / AM",
-    "Marketing",
-    "Growth Team",
-    "Sales",
-    "Data Product Manager",
-    "DP",
-    "PM",
-    "QARA"
-  ],
-  Designers: ["Lead Designer", "Designer Confirmé", "Designer Junior"],
-  DevOps: ["LeadDevOps", "DevOps", "DevOps [FREE]", "SecOps", "LeadSecOps"],
-  Data: ["Lead Data Scientist", "Lead Data Engineer", "Ingénieur IA"],
-  Other: ["Externe", "Head of Tribe", "R&D", "Evangelist", "Dirigeant"]
-} as const;
+  "Dev": "Devs",
 
-export const ALL_ROLE_GROUPS: string[] = Object.keys(ALL_ROLES_MAPPING);
+  "Architecte": "Lead",
+  "Archi volant": "Lead",
+  "Engineering Manager": "Lead",
+  "Senior architect": "Lead",
+  "VP Tech": "Lead",
+
+  "CA / PO": "BizDev",
+  "Operations (Finance) ": "BizDev",
+  "DP / PM / AM": "BizDev",
+  "Marketing": "BizDev",
+  "Growth Team": "BizDev",
+  "Sales": "BizDev",
+  "Data Product Manager": "BizDev",
+  "DP": "BizDev",
+  "PM": "BizDev",
+  "QARA": "BizDev",
+
+  "Lead Designer": "Designers",
+  "Designer Confirmé": "Designers",
+  "Designer Junior": "Designers",
+
+  "LeadDevOps": "DevOps",
+  "DevOps": "DevOps",
+  "DevOps [FREE]": "DevOps",
+  "SecOps": "DevOps",
+  "LeadSecOps": "DevOps",
+
+  "Lead Data Scientist": "Data",
+  "Lead Data Engineer": "Data",
+  "Ingénieur IA": "Data",
+
+  "Externe": "Other",
+  "Head of Tribe": "Other",
+  "R&D": "Other",
+  "Evangelist": "Other",
+  "Dirigeant": "Other"
+};
