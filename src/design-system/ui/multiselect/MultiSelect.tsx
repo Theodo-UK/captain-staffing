@@ -38,12 +38,7 @@ export function MultiSelect({
   showSelected = true,
   Icon = PlusCircledIcon
 }: MultiSelectProps) {
-  const selectedValues = new Set(
-    options.filter((o) => o.isSelected).map((o) => o.value)
-  );
-
-  const selectedOptions = options
-    .filter((option) => selectedValues.has(option.value));
+  const selectedOptions = options.filter((option) => option.isSelected);
 
   return (
     <Popover>
@@ -58,34 +53,24 @@ export function MultiSelect({
         <Command>
           <CommandList className="max-h-[500px]">
             <CommandGroup>
-              {options.map((option) => {
-                const isSelected = selectedValues.has(option.value);
-                return (
-                  <CommandItem
-                    key={option.value}
-                    onSelect={() => {
-                      if (isSelected) {
-                        selectedValues.delete(option.value);
-                      } else {
-                        selectedValues.add(option.value);
-                      }
-                      toggleOption(option.value);
-                    }}
+              {options.map((option) => (
+                <CommandItem
+                  key={option.value}
+                  onSelect={() => { toggleOption(option.value); }}
+                >
+                  <div
+                    className={cn(
+                      "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                      option.isSelected
+                        ? "bg-primary text-primary-foreground"
+                        : "opacity-50 [&_svg]:invisible"
+                    )}
                   >
-                    <div
-                      className={cn(
-                        "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                        isSelected
-                          ? "bg-primary text-primary-foreground"
-                          : "opacity-50 [&_svg]:invisible"
-                      )}
-                    >
-                      <CheckIcon className={cn("h-4 w-4")} />
-                    </div>
-                    <span>{option.label}</span>
-                  </CommandItem>
-                );
-              })}
+                    <CheckIcon className={cn("h-4 w-4")} />
+                  </div>
+                  <span>{option.label}</span>
+                </CommandItem>
+              ))}
             </CommandGroup>
             <MultiSelectBottomOptions
               clearFilter={clearFilter}
