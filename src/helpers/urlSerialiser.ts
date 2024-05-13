@@ -51,7 +51,6 @@ export const setupFilters = (filterList: string[], urlQuery: Record<string, bool
 export const updateFilterStorage = (key: LocalFilter, object: CompanyState | RoleState) => {
   const newurl = `${window.location.origin}${window.location.pathname}`;
 
-  // eslint-disable-next-line default-case
   switch (key) {
     case LOCAL_FILTERS.COMPANIES: {
       uriQuery.companies = serializeTruthyFilters(object);
