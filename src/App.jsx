@@ -1,12 +1,15 @@
+/* eslint-disable complexity */
+/* eslint-disable max-lines */
 import React, { Component } from "react";
 import _ from "lodash";
 import moment from "moment";
 
 import { toggleByPeopleRow, toggleByProjectRow } from "./helpers/edit";
-import { mergeUnion } from "./helpers/utils";
 import {
+  LOCAL_FILTERS,
   deserializeTruthyFilters,
-  serializeTruthyFilters,
+  setupFilters,
+  updateFilterStorage,
 } from "./helpers/urlSerialiser";
 
 import { clearLocaleStorage } from "./helpers/localStorage";
@@ -18,8 +21,6 @@ import ProjectTable from "./components/project/ProjectTable";
 
 import CaptainGoogle from "./components/CaptainGoogle";
 
-import "react-dropdown-tree-select/dist/styles.css";
-
 import LastUpdatedText from "./components/LastUpdatedText";
 import { getSyncStatus, scheduleUpdate } from "./helpers/spreadsheet";
 import ReloadButton from "./components/ReloadButton";
@@ -27,14 +28,14 @@ import { Toolbar } from "./components/Toolbar/Toolbar";
 import { INITIAL_COLUMN_STATE } from "./components/Toolbar/FilterColumns/FilterColumns.utils";
 import { TABS } from "./constants";
 
+const IS_SORTED_BY_IMPORTANCE_DEFAULT = true;
+
+const sortByImportance = (inputArray) =>
+  _.orderBy(inputArray, ["importance"], ["asc"]);
+
 const reload = () => {
   clearLocaleStorage();
   window.location.reload();
-};
-
-const LOCAL_FILTERS = {
-  POSITIONS: "positionsFilterLocalStorage",
-  COMPANIES: "companiesFilterLocalStorage",
 };
 
 const getImportanceLookup = (weeks) => {
@@ -71,52 +72,6 @@ const getStaffingImportance = (staff, importanceLookup) => {
   return importance;
 };
 
-const uriQuery = {
-  companies: "",
-  positions: "",
-};
-
-const updateFilterStorage = (key, object) => {
-  const newurl = `${window.location.origin}${window.location.pathname}`;
-
-  // eslint-disable-next-line default-case
-  switch (key) {
-    case LOCAL_FILTERS.COMPANIES: {
-      uriQuery.companies = serializeTruthyFilters(object);
-      break;
-    }
-
-    case LOCAL_FILTERS.POSITIONS: {
-      uriQuery.positions = serializeTruthyFilters(object);
-      break;
-    }
-  }
-
-  window.history.pushState(
-    { path: newurl },
-    "",
-    `${newurl}?companies=${uriQuery.companies}&positions=${uriQuery.positions}`
-  );
-  window.localStorage.setItem(key, JSON.stringify(object));
-};
-
-const setupFilters = (filterList, urlQuery, localStorage) => {
-  if (urlQuery) {
-    return filterList.reduce((acc, option) => {
-      acc[option] = Object.keys(urlQuery).includes(option);
-      return acc;
-    }, {});
-  }
-
-  return mergeUnion(
-    filterList.reduce((acc, company) => {
-      acc[company] = true;
-      return acc;
-    }, {}),
-    localStorage
-  );
-};
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -129,14 +84,12 @@ class App extends Component {
       weeks: undefined,
       globalStaffing: undefined,
       globalProjects: undefined,
-      isSortedByImportance: false,
+      isSortedByImportance: IS_SORTED_BY_IMPORTANCE_DEFAULT,
       activeTab: TABS.STAFFING,
       isSyncing: false,
       isRefreshRequired: false,
       tableColumns: INITIAL_COLUMN_STATE,
     };
-
-    this.lastClicked = undefined;
   }
 
   onGoogleSuccess() {
@@ -257,14 +210,14 @@ class App extends Component {
         moment(week, "DD/MM/YYYY").format("YYYY/MM/DD")
       );
 
-      const globalStaffingWithImportance = globalStaffing.map((staff) => ({
+      let globalStaffingWithImportance = globalStaffing.map((staff) => ({
         ...staff,
         importance: getStaffingImportance(
           staff,
           getImportanceLookup(formattedWeeks)
         ),
       }));
-      const globalProjectsWithImportance = globalProjects.map((staff) => ({
+      let globalProjectsWithImportance = globalProjects.map((staff) => ({
         ...staff,
         importance: getProjectImportance(
           staff,
@@ -274,6 +227,15 @@ class App extends Component {
 
       updateFilterStorage(LOCAL_FILTERS.COMPANIES, companiesSelection);
       updateFilterStorage(LOCAL_FILTERS.POSITIONS, positionSelection);
+
+      if (this.state.isSortedByImportance) {
+        globalStaffingWithImportance = sortByImportance(
+          globalStaffingWithImportance
+        );
+        globalProjectsWithImportance = sortByImportance(
+          globalProjectsWithImportance
+        );
+      }
 
       this.setState({
         weeks: formattedWeeks,
@@ -347,10 +309,10 @@ class App extends Component {
             ["company", "_name"],
             ["asc", "asc"]
           )
-        : _.orderBy(this.state.globalStaffing, ["importance"], ["asc"]),
+        : sortByImportance(this.state.globalStaffing),
       globalProjects: this.state.isSortedByImportance
         ? _.orderBy(this.state.globalProjects, ["_name"], ["asc"])
-        : _.orderBy(this.state.globalProjects, ["importance"], ["asc"]),
+        : sortByImportance(this.state.globalProjects),
       isSortedByImportance: !this.state.isSortedByImportance,
     });
   }
@@ -382,8 +344,6 @@ class App extends Component {
     });
 
     updateFilterStorage(LOCAL_FILTERS.POSITIONS, newPositions);
-
-    this.lastClicked = currentNode.label;
 
     this.setState({
       positions: newPositions,
@@ -421,8 +381,8 @@ class App extends Component {
       return (
         <div>
           <Toolbar
+            setState={this.setState.bind(this)}
             positionsState={this.state.positions}
-            positionLastClicked={this.lastClicked}
             positionsSelectorOnChange={this.positionsSelectorOnChange.bind(
               this
             )}

@@ -15,21 +15,21 @@
   font-size: 15px;
   margin: 10 0 20px;
 }
-  @media (min-width: 768px) {
-    .brand {
-      font-size: 20px;
-    }
+@media (min-width: 768px) {
+  .brand {
+    font-size: 20px;
   }
-  @media (min-width: 992px) {
-    .brand {
-      font-size: 25px;
-    }
+}
+@media (min-width: 992px) {
+  .brand {
+    font-size: 25px;
   }
-  @media (min-width: 1200px) {
-    .brand {
-      font-size: 30px;
-    }
+}
+@media (min-width: 1200px) {
+  .brand {
+    font-size: 30px;
   }
+}
 
 .content {
   display: flex;
@@ -74,7 +74,7 @@
   margin-right: 10px;
 }
 
-.stats-indicator span{
+.stats-indicator span {
   color: red;
   font-weight: 600;
 }
@@ -84,11 +84,7 @@ a {
   text-decoration: inherit;
 }
 
-.react-dropdown-tree-select .dropdown .dropdown-content {
-  z-index: 2;
-}
-
-.infinite-scroll-component  {
+.infinite-scroll-component {
   text-align: left;
 }
 

@@ -1,7 +1,3 @@
-import DropdownTreeSelect from "react-dropdown-tree-select";
-// @ts-expect-error file is not typed yet
-import { getPositionForFilter } from "../../helpers/formatter";
-
 import { FilterCompanies } from "./FilterCompanies";
 import { TABS } from "../../constants";
 import { Button } from "@/design-system/ui/button";
@@ -13,12 +9,14 @@ import {
 } from "@radix-ui/react-icons";
 import { MultiSelect } from "@/design-system/ui/multiselect/MultiSelect";
 import { IColumn } from "./FilterColumns/FilterColumns.utils";
+import { FilterRoles } from "./FilterRoles/FilterRoles";
 
 interface ToolbarProps {
   // Positions
+  setState: (newState: unknown) => void
   positionsState: { [positionName: string]: boolean };
-  positionLastClicked: string | undefined;
   positionsSelectorOnChange: () => void;
+
 
   // Companies
   companiesState: { [companyName: string]: boolean };
@@ -38,9 +36,8 @@ interface ToolbarProps {
 }
 
 export const Toolbar: React.FC<ToolbarProps> = ({
+  setState,
   positionsState = {},
-  positionLastClicked,
-  positionsSelectorOnChange,
   companiesState = {},
   toggleCompanyFilter,
   toggleAllActive,
@@ -53,10 +50,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   toggleTableColumn
 }) => (
   <div className="flex items-center space-x-2 my-4">
-    <DropdownTreeSelect
-      className="positionDropdown"
-      data={getPositionForFilter(positionsState, positionLastClicked)}
-      onChange={positionsSelectorOnChange}
+    <FilterRoles
+      positionsState={positionsState}
+      setState={setState}
     />
     <FilterCompanies
       toggleNoneActive={toggleNoneActive}

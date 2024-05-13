@@ -6,12 +6,14 @@ const MAX_SELECTED_OPTIONS_BEFORE_GROUPED = 3;
 
 interface MultiSelectBadgesProps {
   selectedOptions: Option[];
+  indeterminateOptions: Option[];
   showSelected: boolean;
 }
 
-export const MultiSelectBadges: React.FC<MultiSelectBadgesProps> = ({ selectedOptions, showSelected }) => {
+export const MultiSelectBadges: React.FC<MultiSelectBadgesProps> = ({ selectedOptions, showSelected, indeterminateOptions }) => {
+  const allOptions = [...selectedOptions, ...indeterminateOptions];
 
-  if (!showSelected || selectedOptions.length === 0) {
+  if (!showSelected || allOptions.length === 0) {
     return null;
   }
 
@@ -22,21 +24,21 @@ export const MultiSelectBadges: React.FC<MultiSelectBadgesProps> = ({ selectedOp
         variant="secondary"
         className="rounded-sm px-1 font-normal lg:hidden"
       >
-        {selectedOptions.length}
+        {allOptions.length}
       </Badge>
       <div className="hidden space-x-1 lg:flex">
-        {selectedOptions.length > MAX_SELECTED_OPTIONS_BEFORE_GROUPED ? (
+        {allOptions.length > MAX_SELECTED_OPTIONS_BEFORE_GROUPED ? (
           <Badge
             variant="secondary"
             className="rounded-sm px-1 font-normal"
           >
-            {selectedOptions.length} selected
+            {allOptions.length} selected
           </Badge>
         ) : (
-          selectedOptions
+          allOptions
             .map((option) => (
               <Badge
-                variant="secondary"
+                variant={option.isSelected ? "secondary" : "outline"}
                 key={option.value}
                 className="rounded-sm px-1 font-normal"
               >
