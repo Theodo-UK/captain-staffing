@@ -18,7 +18,13 @@ const projectColumnToIndex = {
 
 export const subTypes = {
   Devs: ["Dev"],
-  Lead: ["Architecte", "Engineering Manager", "Senior architect", "VP Tech"],
+  Lead: [
+    "Architecte",
+    "Archi volant",
+    "Engineering Manager",
+    "Senior architect",
+    "VP Tech",
+  ],
   BizDev: [
     "CA / PO",
     "Operations (Finance) ",
@@ -61,95 +67,6 @@ const getPosition = (rows, columnIndex) => {
     return positions[0];
   }
   return "Other";
-};
-
-const formatPositions = (options, positionSelectedPairs) =>
-  Object.entries(positionSelectedPairs)
-    .filter(([position]) => options.includes(position))
-    .map(([position, isSelected]) => ({
-      label: position,
-      value: position,
-      children: [],
-      checked: isSelected,
-      id: position,
-    }));
-
-export const getPositionForFilter = (
-  positionSelectedPairs,
-  lastClicked = undefined
-) => {
-  const devPositions = formatPositions(subTypes.Devs, positionSelectedPairs);
-  const leadPositions = formatPositions(subTypes.Lead, positionSelectedPairs);
-  const bizDevPositions = formatPositions(
-    subTypes.BizDev,
-    positionSelectedPairs
-  );
-  const otherPositions = formatPositions(subTypes.Other, positionSelectedPairs);
-  const designerPositions = formatPositions(
-    subTypes.Designers,
-    positionSelectedPairs
-  );
-  const devOpsPositions = formatPositions(
-    subTypes.DevOps,
-    positionSelectedPairs
-  );
-  const dataPositions = formatPositions(subTypes.Data, positionSelectedPairs);
-
-  return {
-    label: "All",
-    expanded: true,
-    children: [
-      {
-        label: "Devs",
-        id: "Devs",
-        children: devPositions,
-        checked: devPositions.every((position) => position.checked),
-        expanded: subTypes.Devs.includes(lastClicked),
-      },
-      {
-        label: "Lead",
-        id: "Lead",
-        children: leadPositions,
-        checked: leadPositions.every((position) => position.checked),
-        expanded: subTypes.Lead.includes(lastClicked),
-      },
-      {
-        label: "Biz Dev",
-        id: "Biz Dev",
-        children: bizDevPositions,
-        checked: bizDevPositions.every((position) => position.checked),
-        expanded: subTypes.BizDev.includes(lastClicked),
-      },
-      {
-        label: "Designers",
-        id: "Designers",
-        children: designerPositions,
-        checked: designerPositions.every((position) => position.checked),
-        expanded: subTypes.Designers.includes(lastClicked),
-      },
-      {
-        label: "Dev Ops",
-        id: "Dev Ops",
-        children: devOpsPositions,
-        checked: devOpsPositions.every((position) => position.checked),
-        expanded: subTypes.DevOps.includes(lastClicked),
-      },
-      {
-        label: "Data",
-        id: "Data",
-        children: dataPositions,
-        checked: dataPositions.every((position) => position.checked),
-        expanded: subTypes.Data.includes(lastClicked),
-      },
-      {
-        label: "Other",
-        id: "Other",
-        children: otherPositions,
-        checked: otherPositions.every((position) => position.checked),
-        expanded: subTypes.Other.includes(lastClicked),
-      },
-    ],
-  };
 };
 
 const getId = (rows, columnIndex) => {

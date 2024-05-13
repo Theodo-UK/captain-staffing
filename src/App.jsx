@@ -137,8 +137,6 @@ class App extends Component {
       isRefreshRequired: false,
       tableColumns: INITIAL_COLUMN_STATE,
     };
-
-    this.lastClicked = undefined;
   }
 
   onGoogleSuccess() {
@@ -385,8 +383,6 @@ class App extends Component {
 
     updateFilterStorage(LOCAL_FILTERS.POSITIONS, newPositions);
 
-    this.lastClicked = currentNode.label;
-
     this.setState({
       positions: newPositions,
     });
@@ -425,7 +421,6 @@ class App extends Component {
           <Toolbar
             setState={this.setState.bind(this)}
             positionsState={this.state.positions}
-            positionLastClicked={this.lastClicked}
             positionsSelectorOnChange={this.positionsSelectorOnChange.bind(
               this
             )}

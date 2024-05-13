@@ -15,11 +15,11 @@ import { IColumn } from "./FilterColumns/FilterColumns.utils";
 import { FilterRoles } from "./FilterRoles/FilterRoles";
 
 interface ToolbarProps {
-  setState: (newState: unknown) => void
   // Positions
+  setState: (newState: unknown) => void
   positionsState: { [positionName: string]: boolean };
-  positionLastClicked: string | undefined;
   positionsSelectorOnChange: () => void;
+
 
   // Companies
   companiesState: { [companyName: string]: boolean };
