@@ -27,7 +27,8 @@ export const FilterRoles: React.FC<FilterRolesProps> = ({ positionsState, setSta
 
     return ({
       name: roleGroup,
-      isSelected: subRoles.every(r => r.isSelected) // TODO add indeterminate state
+      isSelected: subRoles.every(r => r.isSelected),
+      indeterminate: subRoles.some(r => r.isSelected)
     });
   });
 
@@ -67,11 +68,12 @@ export const FilterRoles: React.FC<FilterRolesProps> = ({ positionsState, setSta
       />
       <MultiSelect
         toggleOption={toggleRoleGroup}
-        title="Roles"
+        title="Role groups"
         options={selectedRoleGroups.map((r) => ({
           label: r.name,
           value: r.name,
-          isSelected: r.isSelected
+          isSelected: r.isSelected,
+          indeterminate: r.indeterminate
         }))}
       />
     </>

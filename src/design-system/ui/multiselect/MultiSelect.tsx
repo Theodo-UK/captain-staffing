@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
+import { CheckIcon, PlusCircledIcon, DividerHorizontalIcon } from "@radix-ui/react-icons";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/design-system/ui/button";
@@ -39,6 +39,7 @@ export function MultiSelect({
   Icon = PlusCircledIcon
 }: MultiSelectProps) {
   const selectedOptions = options.filter((option) => option.isSelected);
+  const indeterminateOptions = options.filter((option) => option.indeterminate && !option.isSelected);
 
   return (
     <Popover>
@@ -46,7 +47,7 @@ export function MultiSelect({
         <Button variant="outline" size="sm" className="h-8 border-dashed">
           <Icon className="mr-2 h-4 w-4" />
           {title}
-          <MultiSelectBadges showSelected={showSelected} selectedOptions={selectedOptions} />
+          <MultiSelectBadges showSelected={showSelected} selectedOptions={selectedOptions} indeterminateOptions={indeterminateOptions} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0" align="start">
@@ -61,12 +62,13 @@ export function MultiSelect({
                   <div
                     className={cn(
                       "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                      option.isSelected
+                      (option.isSelected || option.indeterminate)
                         ? "bg-primary text-primary-foreground"
                         : "opacity-50 [&_svg]:invisible"
                     )}
                   >
-                    <CheckIcon className={cn("h-4 w-4")} />
+                    {option.isSelected && <CheckIcon className={cn("h-4 w-4")} />}
+                    {(!option.isSelected && option.indeterminate) && <DividerHorizontalIcon className={cn("h-4 w-4")} />}
                   </div>
                   <span>{option.label}</span>
                 </CommandItem>
