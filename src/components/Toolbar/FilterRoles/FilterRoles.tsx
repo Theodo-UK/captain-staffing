@@ -1,6 +1,7 @@
 import { LOCAL_FILTERS, updateFilterStorage } from "@/helpers/urlSerialiser";
 import { MultiSelect } from "@/design-system/ui/multiselect/MultiSelect";
-import { ALL_ROLES_MAPPING, ALL_ROLE_GROUPS } from "./Roles.constant";
+import { ALL_ROLE_GROUPS } from "./Roles.constant";
+import { isSubRole } from "./Roles.utils";
 
 interface FilterRolesProps {
   positionsState: { [positionName: string]: boolean };
@@ -22,7 +23,7 @@ export const FilterRoles: React.FC<FilterRolesProps> = ({ positionsState, setSta
   ).sort((a, b) => a.name.localeCompare(b.name));
 
   const selectedRoleGroups = ALL_ROLE_GROUPS.map(roleGroup => {
-    const subRoles = selectedRoles.filter(r => ALL_ROLES_MAPPING[roleGroup].includes(r.name));
+    const subRoles = selectedRoles.filter(r => isSubRole(roleGroup, r.name));
 
     return ({
       name: roleGroup,
@@ -34,8 +35,7 @@ export const FilterRoles: React.FC<FilterRolesProps> = ({ positionsState, setSta
     const newFlag = !selectedRoleGroups.find(r => r.name === roleGroup)?.isSelected;
 
     const newPositions = selectedRoles.reduce((acc, role) => {
-      const isSubRole = ALL_ROLES_MAPPING[roleGroup].includes(role.name);
-      if (isSubRole) {
+      if (isSubRole(roleGroup, role.name)) {
         acc[role.name] = newFlag;
       }
       return acc;
