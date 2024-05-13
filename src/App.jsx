@@ -5,10 +5,11 @@ import _ from "lodash";
 import moment from "moment";
 
 import { toggleByPeopleRow, toggleByProjectRow } from "./helpers/edit";
-import { mergeUnion } from "./helpers/utils";
 import {
+  LOCAL_FILTERS,
   deserializeTruthyFilters,
-  serializeTruthyFilters,
+  setupFilters,
+  updateFilterStorage,
 } from "./helpers/urlSerialiser";
 
 import { clearLocaleStorage } from "./helpers/localStorage";
@@ -32,11 +33,6 @@ import { TABS } from "./constants";
 const reload = () => {
   clearLocaleStorage();
   window.location.reload();
-};
-
-const LOCAL_FILTERS = {
-  POSITIONS: "positionsFilterLocalStorage",
-  COMPANIES: "companiesFilterLocalStorage",
 };
 
 const getImportanceLookup = (weeks) => {
@@ -71,52 +67,6 @@ const getStaffingImportance = (staff, importanceLookup) => {
         : (_.min([value._total, 5]) / 5) * importanceLookup[key];
   });
   return importance;
-};
-
-const uriQuery = {
-  companies: "",
-  positions: "",
-};
-
-const updateFilterStorage = (key, object) => {
-  const newurl = `${window.location.origin}${window.location.pathname}`;
-
-  // eslint-disable-next-line default-case
-  switch (key) {
-    case LOCAL_FILTERS.COMPANIES: {
-      uriQuery.companies = serializeTruthyFilters(object);
-      break;
-    }
-
-    case LOCAL_FILTERS.POSITIONS: {
-      uriQuery.positions = serializeTruthyFilters(object);
-      break;
-    }
-  }
-
-  window.history.pushState(
-    { path: newurl },
-    "",
-    `${newurl}?companies=${uriQuery.companies}&positions=${uriQuery.positions}`
-  );
-  window.localStorage.setItem(key, JSON.stringify(object));
-};
-
-const setupFilters = (filterList, urlQuery, localStorage) => {
-  if (urlQuery) {
-    return filterList.reduce((acc, option) => {
-      acc[option] = Object.keys(urlQuery).includes(option);
-      return acc;
-    }, {});
-  }
-
-  return mergeUnion(
-    filterList.reduce((acc, company) => {
-      acc[company] = true;
-      return acc;
-    }, {}),
-    localStorage
-  );
 };
 
 class App extends Component {

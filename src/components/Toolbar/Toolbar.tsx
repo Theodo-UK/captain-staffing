@@ -1,6 +1,3 @@
-// @ts-expect-error file is not typed yet
-import { subTypes as ALL_ROLES_MAPPING } from "../../helpers/formatter";
-
 import { FilterCompanies } from "./FilterCompanies";
 import { TABS } from "../../constants";
 import { Button } from "@/design-system/ui/button";
