@@ -1,3 +1,6 @@
+// @ts-expect-error file is not typed yet
+import { subTypes as ALL_ROLES_MAPPING } from "../../helpers/formatter";
+
 import { FilterCompanies } from "./FilterCompanies";
 import { TABS } from "../../constants";
 import { Button } from "@/design-system/ui/button";
@@ -12,6 +15,7 @@ import { IColumn } from "./FilterColumns/FilterColumns.utils";
 import { FilterRoles } from "./FilterRoles/FilterRoles";
 
 interface ToolbarProps {
+  setState: (newState: unknown) => void
   // Positions
   positionsState: { [positionName: string]: boolean };
   positionLastClicked: string | undefined;
@@ -35,9 +39,8 @@ interface ToolbarProps {
 }
 
 export const Toolbar: React.FC<ToolbarProps> = ({
+  setState,
   positionsState = {},
-  positionLastClicked,
-  positionsSelectorOnChange,
   companiesState = {},
   toggleCompanyFilter,
   toggleAllActive,
@@ -52,8 +55,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   <div className="flex items-center space-x-2 my-4">
     <FilterRoles
       positionsState={positionsState}
-      positionLastClicked={positionLastClicked}
-      positionsSelectorOnChange={positionsSelectorOnChange}
+      setState={setState}
     />
     <FilterCompanies
       toggleNoneActive={toggleNoneActive}

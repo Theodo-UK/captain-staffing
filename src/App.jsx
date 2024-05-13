@@ -1,3 +1,5 @@
+/* eslint-disable complexity */
+/* eslint-disable max-lines */
 import React, { Component } from "react";
 import _ from "lodash";
 import moment from "moment";
@@ -421,6 +423,7 @@ class App extends Component {
       return (
         <div>
           <Toolbar
+            setState={this.setState.bind(this)}
             positionsState={this.state.positions}
             positionLastClicked={this.lastClicked}
             positionsSelectorOnChange={this.positionsSelectorOnChange.bind(
