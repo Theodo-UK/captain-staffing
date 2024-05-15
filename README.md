@@ -1,6 +1,6 @@
 # Captain Staffing
 
-[https://theodo.github.io/captain-staffing](https://theodo.github.io/captain-staffing)
+[https://captain-staffing.m33.tech](https://captain-staffing.m33.tech)
 
 Captain Staffing is a staffing management tool to keep track of projects and holidays across all staff members by presenting data from Napta in a more readable format. Built on React with Javascript, and deployed to GitHub Pages.
 
