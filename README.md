@@ -16,45 +16,24 @@ More details on development and main functionality can be found in the [Onboardi
 ## Installation
 
 ```
-npm install
+yarn install
 ```
-- If packages fail during installation, you may need to install them manually with npm
-
-## Config
-
-The config file can be automatically created for development by running
-
-```
-npm run env:dev
-```
-
-to display the staging data, or
-
-```
-npm run env:prod
-```
-
-to display production data.
-
-The config can be manually edited by creating/modifying the `/src/configs/config.js` file.
 
 ## Develop Locally
 
 ```
-npm start
+yarn dev
 ```
 
 ## Build
 
 ```
-npm run build
+yarn build
 ```
 
-## Deploy to Github Pages
+## Deploy
 
-```
-npm run deploy
-```
+Vercel triggers a deploy automatically when you upadte the master branch (e.g. when you merge your PR)
 
 ## [Architecture Diagram](https://app.diagrams.net/#G1e2bzPIZCX5jeMCaOFt4A8heRurJYnbYe)
 
