@@ -37,4 +37,4 @@ Vercel triggers a deploy automatically when you upadte the master branch (e.g. w
 
 ## [Architecture Diagram](https://app.diagrams.net/#G1e2bzPIZCX5jeMCaOFt4A8heRurJYnbYe)
 
-![architecture-diagram](src/assets/captain-staffing-architecture.drawio.png)
+![architecture-diagram](docs/captain-staffing-architecture.jpg)
