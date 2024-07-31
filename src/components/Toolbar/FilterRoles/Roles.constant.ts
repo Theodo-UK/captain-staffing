@@ -27,6 +27,7 @@ export const ALL_ROLES_MAPPING: RoleMapping = {
   "QARA": "BizDev",
   "Qara Principal": "BizDev",
   "KAM": "BizDev",
+  "LPM": "BizDev",
 
   "Lead Designer": "Designers",
   "Designer Confirmé": "Designers",
